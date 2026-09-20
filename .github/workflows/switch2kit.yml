@@ -49,6 +49,8 @@ jobs:
       - name: Initialize pinned public dependencies
         run: |
           git -c url.https://github.com/.insteadOf=git@github.com: submodule update --init --recursive
+      - name: Prepare portable Apple engine without editing the vendor
+        run: python3 Integrations/Switch2Kit/prepare_engine.py
       - name: Test real Switch2Kit input bridge on macOS
         run: swift test --package-path Integrations/Switch2Kit/Engine
       - name: Compile shared engine for iOS Simulator
@@ -62,14 +64,31 @@ jobs:
           plutil -lint Delta-Switch2Kit.xcodeproj/project.pbxproj
           git diff --exit-code -- Delta.xcodeproj Delta.xcworkspace 'Delta/Supporting Files/Info.plist'
       - name: Build complete iOS Simulator application
-        run: >-
-          xcodebuild -workspace Delta-Switch2Kit.xcworkspace -scheme Delta
-          -configuration Debug -destination 'generic/platform=iOS Simulator'
-          -derivedDataPath build/switch2kit-app CODE_SIGNING_ALLOWED=NO build
-      - name: Verify reversible DeltaCore overlay
+        run: |
+          mkdir -p build
+          if xcodebuild -workspace Delta-Switch2Kit.xcworkspace -scheme Delta \
+            -configuration Debug -destination 'generic/platform=iOS Simulator' \
+            -derivedDataPath build/switch2kit-app CODE_SIGNING_ALLOWED=NO build \
+            > build/switch2kit-app.log 2>&1; then
+            tail -n 20 build/switch2kit-app.log
+          else
+            status=$?
+            grep -n -B 4 -A 8 -E 'error:|BUILD FAILED|failed:' build/switch2kit-app.log || true
+            tail -n 80 build/switch2kit-app.log
+            exit "$status"
+          fi
+      - name: Preserve native application build log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: switch2kit-native-build-log
+          path: build/switch2kit-app.log
+          if-no-files-found: ignore
+      - name: Verify reversible DeltaCore overlay and pristine vendor
         if: always()
         run: |
           if test -f 'Cores/DeltaCore/DeltaCore/Game Controllers/ExternalGameControllerManager.swift'; then
             python3 Integrations/Switch2Kit/configure.py --restore-core
             git -C Cores/DeltaCore diff --exit-code
           fi
+          git -C Integrations/Switch2Kit/Engine/Vendor/Switch2Kit diff --exit-code

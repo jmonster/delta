@@ -11,6 +11,7 @@ import copy
 import hashlib
 import plistlib
 import subprocess
+import sys
 from pathlib import Path
 
 SDK_REVISION = "6b5cba6233b21fca1020570e96b1bf247ba21f1e"
@@ -207,6 +208,7 @@ def configure(root: Path, restore: bool = False) -> None:
     if sdk_changes.stdout.strip():
         raise ValueError("Switch2Kit has tracked changes; refusing to label an altered engine as the pinned source")
 
+    subprocess.run([sys.executable, str(root / "Integrations/Switch2Kit/prepare_engine.py"), "--root", str(root)], check=True)
     project = make_project(read_plist(root / "Delta.xcodeproj/project.pbxproj"))
     for relative in [PROJECT_NAME, WORKSPACE_NAME, GENERATED]:
         prepare_directory(confined(root, relative))

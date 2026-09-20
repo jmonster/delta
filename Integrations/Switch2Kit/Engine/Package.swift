@@ -1,9 +1,10 @@
 // swift-tools-version: 6.2
 import PackageDescription
 
-// The upstream manifest currently declares macOS only. This iOS host wrapper
-// builds the exact pinned, unmodified engine sources with an explicit iOS floor
-// for Synchronization.Mutex. No C ABI, desktop application or SDL is included.
+// prepare_engine.py stages Vendor/Switch2Kit/Sources/Switch2Kit without editing
+// the dependency. Its only source change guards IOBluetooth's import and API,
+// preserving the existing unknown-address path on iOS. Both native tests and
+// the application build the same staged engine. No C ABI, dashboard or SDL.
 let package = Package(
     name: "DeltaSwitch2Engine",
     platforms: [.iOS(.v18), .macOS(.v15)],
@@ -13,7 +14,7 @@ let package = Package(
     ],
     dependencies: [.package(path: "..")],
     targets: [
-        .target(name: "Switch2Kit", path: "Vendor/Switch2Kit/Sources/Switch2Kit",
+        .target(name: "Switch2Kit", path: "Generated/Switch2Kit",
                 swiftSettings: [.swiftLanguageMode(.v6)],
                 linkerSettings: [.linkedFramework("CoreBluetooth")]),
         .target(name: "DeltaSwitch2Bridge", dependencies: ["Switch2Kit",
