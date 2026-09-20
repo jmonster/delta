@@ -2,8 +2,9 @@
 import PackageDescription
 
 // The upstream manifest currently declares macOS only. This iOS host wrapper
-// builds the exact pinned, unmodified engine sources with an explicit iOS floor
-// for Synchronization.Mutex. No C ABI, desktop application or SDL is included.
+// retains the pinned engine and its protocol implementation. One generated
+// source adds IOBluetooth availability guards; see Compatibility/patch_session.py.
+// No C ABI, desktop application or SDL is included.
 let package = Package(
     name: "DeltaSwitch2Engine",
     platforms: [.iOS(.v18), .macOS(.v15)],
@@ -14,10 +15,13 @@ let package = Package(
     dependencies: [.package(path: "..")],
     targets: [
         .target(name: "Switch2Kit", path: "Vendor/Switch2Kit/Sources/Switch2Kit",
+                exclude: ["Bluetooth/ControllerSession.swift"],
                 swiftSettings: [.swiftLanguageMode(.v6)],
-                linkerSettings: [.linkedFramework("CoreBluetooth")]),
+                linkerSettings: [.linkedFramework("CoreBluetooth")],
+                plugins: [.plugin(name: "Switch2IOSCompatibility")]),
         .target(name: "DeltaSwitch2Bridge", dependencies: ["Switch2Kit",
                 .product(name: "DeltaSwitch2Input", package: "switch2kit")]),
-        .testTarget(name: "DeltaSwitch2BridgeTests", dependencies: ["DeltaSwitch2Bridge", "Switch2Kit"])
+        .testTarget(name: "DeltaSwitch2BridgeTests", dependencies: ["DeltaSwitch2Bridge", "Switch2Kit"]),
+        .plugin(name: "Switch2IOSCompatibility", capability: .buildTool())
     ]
 )

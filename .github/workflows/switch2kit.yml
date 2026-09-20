@@ -32,6 +32,8 @@ jobs:
       - uses: actions/checkout@v4
         with:
           persist-credentials: false
+      - name: Select Xcode with Swift 6.2 or newer
+        run: bash Integrations/Switch2Kit/select-xcode.sh
       - name: Input mappings and configuration regressions
         run: |
           swift test --package-path Integrations/Switch2Kit
@@ -47,29 +49,62 @@ jobs:
       - name: Select Xcode with Swift 6.2 or newer
         run: bash Integrations/Switch2Kit/select-xcode.sh
       - name: Initialize pinned public dependencies
+        id: dependencies
         run: |
           git -c url.https://github.com/.insteadOf=git@github.com: submodule update --init --recursive
+          mkdir -p build
       - name: Test real Switch2Kit input bridge on macOS
-        run: swift test --package-path Integrations/Switch2Kit/Engine
+        run: |
+          set -o pipefail
+          swift test --package-path Integrations/Switch2Kit/Engine 2>&1 | tee build/switch2kit-macos.log
       - name: Compile shared engine for iOS Simulator
+        if: ${{ !cancelled() && steps.dependencies.outcome == 'success' }}
         working-directory: Integrations/Switch2Kit/Engine
-        run: >-
-          xcodebuild -scheme DeltaSwitch2Bridge -destination 'generic/platform=iOS Simulator'
-          -derivedDataPath ../../../build/switch2kit-engine CODE_SIGNING_ALLOWED=NO build
+        run: |
+          set -o pipefail
+          xcodebuild -scheme DeltaSwitch2Bridge -destination 'generic/platform=iOS Simulator' \
+            -derivedDataPath ../../../build/switch2kit-engine CODE_SIGNING_ALLOWED=NO build \
+            2>&1 | tee ../../../build/switch2kit-simulator.log
+      - name: Compile shared engine for iOS devices
+        if: ${{ !cancelled() && steps.dependencies.outcome == 'success' }}
+        working-directory: Integrations/Switch2Kit/Engine
+        run: |
+          set -o pipefail
+          xcodebuild -scheme DeltaSwitch2Bridge -destination 'generic/platform=iOS' \
+            -derivedDataPath ../../../build/switch2kit-device CODE_SIGNING_ALLOWED=NO build \
+            2>&1 | tee ../../../build/switch2kit-device.log
       - name: Configure opt-in Delta application
+        id: configure
+        if: ${{ !cancelled() && steps.dependencies.outcome == 'success' }}
         run: |
           python3 Integrations/Switch2Kit/configure.py
           plutil -lint Delta-Switch2Kit.xcodeproj/project.pbxproj
           git diff --exit-code -- Delta.xcodeproj Delta.xcworkspace 'Delta/Supporting Files/Info.plist'
       - name: Build complete iOS Simulator application
-        run: >-
-          xcodebuild -workspace Delta-Switch2Kit.xcworkspace -scheme Delta
-          -configuration Debug -destination 'generic/platform=iOS Simulator'
-          -derivedDataPath build/switch2kit-app CODE_SIGNING_ALLOWED=NO build
-      - name: Verify reversible DeltaCore overlay
+        if: ${{ !cancelled() && steps.configure.outcome == 'success' }}
+        run: |
+          set -o pipefail
+          xcodebuild -workspace Delta-Switch2Kit.xcworkspace -scheme Delta \
+            -configuration Debug -destination 'generic/platform=iOS Simulator' \
+            -derivedDataPath build/switch2kit-app CODE_SIGNING_ALLOWED=NO build \
+            2>&1 | tee build/switch2kit-app.log
+      - name: Verify reversible DeltaCore overlay and unchanged SDK
         if: always()
         run: |
           if test -f 'Cores/DeltaCore/DeltaCore/Game Controllers/ExternalGameControllerManager.swift'; then
             python3 Integrations/Switch2Kit/configure.py --restore-core
             git -C Cores/DeltaCore diff --exit-code
           fi
+          git diff --exit-code -- Delta.xcodeproj Delta.xcworkspace 'Delta/Supporting Files/Info.plist'
+          if test -f 'Integrations/Switch2Kit/Engine/Vendor/Switch2Kit/Package.swift'; then
+            git -C Integrations/Switch2Kit/Engine/Vendor/Switch2Kit diff --exit-code
+          fi
+      - name: Retain native build diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: switch2kit-native-diagnostics
+          path: |
+            build/switch2kit-*.log
+            Delta-Switch2Kit.xcodeproj/project.pbxproj
+          retention-days: 7

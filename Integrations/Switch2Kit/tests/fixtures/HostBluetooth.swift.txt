@@ -1,0 +1,20 @@
+// MARK: - Host Bluetooth adapter address
+
+#if canImport(CoreBluetooth) || S2K_RADIO_FIXTURE
+import IOBluetooth
+
+enum HostBluetooth {
+    /// The Mac's Bluetooth adapter MAC, little-endian bytes, for the
+    /// protocol-level bond command. nil when unavailable.
+    package static var macAddressBytesLE: Data? {
+        guard let addr = IOBluetoothHostController.default()?.addressAsString() else {
+            return nil
+        }
+        let parts = addr.split(whereSeparator: { $0 == ":" || $0 == "-" })
+            .compactMap { UInt8($0, radix: 16) }
+        guard parts.count == 6 else { return nil }
+        return Data(parts.reversed())
+    }
+}
+
+#endif
