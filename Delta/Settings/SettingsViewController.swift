@@ -146,8 +146,8 @@ class SettingsViewController: UITableViewController
         super.init(coder: aDecoder)
         
         NotificationCenter.default.addObserver(self, selector: #selector(SettingsViewController.settingsDidChange(with:)), name: Settings.didChangeNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(SettingsViewController.externalGameControllerDidConnect(_:)), name: .externalGameControllerDidConnect, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(SettingsViewController.externalGameControllerDidDisconnect(_:)), name: .externalGameControllerDidDisconnect, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(SettingsViewController.externalGameControllerDidConnect(_:)), name: .deltaControllerDidConnect, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(SettingsViewController.externalGameControllerDidDisconnect(_:)), name: .deltaControllerDidDisconnect, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(SettingsViewController.didPressExperimentalFeaturesPatreonButton(_:)), name: BecomePatronButton.didPressNotification, object: nil)
         
         if #available(iOS 17.5, *)
@@ -708,9 +708,9 @@ extension SettingsViewController
             {
                 cell.detailTextLabel?.text = LocalDeviceController().name
             }
-            else if let index = ExternalGameControllerManager.shared.connectedControllers.firstIndex(where: { $0.playerIndex == indexPath.row })
+            else if let index = GameControllerRegistry.shared.connectedControllers.firstIndex(where: { $0.playerIndex == indexPath.row })
             {
-                let controller = ExternalGameControllerManager.shared.connectedControllers[index]
+                let controller = GameControllerRegistry.shared.connectedControllers[index]
                 cell.detailTextLabel?.text = controller.name
             }
             else

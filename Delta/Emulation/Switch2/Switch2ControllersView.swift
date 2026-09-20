@@ -1,4 +1,3 @@
-#if DELTA_SWITCH2KIT
 import SwiftUI
 import UIKit
 
@@ -25,7 +24,7 @@ struct Switch2ControllersView: View
                     }
                 }
             } footer: {
-                Text("Choose Find, allow Bluetooth access, then hold the controller’s Sync button. Close Dolphin, Cemu, and other apps managing the controller first. Discovery lasts 60 seconds.")
+                Text("Choose Find, allow Bluetooth access, then hold the controller’s Sync button. Close other apps managing the controller first. Discovery lasts 60 seconds.")
             }
             if let error = service.errorMessage
             {
@@ -43,7 +42,7 @@ struct Switch2ControllersView: View
             }
             Section {
                 Text("Return to Controllers and choose a Player to assign or customize controls. Home opens Delta’s menu; the left Joy-Con uses Capture. Hold individual Joy-Con halves horizontally with the stick on the left.")
-                Text("Experimental iOS support. Controller pairing and gameplay still need physical-device qualification. No combined Joy-Con pair, motion, mouse, or game rumble support is provided by this adapter. Backgrounding disconnects controllers; choose Find again after returning.")
+                Text("Experimental iOS support. Use Find and Sync to connect; automatic reconnection is not supported. No combined Joy-Con pair, motion, mouse, or game rumble support is provided by this adapter. Backgrounding disconnects controllers; choose Find again after returning.")
                     .foregroundStyle(.secondary)
             }
         }
@@ -51,4 +50,3 @@ struct Switch2ControllersView: View
         .navigationBarTitleDisplayMode(.inline)
     }
 }
-#endif

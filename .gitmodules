@@ -34,6 +34,3 @@
 [submodule "External/DeltaOperator"]
 	path = External/DeltaOperator
 	url = https://github.com/epilogue-co/DeltaOperator.git
-[submodule "Integrations/Switch2Kit/Engine/Vendor/Switch2Kit"]
-	path = Integrations/Switch2Kit/Engine/Vendor/Switch2Kit
-	url = https://github.com/jmonster/Switch2Kit.git

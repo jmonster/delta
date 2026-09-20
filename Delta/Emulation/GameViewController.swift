@@ -269,8 +269,9 @@ class GameViewController: DeltaCore.GameViewController
     {
         self.delegate = self
         
-        NotificationCenter.default.addObserver(self, selector: #selector(GameViewController.updateControllers), name: .externalGameControllerDidConnect, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(GameViewController.updateControllers), name: .externalGameControllerDidDisconnect, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(GameViewController.updateControllers), name: .deltaControllerDidConnect, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(GameViewController.updateControllers), name: .deltaControllerDidDisconnect, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(GameViewController.updateControllers), name: .deltaControllerAssignmentDidChange, object: nil)
         
         NotificationCenter.default.addObserver(self, selector: #selector(GameViewController.didEnterBackground(with:)), name: UIApplication.didEnterBackgroundNotification, object: UIApplication.shared)
         
@@ -825,12 +826,12 @@ private extension GameViewController
 {
     @objc func updateControllers()
     {
-        let firstActiveController = ExternalGameControllerManager.shared.connectedControllers.first(where: { $0.playerIndex != nil })
+        let firstActiveController = GameControllerRegistry.shared.connectedControllers.first(where: { $0.playerIndex != nil })
         if firstActiveController == nil && Settings.localControllerPlayerIndex == nil
         {
             Settings.localControllerPlayerIndex = 0
         }
-        else if let index = Settings.localControllerPlayerIndex, ExternalGameControllerManager.shared.connectedControllers.contains(where: { $0.playerIndex == index })
+        else if let index = Settings.localControllerPlayerIndex, GameControllerRegistry.shared.connectedControllers.contains(where: { $0.playerIndex == index })
         {
             // There is an active controller with same player index as local controller, so disable local controller.
             Settings.localControllerPlayerIndex = nil
@@ -873,7 +874,7 @@ private extension GameViewController
         // Roundabout way of combining arrays to prevent rare runtime crash in + operator :(
         var controllers = [GameController]()
         controllers.append(self.controllerView)
-        controllers.append(contentsOf: ExternalGameControllerManager.shared.connectedControllers)
+        controllers.append(contentsOf: GameControllerRegistry.shared.connectedControllers)
         
         if let emulatorCore = self.emulatorCore, let game = self.game
         {
@@ -927,7 +928,7 @@ private extension GameViewController
         guard let game = self.game as? Game, let window = self.view.window else { return }
         
         let traits = DeltaCore.ControllerSkin.Traits.defaults(for: window)
-        let isExternalControllerConnected = ExternalGameControllerManager.shared.connectedControllers.contains(where: { $0.playerIndex != nil })
+        let isExternalControllerConnected = GameControllerRegistry.shared.connectedControllers.contains(where: { $0.playerIndex != nil })
         
         if Settings.localControllerPlayerIndex != nil
         {

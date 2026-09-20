@@ -363,6 +363,22 @@
 		E6BD34AB2F563F1A001C9D78 /* AchievementGreeting.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6BD34AA2F563F1A001C9D78 /* AchievementGreeting.swift */; };
 		E6BD34AD2F587BF0001C9D78 /* AchievementGameBanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6BD34AC2F587BF0001C9D78 /* AchievementGameBanner.swift */; };
 		E6EB10AF2F58B1C50001AAD2 /* AchievementNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6EB10AE2F58B1C50001AAD2 /* AchievementNotification.swift */; };
+		F20920260000000000000002 /* GameControllerRegistry.swift in Delta */ = {isa = PBXBuildFile; fileRef = F20920260000000000000001 /* GameControllerRegistry.swift */; };
+		F20920260000000000000003 /* GameControllerRegistry.swift in Controller Tests */ = {isa = PBXBuildFile; fileRef = F20920260000000000000001 /* GameControllerRegistry.swift */; };
+		F20920260000000000000005 /* Switch2ControllerService.swift in Delta */ = {isa = PBXBuildFile; fileRef = F20920260000000000000004 /* Switch2ControllerService.swift */; };
+		F20920260000000000000006 /* Switch2ControllerService.swift in Controller Tests */ = {isa = PBXBuildFile; fileRef = F20920260000000000000004 /* Switch2ControllerService.swift */; };
+		F20920260000000000000008 /* Switch2GameController.swift in Delta */ = {isa = PBXBuildFile; fileRef = F20920260000000000000007 /* Switch2GameController.swift */; };
+		F20920260000000000000009 /* Switch2GameController.swift in Controller Tests */ = {isa = PBXBuildFile; fileRef = F20920260000000000000007 /* Switch2GameController.swift */; };
+		F2092026000000000000000B /* Switch2InputMapping.swift in Delta */ = {isa = PBXBuildFile; fileRef = F2092026000000000000000A /* Switch2InputMapping.swift */; };
+		F2092026000000000000000C /* Switch2InputMapping.swift in Controller Tests */ = {isa = PBXBuildFile; fileRef = F2092026000000000000000A /* Switch2InputMapping.swift */; };
+		F2092026000000000000000E /* Switch2ControllersView.swift in Delta */ = {isa = PBXBuildFile; fileRef = F2092026000000000000000D /* Switch2ControllersView.swift */; };
+		F20920260000000000000010 /* ControllerIntegrationTests.swift in Controller Tests */ = {isa = PBXBuildFile; fileRef = F2092026000000000000000F /* ControllerIntegrationTests.swift */; };
+		F20920260000000000000014 /* Switch2Kit in Delta */ = {isa = PBXBuildFile; productRef = F20920260000000000000013 /* Switch2Kit */; };
+		F20920260000000000000016 /* Switch2Kit in Controller Tests */ = {isa = PBXBuildFile; productRef = F20920260000000000000015 /* Switch2Kit */; };
+		F20920260000000000000017 /* DeltaCore in Test Frameworks */ = {isa = PBXBuildFile; fileRef = BF9F4FCE1AAD7B87004C9500 /* DeltaCore.framework */; };
+		F20920260000000000000018 /* DeltaCore in Test Embed Frameworks */ = {isa = PBXBuildFile; fileRef = BF9F4FCE1AAD7B87004C9500 /* DeltaCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		F20920260000000000000019 /* ZIPFoundation in Test Frameworks */ = {isa = PBXBuildFile; fileRef = BF07200E219A3A9500F05DA4 /* ZIPFoundation.framework */; };
+		F2092026000000000000001A /* ZIPFoundation in Test Embed Frameworks */ = {isa = PBXBuildFile; fileRef = BF07200E219A3A9500F05DA4 /* ZIPFoundation.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -593,6 +609,18 @@
 			dstPath = "include/$(PRODUCT_NAME)";
 			dstSubfolderSpec = 16;
 			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F2092026000000000000001D /* Controller Test Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			name = "Embed Frameworks";
+			files = (
+				F20920260000000000000018,
+				F2092026000000000000001A,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -946,6 +974,13 @@
 		E6BD34AC2F587BF0001C9D78 /* AchievementGameBanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AchievementGameBanner.swift; sourceTree = "<group>"; };
 		E6EB10AE2F58B1C50001AAD2 /* AchievementNotification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AchievementNotification.swift; sourceTree = "<group>"; };
 		FCE7674E5643CDB43BC8ED32 /* DeltaOperatorWritebackToast.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeltaOperatorWritebackToast.swift; sourceTree = "<group>"; };
+		F20920260000000000000001 /* GameControllerRegistry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Delta/Emulation/GameControllerRegistry.swift"; sourceTree = SOURCE_ROOT; };
+		F20920260000000000000004 /* Switch2ControllerService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Delta/Emulation/Switch2/Switch2ControllerService.swift"; sourceTree = SOURCE_ROOT; };
+		F20920260000000000000007 /* Switch2GameController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Delta/Emulation/Switch2/Switch2GameController.swift"; sourceTree = SOURCE_ROOT; };
+		F2092026000000000000000A /* Switch2InputMapping.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Delta/Emulation/Switch2/Switch2InputMapping.swift"; sourceTree = SOURCE_ROOT; };
+		F2092026000000000000000D /* Switch2ControllersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Delta/Emulation/Switch2/Switch2ControllersView.swift"; sourceTree = SOURCE_ROOT; };
+		F2092026000000000000000F /* ControllerIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DeltaTests/Controllers/ControllerIntegrationTests.swift"; sourceTree = SOURCE_ROOT; };
+		F20920260000000000000022 /* Switch2ControllerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Switch2ControllerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -953,6 +988,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F20920260000000000000014 /* Switch2Kit in Frameworks */,
 				D5FB042C2C5AF40A008329DD /* libresolv.tbd in Frameworks */,
 				BF69FBA823E396860051BEEA /* libz.tbd in Frameworks */,
 				D52CB8C62CE2B7B600B04458 /* RevenueCat in Frameworks */,
@@ -992,6 +1028,16 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F2092026000000000000001C /* Controller Test Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F20920260000000000000016,
+				F20920260000000000000017,
+				F20920260000000000000019,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1520,6 +1566,7 @@
 		BFFA71CE1AAC406100EE9DD1 = {
 			isa = PBXGroup;
 			children = (
+				F20920260000000000000011 /* Switch 2 Controllers */,
 				BFFA71D91AAC406100EE9DD1 /* Delta */,
 				D539103029E88B6C0006B350 /* DeltaPreviews */,
 				D5D7C1F229E60E0000663793 /* DeltaFeatures */,
@@ -1535,6 +1582,7 @@
 		BFFA71D81AAC406100EE9DD1 /* Products */ = {
 			isa = PBXGroup;
 			children = (
+				F20920260000000000000022 /* Switch2ControllerTests.xctest */,
 				BFFA71D71AAC406100EE9DD1 /* Delta.app */,
 				D5D7C1F129E60DFF00663793 /* libDeltaFeatures.a */,
 				D539102F29E88B6B0006B350 /* DeltaPreviews.framework */,
@@ -1998,6 +2046,19 @@
 			name = Pods;
 			sourceTree = "<group>";
 		};
+		F20920260000000000000011 /* Switch 2 Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				F20920260000000000000001 /* GameControllerRegistry.swift */,
+				F20920260000000000000004 /* Switch2ControllerService.swift */,
+				F20920260000000000000007 /* Switch2GameController.swift */,
+				F2092026000000000000000A /* Switch2InputMapping.swift */,
+				F2092026000000000000000D /* Switch2ControllersView.swift */,
+				F2092026000000000000000F /* ControllerIntegrationTests.swift */,
+			);
+			name = "Switch 2 Controllers";
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -2040,6 +2101,7 @@
 			);
 			name = Delta;
 			packageProductDependencies = (
+				F20920260000000000000013 /* Switch2Kit */,
 				D5C45FEE2BE992A80009DBB0 /* AltKit */,
 				D5AE76C12C2B59240086471B /* KeychainAccess */,
 				D5E76AAC2BE199890078C0C5 /* ShowTouches */,
@@ -2086,6 +2148,18 @@
 			productName = DeltaFeatures;
 			productReference = D5D7C1F129E60DFF00663793 /* libDeltaFeatures.a */;
 			productType = "com.apple.product-type.library.static";
+		};
+		F20920260000000000000023 /* Switch2ControllerTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F20920260000000000000021;
+			buildPhases = (F2092026000000000000001B, F2092026000000000000001C, F2092026000000000000001D, );
+			buildRules = ();
+			dependencies = (F2092026000000000000001E, );
+			name = Switch2ControllerTests;
+			packageProductDependencies = (F20920260000000000000015, );
+			productName = Switch2ControllerTests;
+			productReference = F20920260000000000000022;
+			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
 
@@ -2137,6 +2211,7 @@
 			);
 			mainGroup = BFFA71CE1AAC406100EE9DD1;
 			packageReferences = (
+				F20920260000000000000012 /* Switch2Kit */,
 				D5C45FED2BE992A80009DBB0 /* XCRemoteSwiftPackageReference "AltKit" */,
 				D5AE76C02C2B59240086471B /* XCRemoteSwiftPackageReference "KeychainAccess" */,
 				D5E76AAB2BE199890078C0C5 /* XCRemoteSwiftPackageReference "ShowTouches" */,
@@ -2181,6 +2256,7 @@
 			);
 			projectRoot = "";
 			targets = (
+				F20920260000000000000023 /* Switch2ControllerTests */,
 				BFFA71D61AAC406100EE9DD1 /* Delta */,
 				BF14D8941DE7A512002CA1BE /* mogenerator */,
 				BF6E70B925D2187800E41CD1 /* Systems */,
@@ -2486,6 +2562,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F20920260000000000000002 /* GameControllerRegistry.swift in Sources */,
+				F20920260000000000000005 /* Switch2ControllerService.swift in Sources */,
+				F20920260000000000000008 /* Switch2GameController.swift in Sources */,
+				F2092026000000000000000B /* Switch2InputMapping.swift in Sources */,
+				F2092026000000000000000E /* Switch2ControllersView.swift in Sources */,
 				BFB3645823245A6000CD0EB1 /* LicensesViewController.swift in Sources */,
 				BFC6F7B81F435BC500221B96 /* Input+Display.swift in Sources */,
 				D5AE76C82C2B808F0086471B /* AltAppIconsViewController.swift in Sources */,
@@ -2768,6 +2849,18 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		F2092026000000000000001B /* Controller Test Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F20920260000000000000003 /* GameControllerRegistry.swift in Sources */,
+				F20920260000000000000006 /* Switch2ControllerService.swift in Sources */,
+				F20920260000000000000009 /* Switch2GameController.swift in Sources */,
+				F2092026000000000000000C /* Switch2InputMapping.swift in Sources */,
+				F20920260000000000000010 /* ControllerIntegrationTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -2825,6 +2918,11 @@
 			isa = PBXTargetDependency;
 			target = D5D7C1F029E60DFF00663793 /* DeltaFeatures */;
 			targetProxy = D5D7C1FB29E60EDE00663793 /* PBXContainerItemProxy */;
+		};
+		F2092026000000000000001E /* Controller Tests DeltaCore dependency */ = {
+			isa = PBXTargetDependency;
+			name = DeltaCore;
+			targetProxy = D57A82162E29AE66006E06E8 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -3025,6 +3123,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = C786AF1D2DDB6223BE2063CC /* Pods-Delta.debug.xcconfig */;
 			buildSettings = {
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CLANG_ENABLE_MODULES = YES;
@@ -3097,6 +3196,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = A19FF50F55441BC2B2248241 /* Pods-Delta.release.xcconfig */;
 			buildSettings = {
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CLANG_ENABLE_MODULES = YES;
@@ -3269,6 +3369,42 @@
 			};
 			name = Release;
 		};
+		F2092026000000000000001F /* Controller Tests Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LD_RUNPATH_SEARCH_PATHS = ("$(inherited)", "@executable_path/Frameworks", "@loader_path/Frameworks", );
+				PRODUCT_BUNDLE_IDENTIFIER = com.jmonster.Delta.ControllerTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				ENABLE_TESTABILITY = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		F20920260000000000000020 /* Controller Tests Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LD_RUNPATH_SEARCH_PATHS = ("$(inherited)", "@executable_path/Frameworks", "@loader_path/Frameworks", );
+				PRODUCT_BUNDLE_IDENTIFIER = com.jmonster.Delta.ControllerTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				ENABLE_TESTABILITY = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -3326,6 +3462,12 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
+		F20920260000000000000021 /* Controller Tests configurations */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (F2092026000000000000001F, F20920260000000000000020, );
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
@@ -3369,6 +3511,14 @@
 				kind = branch;
 			};
 		};
+		F20920260000000000000012 /* Switch2Kit package */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/jmonster/Switch2Kit.git";
+			requirement = {
+				kind = revision;
+				revision = de2514bc687df810ea804449c8d5c0e88c4702bd;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -3397,6 +3547,8 @@
 			package = D5EF1A1E2D84BD59001B06E6 /* XCRemoteSwiftPackageReference "rcheevos" */;
 			productName = rcheevos;
 		};
+		F20920260000000000000013 /* Switch2Kit Delta */ = {isa = XCSwiftPackageProductDependency; package = F20920260000000000000012 /* Switch2Kit */; productName = Switch2Kit; };
+		F20920260000000000000015 /* Switch2Kit Controller Tests */ = {isa = XCSwiftPackageProductDependency; package = F20920260000000000000012 /* Switch2Kit */; productName = Switch2Kit; };
 /* End XCSwiftPackageProductDependency section */
 
 /* Begin XCVersionGroup section */

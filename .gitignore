@@ -33,11 +33,3 @@ xcuserdata
 
 ## Project-Specific
 Delta.playground
-
-# Opt-in Switch2Kit workspace; keep the ordinary Delta project unchanged.
-/Delta-Switch2Kit.xcodeproj/
-/Delta-Switch2Kit.xcworkspace/
-/Integrations/Switch2Kit/Generated/
-/Integrations/Switch2Kit/**/__pycache__/
-/Integrations/Switch2Kit/**/.swiftpm/
-/Integrations/Switch2Kit/Engine/Generated/

@@ -16,7 +16,7 @@ struct PlayerControllerView: View
 {
     let playerIndex: Int
     
-    private var connectedControllers: [GameController] { ExternalGameControllerManager.shared.connectedControllers }
+    private var connectedControllers: [GameController] { GameControllerRegistry.shared.connectedControllers }
     
     @SwiftUI.State
     private var selectedController: GameController?
@@ -93,6 +93,7 @@ struct PlayerControllerView: View
         .navigationTitle("Player \(playerIndex + 1)")
         .navigationBarTitleDisplayMode(.inline)
         .animation(.default, value: selectedController?.isLocalDevice)
+        .onReceive(NotificationCenter.default.publisher(for: .deltaControllerAssignmentDidChange)) { _ in updateSelectedController() }
         .onAppear(perform: updateSelectedController)
         .onChange(of: connectedControllers as NSArray) { updateSelectedController() } // Cast to NSArray which is equatable
         .onReceive(NotificationCenter.default.publisher(for: Settings.didChangeNotification)) { notification in
@@ -139,6 +140,7 @@ private extension PlayerControllerView
         }
         
         controller?.playerIndex = playerIndex
+        GameControllerRegistry.shared.assignmentDidChange()
         
         updateSelectedController()
     }

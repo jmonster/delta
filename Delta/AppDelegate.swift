@@ -43,7 +43,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate
         self.updateSettings()
         
         // Controllers
-        ExternalGameControllerManager.shared.startMonitoring()
+        GameControllerRegistry.shared.startMonitoring()
         
         // JIT
         ServerManager.shared.prepare()
