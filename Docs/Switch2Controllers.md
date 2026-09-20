@@ -7,7 +7,26 @@ copy, replacement package manifest, or modified DeltaCore checkout.
 This fork's Delta app requires **iOS/iPadOS 18 and Xcode 26 / Swift 6.2 or newer**.
 Switch2Kit uses Synchronization.Mutex; other Delta targets retain their existing
 minimum OS versions. The package reference and Package.resolved select the same
-SDK revision. Its iOS portability change is reviewed in Switch2Kit PR #78.
+SDK revision. Its iOS portability change is reviewed in
+[Switch2Kit PR #78](https://github.com/jmonster/Switch2Kit/pull/78).
+Merge that SDK change before the consuming Delta PR. Keep the package reference
+and lockfile synchronized when updating the SDK; no runtime source patch is needed.
+
+## Build
+
+From a checkout of this branch, initialize Delta's existing submodules and let
+Xcode resolve Switch2Kit normally:
+
+```sh
+git -c url.https://github.com/.insteadOf=git@github.com: submodule update --init --recursive
+xcodebuild -resolvePackageDependencies -workspace Delta.xcworkspace -scheme Delta
+open Delta.xcworkspace
+```
+
+Select Delta and your own signing team to build for a device. The
+Switch2ControllerTests scheme runs on an iOS Simulator without opening Bluetooth.
+CI uses ARM64 Simulator builds because the existing melonDS core includes ARM64
+assembly, and separately builds the full Release application against the device SDK.
 
 ## Use
 
@@ -30,11 +49,20 @@ patched. The Switch2Kit service owns explicit discovery and scene lifecycle; its
 adapter feeds typed MFi inputs to DeltaCore's existing receiver machinery. On an
 interruption the observer is cancelled before inputs are released. Resume creates
 a fresh observer and consumes its initial snapshot instead of mixing a live
-snapshot with a backlog. Connection identity and report sequence reject stale input.
+snapshot with a backlog. Connection identity and report sequence reject stale input,
+including reports queued before player reassignment.
+
+Retirement is terminal for each adapter. If Stop or disconnect occurs inside a
+receiver callback, the current DeltaCore delivery finishes, all receivers receive
+the release, and only then does the controller leave the registry. Remaining
+buttons in that report and later calls on the retired adapter are rejected.
+Registration and removal also tolerate synchronous notification callbacks.
 
 Run the **Switch2ControllerTests** scheme on an iOS Simulator. Its tests substitute
 only the radio, using real SDK value types and production registry, service,
-mapper, adapter, and DeltaCore sustained-input/receiver behavior. CI also builds
+mapper, adapter, and DeltaCore sustained-input/receiver behavior. Regressions cover
+multiple receivers, nested Stop/disconnect, registration callbacks, held-state
+resumption, out-of-order reports, and reconnect/player assignment. CI also builds
 the complete Debug Simulator and Release device apps from the normal workspace.
 
 Physical pairing/gameplay still require checking each model/firmware on an iPhone
