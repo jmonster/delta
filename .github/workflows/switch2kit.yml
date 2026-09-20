@@ -37,6 +37,7 @@ jobs:
           swift test --package-path Integrations/Switch2Kit
           python3 -m unittest discover -s Integrations/Switch2Kit/tests -v
           bash -n Integrations/Switch2Kit/select-xcode.sh
+          bash -n Integrations/Switch2Kit/build-app.sh
           ruby -e "require 'yaml'; YAML.parse_file(ARGV.first)" .github/workflows/switch2kit.yml
   native:
     runs-on: macos-15
@@ -63,26 +64,16 @@ jobs:
           python3 Integrations/Switch2Kit/configure.py
           plutil -lint Delta-Switch2Kit.xcodeproj/project.pbxproj
           git diff --exit-code -- Delta.xcodeproj Delta.xcworkspace 'Delta/Supporting Files/Info.plist'
-      - name: Build complete iOS Simulator application
-        run: |
-          mkdir -p build
-          if xcodebuild -workspace Delta-Switch2Kit.xcworkspace -scheme Delta \
-            -configuration Debug -destination 'generic/platform=iOS Simulator' \
-            -derivedDataPath build/switch2kit-app CODE_SIGNING_ALLOWED=NO build \
-            > build/switch2kit-app.log 2>&1; then
-            tail -n 20 build/switch2kit-app.log
-          else
-            status=$?
-            grep -n -B 4 -A 8 -E 'error:|BUILD FAILED|failed:' build/switch2kit-app.log || true
-            tail -n 80 build/switch2kit-app.log
-            exit "$status"
-          fi
+      - name: Build complete ARM64 iOS Simulator application
+        run: bash Integrations/Switch2Kit/build-app.sh simulator
+      - name: Build complete iOS device application
+        run: bash Integrations/Switch2Kit/build-app.sh device
       - name: Preserve native application build log
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: switch2kit-native-build-log
-          path: build/switch2kit-app.log
+          path: build/switch2kit-*-app.log
           if-no-files-found: ignore
       - name: Verify reversible DeltaCore overlay and pristine vendor
         if: always()
