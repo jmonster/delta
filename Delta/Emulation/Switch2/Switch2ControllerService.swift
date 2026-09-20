@@ -128,8 +128,7 @@ final class Switch2ControllerService: ObservableObject
         guard self.isStarted else { return }
         self.phase = .stopping
         self.cancelObservation()
-        for controller in self.controllers { self.registry.unregister(controller) }
-        self.controllers.removeAll()
+        for controller in self.controllers { self.remove(controller) }
         self.status = String(localized: "Stopping…")
         self.stopTask = Task {
             await self.manager.stop()
@@ -168,12 +167,18 @@ final class Switch2ControllerService: ObservableObject
 
     private func receive(_ event: Switch2ControllerEvent)
     {
+        let generation = self.observationGeneration
         switch event
         {
         case .snapshot(let snapshot), .status(let snapshot):
             let current = Set(snapshot.controllers.map(\.connectionID))
             for controller in self.controllers where !current.contains(controller.connectionID) { self.remove(controller) }
-            for controller in snapshot.controllers { self.connect(controller) }
+            for controller in snapshot.controllers
+            {
+                guard self.isStarted, self.observationGeneration == generation else { return }
+                self.connect(controller)
+            }
+            guard self.isStarted, self.observationGeneration == generation else { return }
             self.needsBluetoothPermission = snapshot.bluetooth == .unauthorized
             switch snapshot.bluetooth
             {
@@ -204,10 +209,16 @@ final class Switch2ControllerService: ObservableObject
 
     private func connect(_ value: Switch2Controller)
     {
+        guard self.isStarted, !self.active.isEmpty else { return }
         if let old = self.controllers.first(where: { $0.id == value.id && $0.connectionID != value.connectionID }) { self.remove(old) }
-        if let controller = self.controllers.first(where: { $0.connectionID == value.connectionID }) { controller.update(value); return }
+        guard self.isStarted, !self.active.isEmpty else { return }
+        if let controller = self.controllers.first(where: { $0.connectionID == value.connectionID }) { controller.update(value, isSnapshot: true); return }
         let controller = Switch2GameController(controller: value, manager: self.manager)
-        if let assignment = self.assignments[value.id]
+        // Own the controller before registration notifies receivers; a synchronous
+        // Stop during that notification must retire this controller too.
+        self.controllers.append(controller)
+        let assignment = self.assignments[value.id]
+        if let assignment
         {
             controller.playerIndex = assignment.playerIndex
             self.registry.register(controller, assignPlayerIndex: false)
@@ -215,18 +226,19 @@ final class Switch2ControllerService: ObservableObject
         else
         {
             self.registry.register(controller)
-            self.remember(controller.playerIndex, for: value.id)
         }
+        guard self.controllers.contains(where: { $0 === controller }) else { return }
+        if assignment == nil { self.remember(controller.playerIndex, for: value.id) }
         // Install after registration: a temporary occupied slot must not erase saved intent.
         controller.playerIndexDidChange = { [weak self] index in self?.remember(index, for: value.id) }
-        self.controllers.append(controller)
-        controller.update(value)
+        if self.isStarted && !self.active.isEmpty { controller.update(value, isSnapshot: true) }
     }
 
     private func remove(_ controller: Switch2GameController)
     {
-        self.registry.unregister(controller)
+        guard self.controllers.contains(where: { $0 === controller }) else { return }
         self.controllers.removeAll { $0 === controller }
+        controller.retire { [registry = self.registry] in registry.unregister(controller) }
     }
 
     private func remember(_ index: Int?, for id: Switch2ControllerID)

@@ -17,11 +17,15 @@ final class Switch2GameController: NSObject, @preconcurrency DeltaCore.GameContr
     private var physicalInputs: [MFiGameController.Input: Double] = [:]
     private var sequence: UInt64?
     private var activationGeneration = 0
+    private var isRetired = false
+    private var isDeliveringInputs = false
+    private var releasePending = false
+    private var retirementCompletion: (() -> Void)?
 
     var playerIndex: Int? {
         willSet { if newValue != self.playerIndex { self.releaseInputs() } }
         didSet {
-            guard oldValue != self.playerIndex else { return }
+            guard !self.isRetired, oldValue != self.playerIndex else { return }
             if let index = self.playerIndex, (0..<4).contains(index)
             {
                 try? self.manager.setPlayerLEDPattern(nil, for: self.id)
@@ -41,11 +45,17 @@ final class Switch2GameController: NSObject, @preconcurrency DeltaCore.GameContr
         super.init()
     }
 
-    func update(_ controller: Switch2Controller)
+    func update(_ controller: Switch2Controller, isSnapshot: Bool = false)
     {
-        guard controller.connectionID == self.connectionID,
-              self.sequence.map({ controller.state.sequence > $0 }) ?? true else { return }
+        guard !self.isRetired, !self.isDeliveringInputs,
+              controller.id == self.id, controller.connectionID == self.connectionID,
+              self.sequence.map({ controller.state.sequence > $0 || (isSnapshot && controller.state.sequence == $0) }) ?? true else { return }
         self.sequence = controller.state.sequence
+        self.isDeliveringInputs = true
+        defer {
+            self.isDeliveringInputs = false
+            if self.releasePending { self.releaseInputs() }
+        }
         let values = Switch2InputMapping.values(model: self.model, state: controller.state)
         let released = self.physicalInputs.keys.filter { values[$0] == nil }
         let activated = values.filter { self.physicalInputs[$0.key] != $0.value }
@@ -64,8 +74,24 @@ final class Switch2GameController: NSObject, @preconcurrency DeltaCore.GameContr
     {
         self.activationGeneration &+= 1
         self.physicalInputs.removeAll()
-        self.sequence = nil
+        // DeltaCore visits every receiver synchronously. A receiver can request a
+        // stop, but releasing midway would let later receivers see a press after
+        // its release. Finish that delivery before neutralizing and unregistering.
+        guard !self.isDeliveringInputs else { self.releasePending = true; return }
+        self.releasePending = false
         for input in self.sustainedInputs.keys { self.unsustain(input) }
         for input in self.activatedInputs.keys { self.deactivate(input) }
+        let completion = self.retirementCompletion
+        self.retirementCompletion = nil
+        completion?()
+    }
+
+    func retire(completion: @escaping () -> Void)
+    {
+        guard !self.isRetired else { return }
+        self.isRetired = true
+        self.playerIndexDidChange = nil
+        self.retirementCompletion = completion
+        self.releaseInputs()
     }
 }

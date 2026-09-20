@@ -56,6 +56,7 @@ private final class Receiver: @preconcurrency GameControllerReceiver
     var presses: [String] = []
     var releases: [String] = []
     var onPress: (() -> Void)?
+    var onRelease: (() -> Void)?
     func gameController(_ gameController: GameController, didActivate input: Input, value: Double)
     {
         self.active[input.stringValue] = value
@@ -66,6 +67,7 @@ private final class Receiver: @preconcurrency GameControllerReceiver
     {
         self.active[input.stringValue] = nil
         self.releases.append(input.stringValue)
+        self.onRelease?()
     }
 }
 
@@ -100,10 +102,10 @@ final class ControllerIntegrationTests: XCTestCase
             discovery: .paused, controllers: controllers, rememberedControllers: []))
     }
 
-    private func setup(autoAssign: Bool = true) -> (Radio, GameControllerRegistry, Switch2ControllerService)
+    private func setup(autoAssign: Bool = true, notifications: NotificationCenter = NotificationCenter()) -> (Radio, GameControllerRegistry, Switch2ControllerService)
     {
         let radio = Radio()
-        let registry = GameControllerRegistry(automaticallyAssignsPlayerIndexes: autoAssign, notifications: NotificationCenter())
+        let registry = GameControllerRegistry(automaticallyAssignsPlayerIndexes: autoAssign, notifications: notifications)
         let service = Switch2ControllerService(manager: radio, registry: registry, notifications: NotificationCenter())
         service.sceneDidChange(.activate, id: "game")
         return (radio, registry, service)
@@ -448,5 +450,137 @@ final class ControllerIntegrationTests: XCTestCase
         XCTAssertEqual(values[.rightThumbstickDown], 1)
         let diagonal = Switch2InputMapping.values(model: .proController2, state: .init(leftStick: .init(x: 1, y: 1)))
         XCTAssertEqual(hypot(diagonal[.leftThumbstickRight]!, diagonal[.leftThumbstickUp]!), 1, accuracy: 0.000001)
+    }
+
+    func testStopDuringDeliveryReleasesEveryReceiverBeforeUnregistering() async
+    {
+        let notifications = NotificationCenter()
+        let (radio, registry, service) = self.setup(notifications: notifications)
+        service.findControllers()
+        radio.emit(.connected(self.device()))
+        let controller = service.controllers[0]
+        let receivers = [Receiver(), Receiver()]
+        for receiver in receivers
+        {
+            controller.addReceiver(receiver)
+            receiver.onPress = { service.stop() }
+        }
+        let token = notifications.addObserver(forName: .deltaControllerDidDisconnect, object: nil, queue: .main) { _ in
+            MainActor.assumeIsolated {
+                XCTAssertTrue(receivers.allSatisfy { $0.active.isEmpty })
+                XCTAssertTrue(controller.activatedInputs.isEmpty)
+            }
+        }
+        defer { notifications.removeObserver(token) }
+        radio.emit(.input(self.device([.a, .b, .home], sequence: 2)))
+        XCTAssertTrue(receivers.allSatisfy { $0.active.isEmpty && $0.presses.count == 1 })
+        XCTAssertTrue(service.controllers.isEmpty)
+        XCTAssertTrue(registry.connectedControllers.isEmpty)
+        await service.stopTask?.value
+    }
+
+    func testDisconnectDuringDeliveryRetiresTheWholeReport() async
+    {
+        let (radio, registry, service) = self.setup()
+        service.findControllers()
+        radio.emit(.connected(self.device()))
+        let controller = service.controllers[0]
+        let receivers = [Receiver(), Receiver()]
+        for receiver in receivers
+        {
+            controller.addReceiver(receiver)
+            receiver.onPress = { radio.emit(.disconnected(self.identity, .linkLost)) }
+        }
+        radio.emit(.input(self.device([.a, .b, .home], sequence: 2)))
+        controller.update(self.device([.a, .b, .home], sequence: 3))
+        XCTAssertTrue(receivers.allSatisfy { $0.active.isEmpty && $0.presses.count == 1 })
+        XCTAssertTrue(registry.connectedControllers.isEmpty)
+        XCTAssertTrue(service.controllers.isEmpty)
+    }
+
+    func testStopInConnectNotificationCannotLeaveGhostControllers() async
+    {
+        let notifications = NotificationCenter()
+        let (radio, registry, service) = self.setup(notifications: notifications)
+        service.findControllers()
+        let token = notifications.addObserver(forName: .deltaControllerDidConnect, object: nil, queue: .main) { _ in
+            MainActor.assumeIsolated { service.stop() }
+        }
+        defer { notifications.removeObserver(token) }
+        radio.emit(self.snapshot([self.device([.a]), self.device([.b], id: .init(rawValue: UUID()), connection: UUID())]))
+        XCTAssertTrue(service.controllers.isEmpty)
+        XCTAssertTrue(registry.connectedControllers.isEmpty)
+        await service.stopTask?.value
+        XCTAssertEqual(service.phase, .stopped)
+    }
+
+    func testPauseDuringRegistrationKeepsAssignmentTrackingWithoutApplyingInput() async
+    {
+        let notifications = NotificationCenter()
+        let (radio, _, service) = self.setup(notifications: notifications)
+        service.findControllers()
+        let token = notifications.addObserver(forName: .deltaControllerDidConnect, object: nil, queue: .main) { _ in
+            MainActor.assumeIsolated { service.sceneDidChange(.deactivate, id: "game") }
+        }
+        radio.emit(.connected(self.device([.a])))
+        notifications.removeObserver(token)
+        XCTAssertEqual(service.controllers.count, 1)
+        XCTAssertTrue(service.controllers[0].activatedInputs.isEmpty)
+        service.controllers[0].playerIndex = 2
+        service.sceneDidChange(.activate, id: "game")
+        radio.emit(self.snapshot([]))
+        radio.emit(.connected(self.device(connection: UUID())))
+        XCTAssertEqual(service.controllers[0].playerIndex, 2)
+    }
+
+    func testReassignmentDoesNotResetTheReportSequenceBoundary() async
+    {
+        let controller = Switch2GameController(controller: self.device(), manager: Radio())
+        let receiver = Receiver()
+        controller.addReceiver(receiver)
+        controller.playerIndex = 0
+        controller.update(self.device([.a], sequence: 10))
+        controller.update(self.device(sequence: 11))
+        controller.playerIndex = 1
+        controller.update(self.device([.home], sequence: 10))
+        XCTAssertTrue(receiver.active.isEmpty)
+        XCTAssertFalse(receiver.presses.contains("menu"))
+        controller.update(self.device([.b], sequence: 12))
+        XCTAssertEqual(receiver.active, ["b": 1])
+    }
+
+    func testFreshSnapshotCanRestoreHeldInputWithoutResettingSequence() async
+    {
+        let (radio, _, service) = self.setup()
+        service.findControllers()
+        radio.emit(.connected(self.device()))
+        let receiver = Receiver()
+        service.controllers[0].addReceiver(receiver)
+        radio.emit(.input(self.device([.a], sequence: 2)))
+        service.sceneDidChange(.deactivate, id: "game")
+        XCTAssertTrue(receiver.active.isEmpty)
+        service.sceneDidChange(.activate, id: "game")
+        radio.emit(self.snapshot([self.device([.a], sequence: 2)]))
+        XCTAssertEqual(receiver.active, ["a": 1])
+        radio.emit(.input(self.device([.home], sequence: 1)))
+        radio.emit(.input(self.device([.home], sequence: 3)), observer: 0)
+        XCTAssertEqual(receiver.active, ["a": 1])
+        XCTAssertEqual(receiver.presses, ["a", "a"])
+    }
+
+    func testReentrantRemovalCannotRemoveTheNextController() async
+    {
+        let registry = GameControllerRegistry(notifications: NotificationCenter())
+        let first = NativeController(), second = NativeController()
+        registry.register(first)
+        registry.register(second)
+        let receiver = Receiver()
+        first.addReceiver(receiver)
+        first.activate(MFiGameController.Input.a)
+        receiver.onRelease = { registry.unregister(first) }
+        registry.unregister(first)
+        XCTAssertEqual(registry.connectedControllers.count, 1)
+        XCTAssertTrue(registry.connectedControllers.first === second)
+        XCTAssertTrue(receiver.active.isEmpty)
     }
 }

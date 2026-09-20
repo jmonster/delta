@@ -64,10 +64,12 @@ final class GameControllerRegistry
 
     func unregister(_ controller: GameController)
     {
-        guard let index = self.connectedControllers.firstIndex(where: { $0 === controller }) else { return }
+        guard self.connectedControllers.contains(where: { $0 === controller }) else { return }
         // Release before removing the controller, while its receivers are still attached.
         for input in controller.sustainedInputs.keys { controller.unsustain(input) }
         for input in controller.activatedInputs.keys { controller.deactivate(input) }
+        // Receiver callbacks may have already removed this or another controller.
+        guard let index = self.connectedControllers.firstIndex(where: { $0 === controller }) else { return }
         self.connectedControllers.remove(at: index)
         self.notifications.post(name: .deltaControllerDidDisconnect, object: controller)
     }
