@@ -1,0 +1,73 @@
+name: Switch2Kit iOS integration
+on:
+  pull_request:
+    paths:
+      - 'Integrations/Switch2Kit/**'
+      - 'Delta/**'
+      - 'Delta.xcodeproj/**'
+      - 'Delta.xcworkspace/**'
+      - 'Cores/DeltaCore'
+      - '.gitmodules'
+      - '.github/workflows/switch2kit.yml'
+  push:
+    branches: [main, 'switch2kit/**']
+    paths:
+      - 'Integrations/Switch2Kit/**'
+      - 'Delta/**'
+      - 'Delta.xcodeproj/**'
+      - 'Delta.xcworkspace/**'
+      - 'Cores/DeltaCore'
+      - '.gitmodules'
+      - '.github/workflows/switch2kit.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: switch2kit-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  input-policy:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Input mappings and configuration regressions
+        run: |
+          swift test --package-path Integrations/Switch2Kit
+          python3 -m unittest discover -s Integrations/Switch2Kit/tests -v
+          bash -n Integrations/Switch2Kit/select-xcode.sh
+  native:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Select Xcode with Swift 6.2 or newer
+        run: bash Integrations/Switch2Kit/select-xcode.sh
+      - name: Initialize pinned public dependencies
+        run: git -c url.https://github.com/.insteadOf=git@github.com: submodule update --init --recursive
+      - name: Test real Switch2Kit input bridge on macOS
+        run: swift test --package-path Integrations/Switch2Kit/Engine
+      - name: Compile shared engine for iOS Simulator
+        working-directory: Integrations/Switch2Kit/Engine
+        run: >-
+          xcodebuild -scheme DeltaSwitch2Bridge -destination 'generic/platform=iOS Simulator'
+          -derivedDataPath ../../../build/switch2kit-engine CODE_SIGNING_ALLOWED=NO build
+      - name: Configure opt-in Delta application
+        run: |
+          python3 Integrations/Switch2Kit/configure.py
+          plutil -lint Delta-Switch2Kit.xcodeproj/project.pbxproj
+          git diff --exit-code -- Delta.xcodeproj Delta.xcworkspace 'Delta/Supporting Files/Info.plist'
+      - name: Build complete iOS Simulator application
+        run: >-
+          xcodebuild -workspace Delta-Switch2Kit.xcworkspace -scheme Delta
+          -configuration Debug -destination 'generic/platform=iOS Simulator'
+          -derivedDataPath build/switch2kit-app CODE_SIGNING_ALLOWED=NO build
+      - name: Verify reversible DeltaCore overlay
+        if: always()
+        run: |
+          if test -f 'Cores/DeltaCore/DeltaCore/Game Controllers/ExternalGameControllerManager.swift'; then
+            python3 Integrations/Switch2Kit/configure.py --restore-core
+            git -C Cores/DeltaCore diff --exit-code
+          fi

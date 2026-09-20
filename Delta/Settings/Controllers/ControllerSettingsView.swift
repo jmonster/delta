@@ -26,6 +26,13 @@ struct ControllerSettingsView: View
                     LabeledContent("Player \(playerIndex + 1)", value: controllerNames[playerIndex] ?? "")
                 }
             }
+            #if DELTA_SWITCH2KIT
+            Section {
+                NavigationLink("Switch 2 Controllers") {
+                    Switch2ControllersView()
+                }
+            }
+            #endif
         }
         .tint(.accentColor)
         .navigationTitle("Controllers")
