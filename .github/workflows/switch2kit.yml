@@ -37,6 +37,7 @@ jobs:
           swift test --package-path Integrations/Switch2Kit
           python3 -m unittest discover -s Integrations/Switch2Kit/tests -v
           bash -n Integrations/Switch2Kit/select-xcode.sh
+          ruby -e "require 'yaml'; YAML.parse_file(ARGV.first)" .github/workflows/switch2kit.yml
   native:
     runs-on: macos-15
     steps:
@@ -46,7 +47,8 @@ jobs:
       - name: Select Xcode with Swift 6.2 or newer
         run: bash Integrations/Switch2Kit/select-xcode.sh
       - name: Initialize pinned public dependencies
-        run: git -c url.https://github.com/.insteadOf=git@github.com: submodule update --init --recursive
+        run: |
+          git -c url.https://github.com/.insteadOf=git@github.com: submodule update --init --recursive
       - name: Test real Switch2Kit input bridge on macOS
         run: swift test --package-path Integrations/Switch2Kit/Engine
       - name: Compile shared engine for iOS Simulator
