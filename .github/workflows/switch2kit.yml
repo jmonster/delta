@@ -2,12 +2,12 @@ name: Switch2Kit integration
 on:
   pull_request:
   push:
-    branches: [main]
+    branches: [main, 'switch2kit/**']
   workflow_dispatch:
 permissions:
   contents: read
 concurrency:
-  group: switch2kit-${{ github.event.pull_request.number || github.ref }}
+  group: switch2kit-${{ github.event.pull_request.head.ref || github.ref_name }}
   cancel-in-progress: true
 jobs:
   native:
