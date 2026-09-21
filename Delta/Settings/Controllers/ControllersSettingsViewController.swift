@@ -64,7 +64,7 @@ class ControllersSettingsViewController: UITableViewController
             else
             {
                 // Ensure it's still a discovered controller, or else it might crash when setting player index.
-                if ExternalGameControllerManager.shared.connectedControllers.contains(where: { $0 === oldValue })
+                if GameControllerRegistry.shared.connectedControllers.contains(where: { $0 === oldValue })
                 {
                     oldValue?.playerIndex = nil
                 }
@@ -74,7 +74,7 @@ class ControllersSettingsViewController: UITableViewController
         }
     }
     
-    private var connectedControllers = ExternalGameControllerManager.shared.connectedControllers.sorted(by: { $0.playerIndex ?? NSIntegerMax < $1.playerIndex ?? NSIntegerMax })
+    private var connectedControllers = GameControllerRegistry.shared.connectedControllers.sorted(by: { $0.playerIndex ?? NSIntegerMax < $1.playerIndex ?? NSIntegerMax })
     
     private lazy var localDeviceController: LocalDeviceController = {
         let device = LocalDeviceController()
@@ -87,8 +87,8 @@ class ControllersSettingsViewController: UITableViewController
     {
         super.init(coder: aDecoder)
         
-        NotificationCenter.default.addObserver(self, selector: #selector(ControllersSettingsViewController.externalGameControllerDidConnect(_:)), name: .externalGameControllerDidConnect, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(ControllersSettingsViewController.externalGameControllerDidDisconnect(_:)), name: .externalGameControllerDidDisconnect, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(ControllersSettingsViewController.externalGameControllerDidConnect(_:)), name: .deltaControllerDidConnect, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(ControllersSettingsViewController.externalGameControllerDidDisconnect(_:)), name: .deltaControllerDidDisconnect, object: nil)
     }
 
     override func viewDidLoad()
@@ -208,68 +208,21 @@ private extension ControllersSettingsViewController
     @objc func externalGameControllerDidConnect(_ notification: Notification)
     {
         guard let controller = notification.object as? GameController else { return }
-        
-        if let playerIndex = controller.playerIndex
-        {
-            // Keep connected controllers sorted.
-            
-            self.connectedControllers.insert(controller, at: playerIndex)
+        self.connectedControllers = GameControllerRegistry.shared.connectedControllers.sorted {
+            ($0.playerIndex ?? NSIntegerMax) < ($1.playerIndex ?? NSIntegerMax)
         }
-        else
-        {
-            self.connectedControllers.append(controller)
-        }
-        
-        self.tableView.beginUpdates()
-        
-        if let index = self.connectedControllers.firstIndex(where: { $0 == controller })
-        {
-            if self.connectedControllers.count == 1 && self.connectedControllers.first?.playerIndex == self.playerIndex
-            {
-                self.tableView.deleteRows(at: [IndexPath(row: 0, section: Section.externalControllers.rawValue)], with: .automatic)
-            }
-            
-            self.tableView.insertRows(at: [IndexPath(row: index, section: Section.externalControllers.rawValue)], with: .automatic)
-        }
-        
-        if controller.playerIndex == self.playerIndex
-        {
-            self.gameController = controller
-            
-            self.tableView.reloadSections(IndexSet(integer: Section.localDevice.rawValue), with: .none)
-            self.tableView.insertSections(IndexSet(integer: Section.customizeControls.rawValue), with: .none)
-        }
-        
-        self.tableView.endUpdates()
+        if controller.playerIndex == self.playerIndex { self.gameController = controller }
+        self.tableView.reloadData()
     }
-    
+
     @objc func externalGameControllerDidDisconnect(_ notification: Notification)
     {
         guard let controller = notification.object as? GameController else { return }
-        
-        self.tableView.beginUpdates()
-        
-        if let index = self.connectedControllers.firstIndex(where: { $0 == controller })
-        {
-            self.connectedControllers.remove(at: index)
-            
-            if self.connectedControllers.count == 0 && controller.playerIndex != nil
-            {
-                self.tableView.insertRows(at: [IndexPath(row: 0, section: Section.externalControllers.rawValue)], with: .automatic)
-            }
-            
-            self.tableView.deleteRows(at: [IndexPath(row: index, section: Section.externalControllers.rawValue)], with: .automatic)
+        self.connectedControllers = GameControllerRegistry.shared.connectedControllers.sorted {
+            ($0.playerIndex ?? NSIntegerMax) < ($1.playerIndex ?? NSIntegerMax)
         }
-        
-        if controller.playerIndex == self.playerIndex
-        {
-            self.gameController = self.localDeviceController
-            
-            self.tableView.reloadSections(IndexSet(integer: Section.localDevice.rawValue), with: .none)
-            self.tableView.deleteSections(IndexSet(integer: Section.customizeControls.rawValue), with: .none)
-        }
-        
-        self.tableView.endUpdates()
+        if controller.playerIndex == self.playerIndex { self.gameController = self.localDeviceController }
+        self.tableView.reloadData()
     }
 }
 
@@ -361,6 +314,8 @@ extension ControllersSettingsViewController
             return
         }
         
+        GameControllerRegistry.shared.assignmentDidChange()
+
         let previousIndexPath: IndexPath?
         
         if let gameController = previousGameController

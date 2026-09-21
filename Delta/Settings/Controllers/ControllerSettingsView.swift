@@ -11,7 +11,7 @@ import DeltaCore
 
 struct ControllerSettingsView: View
 {
-    private var connectedControllers: [GameController] { ExternalGameControllerManager.shared.connectedControllers }
+    private var connectedControllers: [GameController] { GameControllerRegistry.shared.connectedControllers }
     
     @SwiftUI.State
     private var controllerNames = [Int: String]() // Player index → assigned controller name
@@ -26,10 +26,16 @@ struct ControllerSettingsView: View
                     LabeledContent("Player \(playerIndex + 1)", value: controllerNames[playerIndex] ?? "")
                 }
             }
+            Section {
+                NavigationLink("Switch 2 Controllers") {
+                    Switch2ControllersView()
+                }
+            }
         }
         .tint(.accentColor)
         .navigationTitle("Controllers")
         .navigationBarTitleDisplayMode(.inline)
+        .onReceive(NotificationCenter.default.publisher(for: .deltaControllerAssignmentDidChange)) { _ in updateControllerNames() }
         .onAppear(perform: updateControllerNames)
         .onChange(of: connectedControllers as NSArray) { updateControllerNames() } // Cast to NSArray which is equatable
         .onReceive(NotificationCenter.default.publisher(for: Settings.didChangeNotification)) { notification in

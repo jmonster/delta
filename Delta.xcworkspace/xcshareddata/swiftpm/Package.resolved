@@ -2,6 +2,14 @@
   "originHash" : "c4ebf555d28d802ecbbc488a66ef1c55f4891343949a0fefab9fca439c9df89b",
   "pins" : [
     {
+      "identity" : "switch2kit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/jmonster/Switch2Kit.git",
+      "state" : {
+        "revision" : "de2514bc687df810ea804449c8d5c0e88c4702bd"
+      }
+    },
+    {
       "identity" : "altkit",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/altstoreio/AltKit.git",

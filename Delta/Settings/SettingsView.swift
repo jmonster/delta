@@ -77,7 +77,7 @@ struct SettingsView: View
 private struct ControlsSection: View
 {
     @SwiftUI.State
-    private var gameControllerManager: ExternalGameControllerManager = .shared
+    private var gameControllerManager: GameControllerRegistry = .shared
 
     var body: some View {
         Section("Controls") {
