@@ -1,8 +1,10 @@
 # Delta
 
+**This fork of Delta adds Nintendo Switch 2 controller support via [Switch2Kit](https://github.com/jmonster/Switch2Kit).**
+
 > Delta is an all-in-one classic video game emulator for non-jailbroken iOS devices. 
 
-[![Swift Version](https://img.shields.io/badge/swift-5.0-orange.svg)](https://swift.org/)
+[![Swift Version](https://img.shields.io/badge/swift-6.2%2B-orange.svg)](https://swift.org/)
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
 
@@ -36,9 +38,11 @@ Delta is an iOS application that allows you to emulate and play video games for 
     - Automatically displays appropriate box art for imported games.
     - Change a game’s artwork to anything you want, or select from the built-in game artwork database.
 - Controller Support
+    - Experimental Bluetooth support for the Nintendo Switch 2 Pro Controller, Nintendo Switch Online GameCube controller, and individual Joy-Con 2 controllers held horizontally.
+    - Connect Switch 2 controllers from **Settings → Controllers → Switch 2 Controllers → Find**, then hold **Sync**. See the [Switch 2 controller guide](Docs/Switch2Controllers.md) for setup and limitations.
     - Supports PS4, PS5, Xbox One S, Xbox Series X, and MFi game controllers.
     - Supports bluetooth (and wired) keyboards, as well as the Apple Smart Keyboard.
-    - Completely customize button mappings on a per-system, per-controller basis.
+    - Completely customize button mappings on a per-system, per-controller basis, including Switch 2 controllers.
     - Map buttons to special “Quick Save”, “Quick Load,” and “Fast Forward” actions.
 - Custom Controller Skins
     - Beautiful built-in controller skins for all systems.
@@ -47,10 +51,10 @@ Delta is an iOS application that allows you to emulate and play video games for 
     - Save and load save states for any game from the pause menu.
     - Lock save states to prevent them from being accidentally overwritten.
     - Automatically makes backup save states to ensure you never lose your progress.
-    - Support for “Quick Saves,” save states that can be quickly saved/loaded with a single button press (requires external controller).
+    - Support for “Quick Saves,” save states that can be quickly saved/loaded with a single button press (requires a supported external controller, including Switch 2 controllers).
 - Fast Forwarding
     - Speed through slower parts of games by running the game much faster than normal.
-    - Easily enable or disable from the pause menu, or optionally with a mapped button on an external controller.
+    - Easily enable or disable from the pause menu, or optionally with a mapped button on an external controller, including Switch 2 controllers.
 - Delta Sync
     - Sync your games, game saves, save states, cheats, controller skins, and controller mappings between devices.
     - View version histories of everything you sync and optionally restore them to earlier versions.
@@ -83,6 +87,8 @@ Delta is an iOS application that allows you to emulate and play video games for 
 
 ## Installation
 
+**For this fork’s Switch 2 support, [build this repository](#compilation-instructions).** The upstream installation instructions and release links below install standard Delta, not this fork.
+
 <p align="center">
   <img src="https://user-images.githubusercontent.com/705880/114452847-c1db4980-9b8d-11eb-8f8f-de7998562222.png" width=100px height=100px>
 </p>
@@ -104,8 +110,11 @@ Alternatively, you are welcome to download the compiled `.ipa`'s from [Releases]
 
 Delta was designed from the beginning to be modular, and for that reason each "Delta Core" has its own GitHub repo and is added as a submodule to the main Delta project. Additionally, Delta uses two of my own private frameworks I use to share common functionality between my apps: Roxas and Harmony.
 
-[**Delta**](https://github.com/rileytestut/Delta)  
+[**Delta (this fork)**](https://github.com/jmonster/delta)  
 Delta is just a regular, sandboxed iOS application. The Delta app repo (aka this one) contains all the code specific to the Delta app itself, such as storyboards, app-specific view controllers, database logic, etc.
+
+[**Switch2Kit**](https://github.com/jmonster/Switch2Kit)  
+This fork consumes the Switch2Kit Swift package directly for Switch 2 Bluetooth connections and controller state. Delta maps its inputs into the existing player-assignment and Customize Controls interfaces.
 
 [**DeltaCore**](https://github.com/rileytestut/DeltaCore)  
 DeltaCore serves as the “middle-man” between the high-level app code and the specific emulation cores. By working with this framework, you have access to all the core Delta features, such as emulation, controller skins, save states, cheat codes, etc. Other potential emulator apps will use this framework extensively.
@@ -127,9 +136,9 @@ Each system in Delta is implemented as its own "Delta Core", which serves as a s
 - [GPGXDeltaCore](https://github.com/rileytestut/GPGXDeltaCore)
 
 ## Minimum Project Requirements
-- Xcode 15
-- Swift 5.9
-- iOS 14.0
+- Xcode 26 or newer
+- Swift 6.2 or newer
+- iOS/iPadOS 18 or newer
 
 ## Compilation Instructions
 
@@ -137,13 +146,13 @@ Each system in Delta is implemented as its own "Delta Core", which serves as a s
 
 1. Clone this repository by running the following command in Terminal*  
 ```bash
-$ git clone https://github.com/rileytestut/Delta.git
+$ git clone https://github.com/jmonster/delta.git Delta
 ```  
 
 2. Update Git submodules
 ```bash
 $ cd Delta
-$ git submodule update --init --recursive
+$ git -c url.https://github.com/.insteadOf=git@github.com: submodule update --init --recursive
 ```  
 
 3. Open `Systems/Systems.xcworkspace` and select the "Systems" project in the project navigator (a.k.a. the left sidebar).
