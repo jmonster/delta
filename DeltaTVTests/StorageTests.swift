@@ -299,6 +299,106 @@ struct StorageTests
         try require(!timer.isAvailableLocally(timerGame), "ROM-only offline cache was incorrectly playable after save eviction")
         passed += 1
 
+        // Both live files can exist yet belong to different native-core checkpoints.
+        let reconcileCloud = FakeCloud()
+        let reconcileRoot = directory.appendingPathComponent("reconcile")
+        var reconcile = try TVLibraryStore(rootURL: reconcileRoot, cloud: reconcileCloud)
+        let reconcileGame = try await reconcile.importGame(at: rom, title: "Reconcile", system: "gb")
+        try Data([31]).write(to: reconcile.batterySaveURL(for: reconcileGame))
+        try Data([32]).write(to: reconcile.batteryRTCURL(for: reconcileGame))
+        try reconcile.stageBatterySave(for: reconcileGame)
+        await reconcile.synchronize()
+        try Data([99]).write(to: reconcile.batterySaveURL(for: reconcileGame))
+        try require(reconcile.isAvailableLocally(reconcileGame), "Torn-write fixture must have both files present")
+        try await reconcile.prepareForLaunch(reconcileGame)
+        try require(tryData(reconcile.batterySaveURL(for: reconcileGame)) == Data([31]) && tryData(reconcile.batteryRTCURL(for: reconcileGame)) == Data([32]), "Torn native pair did not reconcile to journal checkpoint")
+        try require(reconcile.status.pendingCount == 0 && reconcile.hasCloudBackup(reconcileGame), "Reconciliation changed acknowledged journal state")
+        passed += 1
+
+        // A newer pending checkpoint, rather than the older cloud version, is authoritative.
+        try Data([33]).write(to: reconcile.batterySaveURL(for: reconcileGame))
+        try Data([34]).write(to: reconcile.batteryRTCURL(for: reconcileGame))
+        try reconcile.stageBatterySave(for: reconcileGame)
+        try Data([99]).write(to: reconcile.batteryRTCURL(for: reconcileGame))
+        try await reconcile.prepareForLaunch(reconcileGame)
+        try require(tryData(reconcile.batterySaveURL(for: reconcileGame)) == Data([33]) && tryData(reconcile.batteryRTCURL(for: reconcileGame)) == Data([34]), "Reconciliation discarded newer offline progress")
+        try require(reconcile.status.pendingCount == 1 && !reconcile.hasCloudBackup(reconcileGame), "Reconciliation falsely acknowledged pending data")
+        passed += 1
+
+        // Never replace files while any core is active.
+        reconcile.activeGameID = reconcileGame.id
+        try Data([97]).write(to: reconcile.batterySaveURL(for: reconcileGame))
+        do { try await reconcile.prepareForLaunch(reconcileGame); throw TestFailure.failed("Prepared active game's files") }
+        catch TVCloudError.unavailable { }
+        try require(tryData(reconcile.batterySaveURL(for: reconcileGame)) == Data([97]), "Reconciliation touched an active core's files")
+        reconcile.activeGameID = nil
+        passed += 1
+
+        // Missing pending bundle is an explicit block, even when both live files survive.
+        let currentFiles = try FileManager.default.contentsOfDirectory(at: reconcileRoot.appendingPathComponent("Staged"), includingPropertiesForKeys: nil)
+        let pendingSnapshot = currentFiles.first { $0.lastPathComponent.contains(".batterySave.battery.") }!
+        try FileManager.default.removeItem(at: pendingSnapshot)
+        do { try await reconcile.prepareForLaunch(reconcileGame); throw TestFailure.failed("Started without authoritative pending checkpoint") }
+        catch TVCloudError.unavailable { }
+        try require(!reconcile.isAvailableLocally(reconcileGame) && reconcile.status.phase == .error && reconcile.status.pendingCount == 1, "Missing pending checkpoint was not blocked truthfully")
+        reconcile = try TVLibraryStore(rootURL: reconcileRoot, cloud: reconcileCloud)
+        try require(!reconcile.isAvailableLocally(reconcileGame) && reconcile.status.phase == .error && reconcile.status.pendingCount == 1, "Restart discarded blocked pending checkpoint")
+        passed += 1
+
+        // A missing acknowledged bundle can be recovered online before launching.
+        let recoveredRoot = directory.appendingPathComponent("recoveredCheckpoint")
+        let recovered = try TVLibraryStore(rootURL: recoveredRoot, cloud: reconcileCloud)
+        await recovered.restore()
+        let acknowledgedRecord = reconcileCloud.values.values.first { $0.0.kind == .batterySave }!.0
+        let acknowledgedSnapshot = recoveredRoot.appendingPathComponent("Staged/\(acknowledgedRecord.id).\(acknowledgedRecord.revision)")
+        try FileManager.default.removeItem(at: acknowledgedSnapshot)
+        do { try await recovered.prepareForLaunch(reconcileGame); throw TestFailure.failed("Trusted mixed live pair with missing checkpoint") }
+        catch TVCloudError.unavailable { }
+        try require(!recovered.isAvailableLocally(reconcileGame), "Missing acknowledged checkpoint did not block launch")
+        await recovered.restore()
+        try await recovered.prepareForLaunch(reconcileGame)
+        try require(recovered.isAvailableLocally(reconcileGame) && tryData(recovered.batterySaveURL(for: reconcileGame)) == Data([31]), "Acknowledged checkpoint did not recover from cloud")
+        passed += 1
+
+        // A process crash between reconciliation's renames preserves pending status on restart.
+        try Data([35]).write(to: recovered.batterySaveURL(for: reconcileGame))
+        try Data([36]).write(to: recovered.batteryRTCURL(for: reconcileGame))
+        try recovered.stageBatterySave(for: reconcileGame)
+        let journalData = try Data(contentsOf: recoveredRoot.appendingPathComponent("library.json"))
+        let journalObject = try JSONSerialization.jsonObject(with: journalData) as! [String: Any]
+        let entries = journalObject["entries"] as! [String: Any]
+        let batteryEntry = entries[acknowledgedRecord.id] as! [String: Any]
+        let pendingRecordData = try JSONSerialization.data(withJSONObject: batteryEntry["record"]!)
+        let pendingRecord = try JSONDecoder().decode(TVCloudRecord.self, from: pendingRecordData)
+        struct ReconciliationMarker: Codable { let record: TVCloudRecord; let expectedRevision: String?; let acknowledgesCloudRevision: Bool }
+        let interruptedMarker = recoveredRoot.appendingPathComponent("RestoringBattery/\(pendingRecord.id).json")
+        try FileManager.default.createDirectory(at: interruptedMarker.deletingLastPathComponent(), withIntermediateDirectories: true)
+        try JSONEncoder().encode(ReconciliationMarker(record: pendingRecord, expectedRevision: pendingRecord.revision, acknowledgesCloudRevision: false)).write(to: interruptedMarker)
+        try Data([96]).write(to: recovered.batteryRTCURL(for: reconcileGame))
+        let replayed = try TVLibraryStore(rootURL: recoveredRoot, cloud: reconcileCloud)
+        try require(tryData(replayed.batterySaveURL(for: reconcileGame)) == Data([35]) && tryData(replayed.batteryRTCURL(for: reconcileGame)) == Data([36]), "Interrupted reconciliation did not repair the pair")
+        try require(replayed.status.pendingCount == 1 && !replayed.hasCloudBackup(reconcileGame), "Reconciliation marker replay falsely acknowledged offline data")
+        passed += 1
+
+        // Timer-only checkpoints remove stale RAM and restore their recorded clock.
+        try Data([88]).write(to: timer.batterySaveURL(for: timerGame))
+        try Data([89]).write(to: timer.batteryRTCURL(for: timerGame))
+        try await timer.prepareForLaunch(timerGame)
+        try require(!FileManager.default.fileExists(atPath: timer.batterySaveURL(for: timerGame).path) && tryData(timer.batteryRTCURL(for: timerGame)) == Data([1, 2, 3, 4]), "Timer-only reconciliation retained unrelated RAM")
+        passed += 1
+
+        // Independent review: pre-cancelled launch preparation must not publish files or markers.
+        try Data([77]).write(to: replayed.batterySaveURL(for: reconcileGame))
+        try Data([78]).write(to: replayed.batteryRTCURL(for: reconcileGame))
+        let cancelledPreparation = Task { @MainActor in try await replayed.prepareForLaunch(reconcileGame) }
+        cancelledPreparation.cancel()
+        do { try await cancelledPreparation.value; throw TestFailure.failed("Cancelled preparation unexpectedly succeeded") }
+        catch is CancellationError { }
+        try require(tryData(replayed.batterySaveURL(for: reconcileGame)) == Data([77]) && tryData(replayed.batteryRTCURL(for: reconcileGame)) == Data([78]), "Cancelled preparation changed live files")
+        try require(!FileManager.default.fileExists(atPath: interruptedMarker.path), "Cancelled preparation created a publication marker")
+        try require(replayed.status.pendingCount == 1 && !replayed.hasCloudBackup(reconcileGame), "Cancellation changed pending acknowledgment")
+        passed += 1
+
         print("PASS: \(passed) storage scenarios (offline/restart, cold + partial purge, conflicts, in-flight saves, ambiguous acknowledgments, account isolation, bounded queue, untrusted paths)")
     }
 

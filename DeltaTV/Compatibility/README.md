@@ -22,4 +22,4 @@ Five DeltaCore copies provide tvOS playback audio, public scene-focus checks, pu
 
 ## Verification limits
 
-Historical Linux checks exercised the real C++ core with original synthetic cartridges and parsed the selected Swift sources. These are not commercial-game or Apple TV validation. Apple SDK compilation, Objective-C/Swift interoperability, Metal/audio output, and physical controller behavior require Xcode and device testing. tvOS caches remain purgeable; durable progress requires external backup.
+Initial Xcode 27 unsigned tvOS Simulator/device builds passed. A local Simulator harness using these built frameworks verified real GB/GBC ROM frame output, audio samples, input and save roundtrips. ROMs were not published. Physical Apple TV display/audio and paired-controller behavior remain unverified. tvOS caches remain purgeable; durable progress requires external backup.

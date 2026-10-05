@@ -154,6 +154,11 @@ final class TVApplicationCoordinator
         if !store.isAvailableLocally(game) { await refresh() }
         try Task.checkCancellation()
         guard isSceneActive, lifecycleGeneration == generation else { throw TVEmulationSession.SessionError.sceneInactive }
+        // A force-quit can interrupt the native SAV/RTC pair between writes.
+        // Reopen only a coherent journaled checkpoint, including pending saves.
+        try await store.prepareForLaunch(game)
+        try Task.checkCancellation()
+        guard isSceneActive, lifecycleGeneration == generation else { throw TVEmulationSession.SessionError.sceneInactive }
         guard store.isAvailableLocally(game) else { throw TVEmulationSession.SessionError.incompleteRecovery }
         store.activeGameID = game.id
         do

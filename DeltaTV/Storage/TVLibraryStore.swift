@@ -24,6 +24,8 @@ final class TVLibraryStore
     {
         let record: TVCloudRecord
         let expectedRevision: String?
+        // Absent on old cloud-restore markers; false preserves a local pending checkpoint.
+        var acknowledgesCloudRevision: Bool?
     }
 
     private struct Journal: Codable
@@ -94,11 +96,14 @@ final class TVLibraryStore
                 if FileManager.default.fileExists(atPath: snapshotURL(record).path)
                 {
                     try installBattery(record, from: snapshotURL(record))
-                    if targetIsCurrent { journal.entries[record.id] = Entry(record: record, acknowledgedRevision: record.revision, pending: false) }
+                    if targetIsCurrent && publication.acknowledgesCloudRevision != false
+                    {
+                        journal.entries[record.id] = Entry(record: record, acknowledgedRevision: record.revision, pending: false)
+                    }
                     try persist()
                     try FileManager.default.removeItem(at: marker)
                 }
-                else if targetIsCurrent
+                else if targetIsCurrent && publication.acknowledgesCloudRevision != false
                 {
                     // A partial purge can remove the downloaded snapshot too. Retain the
                     // marker and cloud metadata; no launch until restore repairs the pair.
@@ -141,6 +146,58 @@ final class TVLibraryStore
         if let battery = journal.entries["\(game.id).batterySave.battery"] { return isLiveAssetAvailable(battery.record) }
         return true
     }
+    /// Before opening a core, rebuild its live RAM/RTC pair from the last journaled
+    /// checkpoint. File existence cannot detect a crash between the core's two writes.
+    func prepareForLaunch(_ game: TVGame) async throws
+    {
+        guard activeGameID == nil else { throw TVCloudError.unavailable("Stop the active game before preparing another checkpoint.") }
+        guard let entry = journal.entries["\(game.id).batterySave.battery"] else { return }
+        let record = entry.record
+        let prepared: TVPreparedBattery
+        do
+        {
+            prepared = try await TVFileWorker.shared.prepareBattery(from: snapshotURL(record), record: record,
+                maximumBytes: limits.maximumSaveBytes, beside: batterySaveURL(for: game))
+        }
+        catch is CancellationError { throw CancellationError() }
+        catch
+        {
+            // A concurrent stage or game launch owns the new state. Do not mark or touch it.
+            guard activeGameID == nil, journal.entries[record.id]?.record.revision == record.revision else { throw error }
+            try writePublicationMarker(record, acknowledgesCloudRevision: false)
+            let detail = entry.pending
+                ? "The latest unsynced battery checkpoint is unavailable. Its live files cannot safely be used; keep this game stopped."
+                : "The saved battery checkpoint is unavailable locally. Restore it from iCloud before playing."
+            status = TVCloudStatus(phase: .error, message: detail, pendingCount: pendingCount, conflictCount: conflicts.count)
+            onChange?()
+            throw TVCloudError.unavailable(detail)
+        }
+        defer { try? FileManager.default.removeItem(at: prepared.directory) }
+        try Task.checkCancellation()
+        guard activeGameID == nil, journal.entries[record.id]?.record.revision == record.revision else
+        {
+            throw TVCloudError.unavailable("Progress changed while preparing this game. Try launching again.")
+        }
+        do
+        {
+            try writePublicationMarker(record, acknowledgesCloudRevision: false)
+            if let save = prepared.save { try Self.installPrepared(save, at: batterySaveURL(for: game)) }
+            else { try removeIfPresent(batterySaveURL(for: game)) }
+            if let rtc = prepared.rtc { try Self.installPrepared(rtc, at: batteryRTCURL(for: game)) }
+            else { try removeIfPresent(batteryRTCURL(for: game)) }
+            // The journal and acknowledgment remain exactly as they were, including a
+            // newer pending revision. The marker makes a crash between renames repairable.
+            finishPublication(record)
+            updateStatus()
+        }
+        catch
+        {
+            status = TVCloudStatus(phase: .error, message: "The battery checkpoint could not be prepared. This game must stay stopped until recovery succeeds.", pendingCount: pendingCount, conflictCount: conflicts.count)
+            onChange?()
+            throw error
+        }
+    }
+
     func hasSaveState(_ game: TVGame, slot: String = "resume") -> Bool {
         FileManager.default.fileExists(atPath: saveStateURL(for: game, slot: slot).path)
     }
@@ -475,12 +532,22 @@ final class TVLibraryStore
     {
         if record.kind == .batterySave
         {
-            let marker = publicationMarker(record)
-            try FileManager.default.createDirectory(at: marker.deletingLastPathComponent(), withIntermediateDirectories: true)
-            try JSONEncoder().encode(BatteryPublication(record: record, expectedRevision: journal.entries[record.id]?.record.revision)).write(to: marker, options: .atomic)
+            try writePublicationMarker(record, acknowledgesCloudRevision: true)
             try installBattery(record, from: prepared)
         }
         else { try Self.installPrepared(prepared, at: liveURL(record)) }
+    }
+    private func writePublicationMarker(_ record: TVCloudRecord, acknowledgesCloudRevision: Bool) throws
+    {
+        let marker = publicationMarker(record)
+        try FileManager.default.createDirectory(at: marker.deletingLastPathComponent(), withIntermediateDirectories: true)
+        let publication = BatteryPublication(record: record, expectedRevision: journal.entries[record.id]?.record.revision,
+            acknowledgesCloudRevision: acknowledgesCloudRevision)
+        try JSONEncoder().encode(publication).write(to: marker, options: .atomic)
+    }
+    private func removeIfPresent(_ url: URL) throws
+    {
+        if FileManager.default.fileExists(atPath: url.path) { try FileManager.default.removeItem(at: url) }
     }
     private func finishPublication(_ record: TVCloudRecord)
     {
@@ -488,11 +555,7 @@ final class TVLibraryStore
     }
     private func installBattery(_ record: TVCloudRecord, from source: URL) throws
     {
-        let snapshot = try PropertyListDecoder().decode(TVBatterySnapshot.self, from: Data(contentsOf: source))
-        guard snapshot.formatVersion == 1, !snapshot.save.isEmpty || snapshot.rtc?.isEmpty == false,
-              !snapshot.save.isEmpty == record.hasBatteryRAM,
-              (snapshot.rtc != nil) == record.hasRTC,
-              snapshot.save.count + (snapshot.rtc?.count ?? 0) <= limits.maximumSaveBytes else { throw TVCloudError.invalidRecord }
+        let snapshot = try Self.decodeBattery(from: source, record: record, maximumBytes: limits.maximumSaveBytes)
         let saveURL = batterySaveURL(for: record.game)
         let rtcURL = batteryRTCURL(for: record.game)
         try FileManager.default.createDirectory(at: saveURL.deletingLastPathComponent(), withIntermediateDirectories: true)
@@ -500,6 +563,18 @@ final class TVLibraryStore
         else if FileManager.default.fileExists(atPath: saveURL.path) { try FileManager.default.removeItem(at: saveURL) }
         if let rtc = snapshot.rtc { try rtc.write(to: rtcURL, options: .atomic) }
         else if FileManager.default.fileExists(atPath: rtcURL.path) { try FileManager.default.removeItem(at: rtcURL) }
+    }
+
+    nonisolated static func decodeBattery(from source: URL, record: TVCloudRecord, maximumBytes: Int64) throws -> TVBatterySnapshot
+    {
+        let size = try source.resourceValues(forKeys: [.fileSizeKey]).fileSize ?? 0
+        guard size > 0, size <= maximumBytes else { throw TVCloudError.missingAsset }
+        let snapshot = try PropertyListDecoder().decode(TVBatterySnapshot.self, from: Data(contentsOf: source))
+        guard snapshot.formatVersion == 1, !snapshot.save.isEmpty || snapshot.rtc?.isEmpty == false,
+              !snapshot.save.isEmpty == record.hasBatteryRAM,
+              (snapshot.rtc != nil) == record.hasRTC,
+              snapshot.save.count + (snapshot.rtc?.count ?? 0) <= maximumBytes else { throw TVCloudError.invalidRecord }
+        return snapshot
     }
 
     private func validateDownloadedAsset(_ record: TVCloudRecord, at url: URL) throws
@@ -539,6 +614,11 @@ final class TVLibraryStore
         {
             phase = .unavailable
             message = "iCloud is not configured. Files exist only in this Apple TV's purgeable cache."
+        }
+        else if journal.entries.values.contains(where: { $0.record.kind == .batterySave && FileManager.default.fileExists(atPath: publicationMarker($0.record).path) })
+        {
+            phase = .error
+            message = "A battery checkpoint needs recovery before this game can start. Missing unsynced checkpoints cannot be recovered from iCloud."
         }
         else if !missingCloudRecords.isEmpty
         {
@@ -610,11 +690,40 @@ final class TVLibraryStore
     }
 }
 
+struct TVPreparedBattery: Sendable
+{
+    let directory: URL
+    let save: URL?
+    let rtc: URL?
+}
+
 /// Serial bounded disk work stays off the UI actor. Publication is an atomic rename on
 /// the store's actor only after its revision/account/active-game checks are repeated.
 actor TVFileWorker
 {
     static let shared = TVFileWorker()
+    func prepareBattery(from source: URL, record: TVCloudRecord, maximumBytes: Int64, beside destination: URL) throws -> TVPreparedBattery
+    {
+        try Task.checkCancellation()
+        let snapshot = try TVLibraryStore.decodeBattery(from: source, record: record, maximumBytes: maximumBytes)
+        let directory = destination.deletingLastPathComponent().appendingPathComponent(UUID().uuidString + ".checkpoint", isDirectory: true)
+        try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+        do
+        {
+            let save = snapshot.save.isEmpty ? nil : directory.appendingPathComponent("battery.sav")
+            let rtc = snapshot.rtc == nil ? nil : directory.appendingPathComponent("battery.rtc")
+            if let save = save { try snapshot.save.write(to: save, options: .atomic) }
+            if let rtc = rtc, let data = snapshot.rtc { try data.write(to: rtc, options: .atomic) }
+            try Task.checkCancellation()
+            return TVPreparedBattery(directory: directory, save: save, rtc: rtc)
+        }
+        catch
+        {
+            try? FileManager.default.removeItem(at: directory)
+            throw error
+        }
+    }
+
     func copy(_ source: URL, to destination: URL) throws
     {
         try Task.checkCancellation()

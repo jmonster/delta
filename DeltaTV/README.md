@@ -33,4 +33,6 @@ bash DeltaTVTests/run-storage-tests.sh
 bash DeltaTVTests/run-import-tests.sh
 ```
 
-The new app uses Swift 6 with complete strict-concurrency checking; upstream framework targets retain Swift 5. Portable storage/import tests and tvOS-target syntax checks pass. These do not establish Apple SDK compilation, working physical-controller gameplay or live iCloud recovery. Check the relevant build result and complete the [device acceptance checklist](UI/VALIDATION.md) before release.
+The new app uses Swift 6 with complete strict-concurrency checking; upstream framework targets retain Swift 5. Thirty storage scenarios and import-policy tests pass.
+
+Initial Xcode 27 unsigned Simulator/device builds passed. The Simulator app opened a privately seeded GB/GBC library; a separate built-framework harness verified real-ROM frame output, non-silent audio samples, input, state reload and battery RAM. ROMs stayed local. The launch-reconciliation update still needs its final Apple build rerun. Physical-controller gameplay, device installation and signed iCloud recovery remain unverified; complete the [acceptance checklist](UI/VALIDATION.md) before release.

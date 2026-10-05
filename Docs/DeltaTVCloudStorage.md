@@ -32,11 +32,11 @@ DeltaTVTests/run-storage-tests.sh
 SWIFTC=/absolute/path/to/swiftc DeltaTVTests/run-storage-tests.sh
 ```
 
-The 22 scenarios pass with Swift 6, complete concurrency checking, and warnings as errors. They use a fake transport, so they do not prove CloudKit runtime behavior.
+The 30 scenarios pass with Swift 6, complete concurrency checking, and warnings as errors. They use a fake transport, so they do not prove CloudKit runtime behavior.
 
-Still required: actual Apple SDK compilation; signed-device upload/acknowledgment; reinstall recovery; concurrent-device conflicts; quota/throttle, cancellation, and account-change tests.
+Initial Xcode 27 unsigned Simulator/device builds passed. Still required: the final-source Apple build rerun; signed-device upload/acknowledgment; reinstall recovery; concurrent-device conflicts; quota/throttle, cancellation and account-change tests.
 
-Cloud restore's interrupted battery/RTC publication is tested. Native-core writes are separate: a crash before staging can leave mixed live files. Before release, reconcile the inactive game's pair from its current journaled bundle, preserving newer pending progress, and test that interruption. Do not claim native checkpoint crash atomicity yet.
+Before launch, the app reconciles inactive battery/RTC files from the current journaled checkpoint, preserving pending progress. Tests cover interrupted publication, mixed native files, missing components, cancellation and newer revisions. A crash before a new checkpoint can still lose recent play; this does not make native-core writes transactional or prove live iCloud durability.
 
 ## Official guidance
 

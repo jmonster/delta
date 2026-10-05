@@ -112,7 +112,7 @@ final class TVCloudKitTransport: TVCloudTransport
         try TVLibraryStore.validate(record)
         do
         {
-            let remote: CKRecord
+            var remote: CKRecord
             do
             {
                 remote = try await database.record(for: recordID(record.id))

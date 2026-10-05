@@ -1,12 +1,12 @@
 # Apple TV acceptance checklist
 
-Import-policy logic tests pass with Swift 6 strict concurrency checking:
-`bash DeltaTVTests/run-import-tests.sh`. UI syntax parsing also passes.
-Apple SDK compilation, simulator interaction, physical Apple TV behavior, and
-live CloudKit recovery have not been verified here. Logic tests do not replace
-these checks.
+Import-policy tests pass with Swift 6 strict concurrency checking:
+`bash DeltaTVTests/run-import-tests.sh`. Initial Xcode 27 unsigned Simulator/device
+builds and Simulator library launch passed. Full focus/control flows, physical
+Apple TV behavior and live CloudKit recovery still require the checks below.
 
-Use a legal homebrew ROM and a development iCloud account/container.
+Use a ROM you are entitled to test and a development iCloud account/container.
+Keep private ROMs out of commits, CI and shared artifacts.
 
 - Start with an empty cache and unavailable iCloud. Show no invented games or
   completed backups; keep Import, Restore, and account errors accessible.
