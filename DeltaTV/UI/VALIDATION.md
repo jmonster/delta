@@ -4,8 +4,9 @@ Import-policy tests pass with Swift 6 strict concurrency checking:
 `bash DeltaTVTests/run-import-tests.sh`. The final production code passed local
 Xcode 27 unsigned Simulator/device builds and actual-ROM automation for video,
 input, audio-sample processing, state reload and fresh battery/RTC restoration.
-Physical-controller gameplay, audible listening, device installation, live
-CloudKit recovery and process-kill testing remain unverified.
+Signed-device backup acknowledgment and byte-identical CloudKit recovery also
+passed in the Development environment; see [verification scope and remaining
+release gates](../../Docs/DeltaTVCloudStorage.md#verification-and-release-gates).
 
 Use a ROM you are entitled to test and a development iCloud account/container.
 Keep private ROMs out of commits, CI and shared artifacts.
