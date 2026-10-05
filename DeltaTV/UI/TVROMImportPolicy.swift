@@ -36,7 +36,10 @@ enum TVROMImportPolicy
     /// logo, so independently produced homebrew remains importable.
     static func validateGameBoyROM(at url: URL) throws
     {
-        let values = try url.resourceValues(forKeys: [.fileSizeKey, .isRegularFileKey])
+        // Foundation caches URL metadata; validate the current file after download or replacement.
+        var currentURL = url
+        currentURL.removeAllCachedResourceValues()
+        let values = try currentURL.resourceValues(forKeys: [.fileSizeKey, .isRegularFileKey])
         guard values.isRegularFile == true,
               let byteCount = values.fileSize, byteCount >= 0x150,
               byteCount <= maximumBytes else

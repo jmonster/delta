@@ -35,4 +35,4 @@ bash DeltaTVTests/run-import-tests.sh
 
 The new app uses Swift 6 with complete strict-concurrency checking; upstream framework targets retain Swift 5. Thirty storage scenarios and import-policy tests pass.
 
-Initial Xcode 27 unsigned Simulator/device builds passed. The Simulator app opened a privately seeded GB/GBC library; a separate built-framework harness verified real-ROM frame output, non-silent audio samples, input, state reload and battery RAM. ROMs stayed local. The launch-reconciliation update still needs its final Apple build rerun. Physical-controller gameplay, device installation and signed iCloud recovery remain unverified; complete the [acceptance checklist](UI/VALIDATION.md) before release.
+The final production code passed local Xcode 27 unsigned Simulator/device builds and real GB/GBC/RTC-cartridge automation for video, input, audio-sample processing, state reload and fresh battery/RTC restoration. ROMs stayed local. Physical-controller gameplay, audible listening, device installation, live CloudKit recovery and process-kill testing remain unverified; complete the [acceptance checklist](UI/VALIDATION.md) before release.

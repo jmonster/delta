@@ -1,9 +1,11 @@
 # Apple TV acceptance checklist
 
 Import-policy tests pass with Swift 6 strict concurrency checking:
-`bash DeltaTVTests/run-import-tests.sh`. Initial Xcode 27 unsigned Simulator/device
-builds and Simulator library launch passed. Full focus/control flows, physical
-Apple TV behavior and live CloudKit recovery still require the checks below.
+`bash DeltaTVTests/run-import-tests.sh`. The final production code passed local
+Xcode 27 unsigned Simulator/device builds and actual-ROM automation for video,
+input, audio-sample processing, state reload and fresh battery/RTC restoration.
+Physical-controller gameplay, audible listening, device installation, live
+CloudKit recovery and process-kill testing remain unverified.
 
 Use a ROM you are entitled to test and a development iCloud account/container.
 Keep private ROMs out of commits, CI and shared artifacts.
