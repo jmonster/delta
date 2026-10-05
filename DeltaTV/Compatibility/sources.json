@@ -1,0 +1,144 @@
+{
+  "upstream": {
+    "DeltaCore": "633dfa86967816315fe19b482511dab1ce517f28",
+    "GBCDeltaCore": "0871ccaad2bbd7cbd2de0ce06f9e26dc3d1bfdde",
+    "gambatte": "f8a810b103c4549f66035dd2be4279c8f0d95e77"
+  },
+  "DeltaCore": {
+    "sources": [
+      "Cores/DeltaCore/DeltaCore/Cores/DeltaCoreProtocol.swift",
+      "Cores/DeltaCore/DeltaCore/Cores/EmulatorBridging.swift",
+      "Cores/DeltaCore/DeltaCore/DeltaTypes.m",
+      "Cores/DeltaCore/DeltaCore/Emulator Core/Audio/RingBuffer.swift",
+      "Cores/DeltaCore/DeltaCore/Emulator Core/Video/BitmapProcessor.swift",
+      "Cores/DeltaCore/DeltaCore/Emulator Core/Video/OpenGLESProcessor.swift",
+      "Cores/DeltaCore/DeltaCore/Emulator Core/Video/RenderThread.swift",
+      "Cores/DeltaCore/DeltaCore/Emulator Core/Video/VideoFormat.swift",
+      "Cores/DeltaCore/DeltaCore/Emulator Core/Video/VideoManager.swift",
+      "Cores/DeltaCore/DeltaCore/Extensions/Bundle+Resources.swift",
+      "Cores/DeltaCore/DeltaCore/Extensions/CGGeometry+Conveniences.swift",
+      "Cores/DeltaCore/DeltaCore/Extensions/CharacterSet+Hexadecimals.swift",
+      "Cores/DeltaCore/DeltaCore/Extensions/Thread+RealTime.swift",
+      "DeltaTV/Compatibility/DeltaCore/Game Controllers/MFi/MFiGameController.swift",
+      "Cores/DeltaCore/DeltaCore/Model/Cheat.swift",
+      "Cores/DeltaCore/DeltaCore/Model/CheatFormat.swift",
+      "Cores/DeltaCore/DeltaCore/Model/Game.swift",
+      "Cores/DeltaCore/DeltaCore/Model/GameControllerInputMapping.swift",
+      "Cores/DeltaCore/DeltaCore/Model/GameControllerStateManager.swift",
+      "Cores/DeltaCore/DeltaCore/Model/Inputs/AnyInput.swift",
+      "Cores/DeltaCore/DeltaCore/Model/Inputs/StandardGameControllerInput.swift",
+      "Cores/DeltaCore/DeltaCore/Model/SaveState.swift",
+      "Cores/DeltaCore/DeltaCore/Protocols/Inputs/GameController.swift",
+      "Cores/DeltaCore/DeltaCore/Protocols/Inputs/Input.swift",
+      "Cores/DeltaCore/DeltaCore/Protocols/Model/CheatProtocol.swift",
+      "Cores/DeltaCore/DeltaCore/Protocols/Model/GameControllerInputMappingProtocol.swift",
+      "Cores/DeltaCore/DeltaCore/Protocols/Model/GameProtocol.swift",
+      "Cores/DeltaCore/DeltaCore/Protocols/Model/SaveStateProtocol.swift",
+      "Cores/DeltaCore/DeltaCore/Protocols/Rendering/AudioRendering.swift",
+      "Cores/DeltaCore/DeltaCore/Protocols/Rendering/VideoRendering.swift",
+      "Cores/DeltaCore/DeltaCore/Types/ExtensibleEnums.swift",
+      "DeltaTV/Compatibility/DeltaCore/Delta.swift",
+      "DeltaTV/Compatibility/DeltaCore/Emulator Core/Audio/AudioManager.swift",
+      "DeltaTV/Compatibility/DeltaCore/Emulator Core/EmulatorCore.swift",
+      "DeltaTV/Compatibility/DeltaCore/UI/Game/GameView.swift"
+    ],
+    "publicHeaders": [
+      "Cores/DeltaCore/DeltaCore/DeltaCore.h",
+      "Cores/DeltaCore/DeltaCore/DeltaTypes.h",
+      "Cores/DeltaCore/DeltaCore/Emulator Core/Audio/DLTAMuteSwitchMonitor.h"
+    ],
+    "resources": [
+      "Cores/DeltaCore/DeltaCore/Supporting Files/MFiGameController.deltamapping"
+    ],
+    "swiftConditions": [
+      "FRAMEWORK"
+    ],
+    "cDefines": [
+      "FRAMEWORK",
+      "GLES_SILENCE_DEPRECATION",
+      "CI_SILENCE_GL_DEPRECATION"
+    ],
+    "frameworks": [
+      "UIKit",
+      "AVFoundation",
+      "AudioToolbox",
+      "CoreImage",
+      "CoreGraphics",
+      "Metal",
+      "MetalKit",
+      "GLKit",
+      "OpenGLES",
+      "GameController",
+      "Accelerate"
+    ]
+  },
+  "GBCDeltaCore": {
+    "sources": [
+      "Cores/GBCDeltaCore/GBCDeltaCore/Bridge/GBCInputGetter.cpp",
+      "Cores/GBCDeltaCore/GBCDeltaCore/GBC.swift",
+      "Cores/GBCDeltaCore/GBCDeltaCore/Model/GBCCheat.m",
+      "Cores/GBCDeltaCore/GBCDeltaCore/Model/GBCPalette.m",
+      "Cores/GBCDeltaCore/GBCDeltaCore/Types/GBCTypes.m",
+      "Cores/GBCDeltaCore/gambatte/libgambatte/src/bitmap_font.cpp",
+      "Cores/GBCDeltaCore/gambatte/libgambatte/src/cpu.cpp",
+      "Cores/GBCDeltaCore/gambatte/libgambatte/src/file/file.cpp",
+      "Cores/GBCDeltaCore/gambatte/libgambatte/src/gambatte.cpp",
+      "Cores/GBCDeltaCore/gambatte/libgambatte/src/initstate.cpp",
+      "Cores/GBCDeltaCore/gambatte/libgambatte/src/interrupter.cpp",
+      "Cores/GBCDeltaCore/gambatte/libgambatte/src/interruptrequester.cpp",
+      "Cores/GBCDeltaCore/gambatte/libgambatte/src/loadres.cpp",
+      "Cores/GBCDeltaCore/gambatte/libgambatte/src/mem/cartridge.cpp",
+      "Cores/GBCDeltaCore/gambatte/libgambatte/src/mem/memptrs.cpp",
+      "Cores/GBCDeltaCore/gambatte/libgambatte/src/mem/pakinfo.cpp",
+      "Cores/GBCDeltaCore/gambatte/libgambatte/src/mem/rtc.cpp",
+      "Cores/GBCDeltaCore/gambatte/libgambatte/src/memory.cpp",
+      "Cores/GBCDeltaCore/gambatte/libgambatte/src/sound.cpp",
+      "Cores/GBCDeltaCore/gambatte/libgambatte/src/sound/channel1.cpp",
+      "Cores/GBCDeltaCore/gambatte/libgambatte/src/sound/channel2.cpp",
+      "Cores/GBCDeltaCore/gambatte/libgambatte/src/sound/channel3.cpp",
+      "Cores/GBCDeltaCore/gambatte/libgambatte/src/sound/channel4.cpp",
+      "Cores/GBCDeltaCore/gambatte/libgambatte/src/sound/duty_unit.cpp",
+      "Cores/GBCDeltaCore/gambatte/libgambatte/src/sound/envelope_unit.cpp",
+      "Cores/GBCDeltaCore/gambatte/libgambatte/src/sound/length_counter.cpp",
+      "Cores/GBCDeltaCore/gambatte/libgambatte/src/state_osd_elements.cpp",
+      "Cores/GBCDeltaCore/gambatte/libgambatte/src/statesaver.cpp",
+      "Cores/GBCDeltaCore/gambatte/libgambatte/src/tima.cpp",
+      "Cores/GBCDeltaCore/gambatte/libgambatte/src/video.cpp",
+      "Cores/GBCDeltaCore/gambatte/libgambatte/src/video/ly_counter.cpp",
+      "Cores/GBCDeltaCore/gambatte/libgambatte/src/video/lyc_irq.cpp",
+      "Cores/GBCDeltaCore/gambatte/libgambatte/src/video/next_m0_time.cpp",
+      "Cores/GBCDeltaCore/gambatte/libgambatte/src/video/ppu.cpp",
+      "Cores/GBCDeltaCore/gambatte/libgambatte/src/video/sprite_mapper.cpp",
+      "DeltaTV/Compatibility/GBCDeltaCore/Bridge/GBCEmulatorBridge.mm"
+    ],
+    "publicHeaders": [
+      "Cores/GBCDeltaCore/GBCDeltaCore/GBCDeltaCore.h",
+      "Cores/GBCDeltaCore/GBCDeltaCore/Types/GBCTypes.h",
+      "DeltaTV/Compatibility/GBCDeltaCore/Bridge/GBCEmulatorBridge.h",
+      "Cores/GBCDeltaCore/GBCDeltaCore/Model/GBCPalette.h"
+    ],
+    "resources": [
+      "Cores/GBCDeltaCore/GBCDeltaCore/Standard.deltamapping"
+    ],
+    "headerSearchPaths": [
+      "Cores/GBCDeltaCore/gambatte/libgambatte/include",
+      "Cores/GBCDeltaCore/gambatte/libgambatte/src",
+      "Cores/GBCDeltaCore/gambatte/common",
+      "Cores/GBCDeltaCore/GBCDeltaCore/Model",
+      "Cores/GBCDeltaCore/GBCDeltaCore/Bridge"
+    ],
+    "cDefines": [
+      "HAVE_CSTDINT"
+    ],
+    "cxxStandard": "gnu++14",
+    "frameworks": [
+      "DeltaCore",
+      "Foundation",
+      "UIKit",
+      "AVFoundation"
+    ],
+    "libraries": [
+      "c++"
+    ]
+  }
+}

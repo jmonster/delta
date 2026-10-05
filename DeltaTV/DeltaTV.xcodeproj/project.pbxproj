@@ -1,0 +1,2063 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+		5FC0FE0B348105E3758597B0 = {
+			isa = PBXFileReference;
+			explicitFileType = wrapper.framework;
+			includeInIndex = 0;
+			path = DeltaCore.framework;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		618115B1DF466695AC502B77 = {
+			isa = PBXFileReference;
+			explicitFileType = wrapper.framework;
+			includeInIndex = 0;
+			path = GBCDeltaCore.framework;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		238D702259BFDDB77BD1D68A = {
+			isa = PBXFileReference;
+			explicitFileType = wrapper.application;
+			includeInIndex = 0;
+			path = DeltaTV.app;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		0FF0EF9E6262CB21CA6A7BDF = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.swift;
+			path = ../Cores/DeltaCore/DeltaCore/Cores/DeltaCoreProtocol.swift;
+			sourceTree = "<group>";
+		};
+		809DC7C6FF9AB0051188BD85 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.swift;
+			path = ../Cores/DeltaCore/DeltaCore/Cores/EmulatorBridging.swift;
+			sourceTree = "<group>";
+		};
+		8ACF5D617555801C1029B417 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			path = ../Cores/DeltaCore/DeltaCore/DeltaTypes.m;
+			sourceTree = "<group>";
+		};
+		0770926CCCA286E6B49E86AB = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.swift;
+			path = "../Cores/DeltaCore/DeltaCore/Emulator Core/Audio/RingBuffer.swift";
+			sourceTree = "<group>";
+		};
+		CBDB2A40ED2C799A642EA698 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.swift;
+			path = "../Cores/DeltaCore/DeltaCore/Emulator Core/Video/BitmapProcessor.swift";
+			sourceTree = "<group>";
+		};
+		57645619664A451C945AA6C6 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.swift;
+			path = "../Cores/DeltaCore/DeltaCore/Emulator Core/Video/OpenGLESProcessor.swift";
+			sourceTree = "<group>";
+		};
+		23A5ABB8A40C06A4537C1003 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.swift;
+			path = "../Cores/DeltaCore/DeltaCore/Emulator Core/Video/RenderThread.swift";
+			sourceTree = "<group>";
+		};
+		69C84D910246A5A87AADACA8 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.swift;
+			path = "../Cores/DeltaCore/DeltaCore/Emulator Core/Video/VideoFormat.swift";
+			sourceTree = "<group>";
+		};
+		5408D7294F8A2FEAB9680662 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.swift;
+			path = "../Cores/DeltaCore/DeltaCore/Emulator Core/Video/VideoManager.swift";
+			sourceTree = "<group>";
+		};
+		00EFB0C4F0971DA2533D0835 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.swift;
+			path = "../Cores/DeltaCore/DeltaCore/Extensions/Bundle+Resources.swift";
+			sourceTree = "<group>";
+		};
+		B82C0E35D8F50215C8452711 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.swift;
+			path = "../Cores/DeltaCore/DeltaCore/Extensions/CGGeometry+Conveniences.swift";
+			sourceTree = "<group>";
+		};
+		E50AF933770B3BD0E3A2733A = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.swift;
+			path = "../Cores/DeltaCore/DeltaCore/Extensions/CharacterSet+Hexadecimals.swift";
+			sourceTree = "<group>";
+		};
+		A38F7654F51568647CCB9AA4 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.swift;
+			path = "../Cores/DeltaCore/DeltaCore/Extensions/Thread+RealTime.swift";
+			sourceTree = "<group>";
+		};
+		564AD38DD3507D7D766F67F9 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.swift;
+			path = "Compatibility/DeltaCore/Game Controllers/MFi/MFiGameController.swift";
+			sourceTree = "<group>";
+		};
+		6AE247288FE0467EC6F189CB = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.swift;
+			path = ../Cores/DeltaCore/DeltaCore/Model/Cheat.swift;
+			sourceTree = "<group>";
+		};
+		A9A553FC4C69D44AAE881E14 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.swift;
+			path = ../Cores/DeltaCore/DeltaCore/Model/CheatFormat.swift;
+			sourceTree = "<group>";
+		};
+		E3A9D203773102D5EFFA13B0 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.swift;
+			path = ../Cores/DeltaCore/DeltaCore/Model/Game.swift;
+			sourceTree = "<group>";
+		};
+		E949588CBEDEB82F635A9DE3 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.swift;
+			path = ../Cores/DeltaCore/DeltaCore/Model/GameControllerInputMapping.swift;
+			sourceTree = "<group>";
+		};
+		CA6F418C085DAD5CB4492DF3 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.swift;
+			path = ../Cores/DeltaCore/DeltaCore/Model/GameControllerStateManager.swift;
+			sourceTree = "<group>";
+		};
+		45CEE5FEB4C65CE88AF8355D = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.swift;
+			path = ../Cores/DeltaCore/DeltaCore/Model/Inputs/AnyInput.swift;
+			sourceTree = "<group>";
+		};
+		A90EFB812B761AA564AC47C6 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.swift;
+			path = ../Cores/DeltaCore/DeltaCore/Model/Inputs/StandardGameControllerInput.swift;
+			sourceTree = "<group>";
+		};
+		80EA82BAA131CDDA31B5CA0F = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.swift;
+			path = ../Cores/DeltaCore/DeltaCore/Model/SaveState.swift;
+			sourceTree = "<group>";
+		};
+		80722B9946F89ED89AD8F43C = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.swift;
+			path = ../Cores/DeltaCore/DeltaCore/Protocols/Inputs/GameController.swift;
+			sourceTree = "<group>";
+		};
+		9E8C55BBD9ABD7D593A4F37D = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.swift;
+			path = ../Cores/DeltaCore/DeltaCore/Protocols/Inputs/Input.swift;
+			sourceTree = "<group>";
+		};
+		50EA8733EC1E108B0BA44A3C = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.swift;
+			path = ../Cores/DeltaCore/DeltaCore/Protocols/Model/CheatProtocol.swift;
+			sourceTree = "<group>";
+		};
+		B443E81E5BD83D806946D9E7 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.swift;
+			path = ../Cores/DeltaCore/DeltaCore/Protocols/Model/GameControllerInputMappingProtocol.swift;
+			sourceTree = "<group>";
+		};
+		F1398E4CB4E39012A7607D10 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.swift;
+			path = ../Cores/DeltaCore/DeltaCore/Protocols/Model/GameProtocol.swift;
+			sourceTree = "<group>";
+		};
+		2FDCCF257D306A9BC5061EDE = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.swift;
+			path = ../Cores/DeltaCore/DeltaCore/Protocols/Model/SaveStateProtocol.swift;
+			sourceTree = "<group>";
+		};
+		14DB3DA79E821C0F7C5F3F1D = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.swift;
+			path = ../Cores/DeltaCore/DeltaCore/Protocols/Rendering/AudioRendering.swift;
+			sourceTree = "<group>";
+		};
+		D6A7AB7992EC690ED1B28719 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.swift;
+			path = ../Cores/DeltaCore/DeltaCore/Protocols/Rendering/VideoRendering.swift;
+			sourceTree = "<group>";
+		};
+		6BC5802E5FBB15DD39F04601 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.swift;
+			path = ../Cores/DeltaCore/DeltaCore/Types/ExtensibleEnums.swift;
+			sourceTree = "<group>";
+		};
+		BF15C7526106B91EA827D680 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.swift;
+			path = Compatibility/DeltaCore/Delta.swift;
+			sourceTree = "<group>";
+		};
+		18DCD511777B5A62B99CC0BA = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.swift;
+			path = "Compatibility/DeltaCore/Emulator Core/Audio/AudioManager.swift";
+			sourceTree = "<group>";
+		};
+		4419C180B89A6C8B99AAE26C = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.swift;
+			path = "Compatibility/DeltaCore/Emulator Core/EmulatorCore.swift";
+			sourceTree = "<group>";
+		};
+		ADD01F8ACE47EC5635710BE0 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.swift;
+			path = Compatibility/DeltaCore/UI/Game/GameView.swift;
+			sourceTree = "<group>";
+		};
+		51E9CBD49A33AD5C4CD9E02C = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = ../Cores/DeltaCore/DeltaCore/DeltaCore.h;
+			sourceTree = "<group>";
+		};
+		68F187DFF40244381226C895 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = ../Cores/DeltaCore/DeltaCore/DeltaTypes.h;
+			sourceTree = "<group>";
+		};
+		DFEECCEDA42981767DD1F4D0 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = "../Cores/DeltaCore/DeltaCore/Emulator Core/Audio/DLTAMuteSwitchMonitor.h";
+			sourceTree = "<group>";
+		};
+		1D33AB4F0515DA6AF1C2E320 = {
+			isa = PBXFileReference;
+			lastKnownFileType = file;
+			path = "../Cores/DeltaCore/DeltaCore/Supporting Files/MFiGameController.deltamapping";
+			sourceTree = "<group>";
+		};
+		80E4BFAED1F23D56CAB178A1 = {
+			isa = PBXGroup;
+			children = (
+				0FF0EF9E6262CB21CA6A7BDF,
+				809DC7C6FF9AB0051188BD85,
+				8ACF5D617555801C1029B417,
+				0770926CCCA286E6B49E86AB,
+				CBDB2A40ED2C799A642EA698,
+				57645619664A451C945AA6C6,
+				23A5ABB8A40C06A4537C1003,
+				69C84D910246A5A87AADACA8,
+				5408D7294F8A2FEAB9680662,
+				00EFB0C4F0971DA2533D0835,
+				B82C0E35D8F50215C8452711,
+				E50AF933770B3BD0E3A2733A,
+				A38F7654F51568647CCB9AA4,
+				564AD38DD3507D7D766F67F9,
+				6AE247288FE0467EC6F189CB,
+				A9A553FC4C69D44AAE881E14,
+				E3A9D203773102D5EFFA13B0,
+				E949588CBEDEB82F635A9DE3,
+				CA6F418C085DAD5CB4492DF3,
+				45CEE5FEB4C65CE88AF8355D,
+				A90EFB812B761AA564AC47C6,
+				80EA82BAA131CDDA31B5CA0F,
+				80722B9946F89ED89AD8F43C,
+				9E8C55BBD9ABD7D593A4F37D,
+				50EA8733EC1E108B0BA44A3C,
+				B443E81E5BD83D806946D9E7,
+				F1398E4CB4E39012A7607D10,
+				2FDCCF257D306A9BC5061EDE,
+				14DB3DA79E821C0F7C5F3F1D,
+				D6A7AB7992EC690ED1B28719,
+				6BC5802E5FBB15DD39F04601,
+				BF15C7526106B91EA827D680,
+				18DCD511777B5A62B99CC0BA,
+				4419C180B89A6C8B99AAE26C,
+				ADD01F8ACE47EC5635710BE0,
+				51E9CBD49A33AD5C4CD9E02C,
+				68F187DFF40244381226C895,
+				DFEECCEDA42981767DD1F4D0,
+				1D33AB4F0515DA6AF1C2E320,
+			);
+			name = DeltaCore;
+			sourceTree = "<group>";
+		};
+		DCA1EF9F8B0005D049BD5B9F = {
+			isa = PBXBuildFile;
+			fileRef = 0FF0EF9E6262CB21CA6A7BDF;
+		};
+		D23FFE50F87BDBF5DCDA5BA2 = {
+			isa = PBXBuildFile;
+			fileRef = 809DC7C6FF9AB0051188BD85;
+		};
+		2C9FC622FBA08232371CE60E = {
+			isa = PBXBuildFile;
+			fileRef = 8ACF5D617555801C1029B417;
+		};
+		67C561B01DACCA230912B286 = {
+			isa = PBXBuildFile;
+			fileRef = 0770926CCCA286E6B49E86AB;
+		};
+		E8C22129EE84EA71D15C942F = {
+			isa = PBXBuildFile;
+			fileRef = CBDB2A40ED2C799A642EA698;
+		};
+		74E37E17BE89042F4F3922EC = {
+			isa = PBXBuildFile;
+			fileRef = 57645619664A451C945AA6C6;
+		};
+		F88F4A7BE5FB48DFCA4D0E13 = {
+			isa = PBXBuildFile;
+			fileRef = 23A5ABB8A40C06A4537C1003;
+		};
+		0A2D9D9139F7AB47640302FF = {
+			isa = PBXBuildFile;
+			fileRef = 69C84D910246A5A87AADACA8;
+		};
+		52942B5AD529A7B00B2D7B77 = {
+			isa = PBXBuildFile;
+			fileRef = 5408D7294F8A2FEAB9680662;
+		};
+		27B25E2C144768D0D67FB5E9 = {
+			isa = PBXBuildFile;
+			fileRef = 00EFB0C4F0971DA2533D0835;
+		};
+		0A900DA1D329435779767E1A = {
+			isa = PBXBuildFile;
+			fileRef = B82C0E35D8F50215C8452711;
+		};
+		D1843B0ECEB349057414CFF8 = {
+			isa = PBXBuildFile;
+			fileRef = E50AF933770B3BD0E3A2733A;
+		};
+		ED81A1EE8954A11529B82756 = {
+			isa = PBXBuildFile;
+			fileRef = A38F7654F51568647CCB9AA4;
+		};
+		92B9504FBA77B535F5C9FFB7 = {
+			isa = PBXBuildFile;
+			fileRef = 564AD38DD3507D7D766F67F9;
+		};
+		4004870698AABC3B02E58186 = {
+			isa = PBXBuildFile;
+			fileRef = 6AE247288FE0467EC6F189CB;
+		};
+		02DF1209D53A9110B4F8A3A7 = {
+			isa = PBXBuildFile;
+			fileRef = A9A553FC4C69D44AAE881E14;
+		};
+		162841C470D2034753B1949C = {
+			isa = PBXBuildFile;
+			fileRef = E3A9D203773102D5EFFA13B0;
+		};
+		EB9710DF3EE3030D76501598 = {
+			isa = PBXBuildFile;
+			fileRef = E949588CBEDEB82F635A9DE3;
+		};
+		9CE6D3AFA3FFF5FC2877B00F = {
+			isa = PBXBuildFile;
+			fileRef = CA6F418C085DAD5CB4492DF3;
+		};
+		00A4B6252DCF650E246BCEAA = {
+			isa = PBXBuildFile;
+			fileRef = 45CEE5FEB4C65CE88AF8355D;
+		};
+		2A5AE4AA6E53445D3D32584C = {
+			isa = PBXBuildFile;
+			fileRef = A90EFB812B761AA564AC47C6;
+		};
+		7FC01709F480C6CF4ADF5CEA = {
+			isa = PBXBuildFile;
+			fileRef = 80EA82BAA131CDDA31B5CA0F;
+		};
+		D905AEEF4E28A5D7CFEF11B0 = {
+			isa = PBXBuildFile;
+			fileRef = 80722B9946F89ED89AD8F43C;
+		};
+		95B8A4104E93A636DF74B39F = {
+			isa = PBXBuildFile;
+			fileRef = 9E8C55BBD9ABD7D593A4F37D;
+		};
+		17EFE7B4341D9A46C6C7CB73 = {
+			isa = PBXBuildFile;
+			fileRef = 50EA8733EC1E108B0BA44A3C;
+		};
+		3F994923F7B9AA763EED495D = {
+			isa = PBXBuildFile;
+			fileRef = B443E81E5BD83D806946D9E7;
+		};
+		2467A1FCF5D3A1940F220F7D = {
+			isa = PBXBuildFile;
+			fileRef = F1398E4CB4E39012A7607D10;
+		};
+		29CAFDFB05D0E30BD93D5F11 = {
+			isa = PBXBuildFile;
+			fileRef = 2FDCCF257D306A9BC5061EDE;
+		};
+		BD812A21378DEDA85C8A0A94 = {
+			isa = PBXBuildFile;
+			fileRef = 14DB3DA79E821C0F7C5F3F1D;
+		};
+		BF85BA92A4AC70778CF4E7E7 = {
+			isa = PBXBuildFile;
+			fileRef = D6A7AB7992EC690ED1B28719;
+		};
+		B8C6C08362D2AC8BEFD43457 = {
+			isa = PBXBuildFile;
+			fileRef = 6BC5802E5FBB15DD39F04601;
+		};
+		E04B5AF55E73A675A5E438C4 = {
+			isa = PBXBuildFile;
+			fileRef = BF15C7526106B91EA827D680;
+		};
+		25E2A3855DFC257EEF7AA8FB = {
+			isa = PBXBuildFile;
+			fileRef = 18DCD511777B5A62B99CC0BA;
+		};
+		3E7528DB8001F72F7A75AEF6 = {
+			isa = PBXBuildFile;
+			fileRef = 4419C180B89A6C8B99AAE26C;
+		};
+		B76B52D59459793BE42F7FDA = {
+			isa = PBXBuildFile;
+			fileRef = ADD01F8ACE47EC5635710BE0;
+		};
+		041AD61E1F310A3328201AF9 = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DCA1EF9F8B0005D049BD5B9F,
+				D23FFE50F87BDBF5DCDA5BA2,
+				2C9FC622FBA08232371CE60E,
+				67C561B01DACCA230912B286,
+				E8C22129EE84EA71D15C942F,
+				74E37E17BE89042F4F3922EC,
+				F88F4A7BE5FB48DFCA4D0E13,
+				0A2D9D9139F7AB47640302FF,
+				52942B5AD529A7B00B2D7B77,
+				27B25E2C144768D0D67FB5E9,
+				0A900DA1D329435779767E1A,
+				D1843B0ECEB349057414CFF8,
+				ED81A1EE8954A11529B82756,
+				92B9504FBA77B535F5C9FFB7,
+				4004870698AABC3B02E58186,
+				02DF1209D53A9110B4F8A3A7,
+				162841C470D2034753B1949C,
+				EB9710DF3EE3030D76501598,
+				9CE6D3AFA3FFF5FC2877B00F,
+				00A4B6252DCF650E246BCEAA,
+				2A5AE4AA6E53445D3D32584C,
+				7FC01709F480C6CF4ADF5CEA,
+				D905AEEF4E28A5D7CFEF11B0,
+				95B8A4104E93A636DF74B39F,
+				17EFE7B4341D9A46C6C7CB73,
+				3F994923F7B9AA763EED495D,
+				2467A1FCF5D3A1940F220F7D,
+				29CAFDFB05D0E30BD93D5F11,
+				BD812A21378DEDA85C8A0A94,
+				BF85BA92A4AC70778CF4E7E7,
+				B8C6C08362D2AC8BEFD43457,
+				E04B5AF55E73A675A5E438C4,
+				25E2A3855DFC257EEF7AA8FB,
+				3E7528DB8001F72F7A75AEF6,
+				B76B52D59459793BE42F7FDA,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A204D2816A68DB3BB556FFA0 = {
+			isa = PBXBuildFile;
+			fileRef = 51E9CBD49A33AD5C4CD9E02C;
+			settings = {
+				ATTRIBUTES = (
+					Public,
+				);
+			};
+		};
+		36A4DFC3BE822B65B49B341D = {
+			isa = PBXBuildFile;
+			fileRef = 68F187DFF40244381226C895;
+			settings = {
+				ATTRIBUTES = (
+					Public,
+				);
+			};
+		};
+		2326FF11C996F17D87C5C6B6 = {
+			isa = PBXBuildFile;
+			fileRef = DFEECCEDA42981767DD1F4D0;
+			settings = {
+				ATTRIBUTES = (
+					Public,
+				);
+			};
+		};
+		647EE2CAC089D2F9F7E21B9D = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A204D2816A68DB3BB556FFA0,
+				36A4DFC3BE822B65B49B341D,
+				2326FF11C996F17D87C5C6B6,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4679B1B8479DBB4E59EA933C = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.framework;
+			name = UIKit.framework;
+			path = System/Library/Frameworks/UIKit.framework;
+			sourceTree = SDKROOT;
+		};
+		E4733C45AAF3673B38A99CCF = {
+			isa = PBXBuildFile;
+			fileRef = 4679B1B8479DBB4E59EA933C;
+		};
+		EDEF6E74797027D2A92ADE24 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.framework;
+			name = AVFoundation.framework;
+			path = System/Library/Frameworks/AVFoundation.framework;
+			sourceTree = SDKROOT;
+		};
+		DAE273D4B71B7D6A49A42D18 = {
+			isa = PBXBuildFile;
+			fileRef = EDEF6E74797027D2A92ADE24;
+		};
+		2EE4D479CE80D8D5624CC344 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.framework;
+			name = AudioToolbox.framework;
+			path = System/Library/Frameworks/AudioToolbox.framework;
+			sourceTree = SDKROOT;
+		};
+		9F2BC44BEB0E98B567A944B4 = {
+			isa = PBXBuildFile;
+			fileRef = 2EE4D479CE80D8D5624CC344;
+		};
+		AC2446436B7AE5A9EC884AD4 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.framework;
+			name = CoreImage.framework;
+			path = System/Library/Frameworks/CoreImage.framework;
+			sourceTree = SDKROOT;
+		};
+		5AAA94635C21D9106388C729 = {
+			isa = PBXBuildFile;
+			fileRef = AC2446436B7AE5A9EC884AD4;
+		};
+		FB95B506FAA940469C15D964 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.framework;
+			name = CoreGraphics.framework;
+			path = System/Library/Frameworks/CoreGraphics.framework;
+			sourceTree = SDKROOT;
+		};
+		9570A83C9E164146ED30E446 = {
+			isa = PBXBuildFile;
+			fileRef = FB95B506FAA940469C15D964;
+		};
+		B6796D8C31DE485F365AC49A = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.framework;
+			name = Metal.framework;
+			path = System/Library/Frameworks/Metal.framework;
+			sourceTree = SDKROOT;
+		};
+		87C097ACB2FA6826413579B7 = {
+			isa = PBXBuildFile;
+			fileRef = B6796D8C31DE485F365AC49A;
+		};
+		C950EBC2E3F88EF46D3B13CB = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.framework;
+			name = MetalKit.framework;
+			path = System/Library/Frameworks/MetalKit.framework;
+			sourceTree = SDKROOT;
+		};
+		799B74620C3F42BE9526AEF8 = {
+			isa = PBXBuildFile;
+			fileRef = C950EBC2E3F88EF46D3B13CB;
+		};
+		DDFD627516D15D6FF7A00A3D = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.framework;
+			name = GLKit.framework;
+			path = System/Library/Frameworks/GLKit.framework;
+			sourceTree = SDKROOT;
+		};
+		965E22A5FFDEE1FE66050ED3 = {
+			isa = PBXBuildFile;
+			fileRef = DDFD627516D15D6FF7A00A3D;
+		};
+		B238F198CFF180031BC96453 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.framework;
+			name = OpenGLES.framework;
+			path = System/Library/Frameworks/OpenGLES.framework;
+			sourceTree = SDKROOT;
+		};
+		A33EE023AAEFC2C7888F8C23 = {
+			isa = PBXBuildFile;
+			fileRef = B238F198CFF180031BC96453;
+		};
+		849B17B15FD9CB9F03D10738 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.framework;
+			name = GameController.framework;
+			path = System/Library/Frameworks/GameController.framework;
+			sourceTree = SDKROOT;
+		};
+		C4D8A2E053EEE9254C790C2C = {
+			isa = PBXBuildFile;
+			fileRef = 849B17B15FD9CB9F03D10738;
+		};
+		92B1FED2DBA6139B05776B6B = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.framework;
+			name = Accelerate.framework;
+			path = System/Library/Frameworks/Accelerate.framework;
+			sourceTree = SDKROOT;
+		};
+		5232229269298B8A07ACAABB = {
+			isa = PBXBuildFile;
+			fileRef = 92B1FED2DBA6139B05776B6B;
+		};
+		0F5667FB85F9A3D03437AFCD = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E4733C45AAF3673B38A99CCF,
+				DAE273D4B71B7D6A49A42D18,
+				9F2BC44BEB0E98B567A944B4,
+				5AAA94635C21D9106388C729,
+				9570A83C9E164146ED30E446,
+				87C097ACB2FA6826413579B7,
+				799B74620C3F42BE9526AEF8,
+				965E22A5FFDEE1FE66050ED3,
+				A33EE023AAEFC2C7888F8C23,
+				C4D8A2E053EEE9254C790C2C,
+				5232229269298B8A07ACAABB,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		51A0FDC019C2E093F011A02F = {
+			isa = PBXBuildFile;
+			fileRef = 1D33AB4F0515DA6AF1C2E320;
+		};
+		57A5D0C5D3E49832551B1A4B = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				51A0FDC019C2E093F011A02F,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5DF4AF0DB28FDE161DAF42CB = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = DeltaCore;
+				PRODUCT_BUNDLE_IDENTIFIER = com.rileytestut.DeltaCore.tvOS;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 3;
+				TVOS_DEPLOYMENT_TARGET = 17.0;
+				SDKROOT = appletvos;
+				SUPPORTED_PLATFORMS = "appletvos appletvsimulator";
+				CODE_SIGN_STYLE = Automatic;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) DEBUG FRAMEWORK";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+					FRAMEWORK,
+					GLES_SILENCE_DEPRECATION,
+					CI_SILENCE_GL_DEPRECATION,
+				);
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				CURRENT_PROJECT_VERSION = 1;
+				MARKETING_VERSION = 0.1.0;
+				DEFINES_MODULE = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = DeltaCore;
+				SKIP_INSTALL = YES;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				SWIFT_INSTALL_OBJC_HEADER = YES;
+				SWIFT_OBJC_INTERFACE_HEADER_NAME = "DeltaCore-Swift.h";
+				VERSIONING_SYSTEM = "apple-generic";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				ENABLE_BITCODE = NO;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				GCC_OPTIMIZATION_LEVEL = 0;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_TESTABILITY = YES;
+			};
+			name = Debug;
+		};
+		845342C5E3433E33423771CB = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = DeltaCore;
+				PRODUCT_BUNDLE_IDENTIFIER = com.rileytestut.DeltaCore.tvOS;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 3;
+				TVOS_DEPLOYMENT_TARGET = 17.0;
+				SDKROOT = appletvos;
+				SUPPORTED_PLATFORMS = "appletvos appletvsimulator";
+				CODE_SIGN_STYLE = Automatic;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) FRAMEWORK";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					FRAMEWORK,
+					GLES_SILENCE_DEPRECATION,
+					CI_SILENCE_GL_DEPRECATION,
+				);
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				CURRENT_PROJECT_VERSION = 1;
+				MARKETING_VERSION = 0.1.0;
+				DEFINES_MODULE = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = DeltaCore;
+				SKIP_INSTALL = YES;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				SWIFT_INSTALL_OBJC_HEADER = YES;
+				SWIFT_OBJC_INTERFACE_HEADER_NAME = "DeltaCore-Swift.h";
+				VERSIONING_SYSTEM = "apple-generic";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				ENABLE_BITCODE = NO;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				GCC_OPTIMIZATION_LEVEL = s;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+			};
+			name = Release;
+		};
+		C71F8AD37E19035B51549902 = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5DF4AF0DB28FDE161DAF42CB,
+				845342C5E3433E33423771CB,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		8BB5776D6B2F8D5CDF3776D2 = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C71F8AD37E19035B51549902;
+			buildPhases = (
+				041AD61E1F310A3328201AF9,
+				647EE2CAC089D2F9F7E21B9D,
+				0F5667FB85F9A3D03437AFCD,
+				57A5D0C5D3E49832551B1A4B,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = DeltaCore;
+			productName = DeltaCore;
+			productReference = 5FC0FE0B348105E3758597B0;
+			productType = "com.apple.product-type.framework";
+		};
+		2CFE8332C22287D8A76C2867 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.cpp;
+			path = ../Cores/GBCDeltaCore/GBCDeltaCore/Bridge/GBCInputGetter.cpp;
+			sourceTree = "<group>";
+		};
+		39949907817D8CA26619C425 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.swift;
+			path = ../Cores/GBCDeltaCore/GBCDeltaCore/GBC.swift;
+			sourceTree = "<group>";
+		};
+		A389DA3190F9F9C8969725CA = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			path = ../Cores/GBCDeltaCore/GBCDeltaCore/Model/GBCCheat.m;
+			sourceTree = "<group>";
+		};
+		D1EC20929C880C0B5E809143 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			path = ../Cores/GBCDeltaCore/GBCDeltaCore/Model/GBCPalette.m;
+			sourceTree = "<group>";
+		};
+		760E469219D1E8C0AD773228 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			path = ../Cores/GBCDeltaCore/GBCDeltaCore/Types/GBCTypes.m;
+			sourceTree = "<group>";
+		};
+		341BDC3FF9AEA577BC3D52DD = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.cpp;
+			path = ../Cores/GBCDeltaCore/gambatte/libgambatte/src/bitmap_font.cpp;
+			sourceTree = "<group>";
+		};
+		AB3EEEE0FD48B1F04820348D = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.cpp;
+			path = ../Cores/GBCDeltaCore/gambatte/libgambatte/src/cpu.cpp;
+			sourceTree = "<group>";
+		};
+		70930ECD77CC89C02A70C6AA = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.cpp;
+			path = ../Cores/GBCDeltaCore/gambatte/libgambatte/src/file/file.cpp;
+			sourceTree = "<group>";
+		};
+		68E3454317C8338CA2B3FEEB = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.cpp;
+			path = ../Cores/GBCDeltaCore/gambatte/libgambatte/src/gambatte.cpp;
+			sourceTree = "<group>";
+		};
+		18947257ECFB69621C023582 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.cpp;
+			path = ../Cores/GBCDeltaCore/gambatte/libgambatte/src/initstate.cpp;
+			sourceTree = "<group>";
+		};
+		1617E06EBCB3BE159AEA77E7 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.cpp;
+			path = ../Cores/GBCDeltaCore/gambatte/libgambatte/src/interrupter.cpp;
+			sourceTree = "<group>";
+		};
+		0622443315AC45729C05817A = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.cpp;
+			path = ../Cores/GBCDeltaCore/gambatte/libgambatte/src/interruptrequester.cpp;
+			sourceTree = "<group>";
+		};
+		DB14AE45CC4CBBFBD6021DB0 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.cpp;
+			path = ../Cores/GBCDeltaCore/gambatte/libgambatte/src/loadres.cpp;
+			sourceTree = "<group>";
+		};
+		D272AF8BD605EA76454B77A1 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.cpp;
+			path = ../Cores/GBCDeltaCore/gambatte/libgambatte/src/mem/cartridge.cpp;
+			sourceTree = "<group>";
+		};
+		74C0E18A5593343326B10B19 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.cpp;
+			path = ../Cores/GBCDeltaCore/gambatte/libgambatte/src/mem/memptrs.cpp;
+			sourceTree = "<group>";
+		};
+		676245A4A44DCCE18271E67A = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.cpp;
+			path = ../Cores/GBCDeltaCore/gambatte/libgambatte/src/mem/pakinfo.cpp;
+			sourceTree = "<group>";
+		};
+		6F9C25F7C4CF4E9E19383465 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.cpp;
+			path = ../Cores/GBCDeltaCore/gambatte/libgambatte/src/mem/rtc.cpp;
+			sourceTree = "<group>";
+		};
+		38F556D70654E0446C501A60 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.cpp;
+			path = ../Cores/GBCDeltaCore/gambatte/libgambatte/src/memory.cpp;
+			sourceTree = "<group>";
+		};
+		D7DAC56529A410F7669CF3A9 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.cpp;
+			path = ../Cores/GBCDeltaCore/gambatte/libgambatte/src/sound.cpp;
+			sourceTree = "<group>";
+		};
+		156A6C6FD005E06F31BAAAA1 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.cpp;
+			path = ../Cores/GBCDeltaCore/gambatte/libgambatte/src/sound/channel1.cpp;
+			sourceTree = "<group>";
+		};
+		35DBA291502AE0D12A431C6E = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.cpp;
+			path = ../Cores/GBCDeltaCore/gambatte/libgambatte/src/sound/channel2.cpp;
+			sourceTree = "<group>";
+		};
+		1AA78AF4E4507E508AC1C77A = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.cpp;
+			path = ../Cores/GBCDeltaCore/gambatte/libgambatte/src/sound/channel3.cpp;
+			sourceTree = "<group>";
+		};
+		FE0395CCEF12C707B3D3B627 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.cpp;
+			path = ../Cores/GBCDeltaCore/gambatte/libgambatte/src/sound/channel4.cpp;
+			sourceTree = "<group>";
+		};
+		CA4D0353982D0F5374215BD9 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.cpp;
+			path = ../Cores/GBCDeltaCore/gambatte/libgambatte/src/sound/duty_unit.cpp;
+			sourceTree = "<group>";
+		};
+		B01D235C73A34B6047FB9972 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.cpp;
+			path = ../Cores/GBCDeltaCore/gambatte/libgambatte/src/sound/envelope_unit.cpp;
+			sourceTree = "<group>";
+		};
+		6490007FCA316A3358F6F7A0 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.cpp;
+			path = ../Cores/GBCDeltaCore/gambatte/libgambatte/src/sound/length_counter.cpp;
+			sourceTree = "<group>";
+		};
+		5F252E4C1B80E954635EF4AD = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.cpp;
+			path = ../Cores/GBCDeltaCore/gambatte/libgambatte/src/state_osd_elements.cpp;
+			sourceTree = "<group>";
+		};
+		F0A826DC2E4EE85E59EE0462 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.cpp;
+			path = ../Cores/GBCDeltaCore/gambatte/libgambatte/src/statesaver.cpp;
+			sourceTree = "<group>";
+		};
+		7126FC7EB97221BA2D69EB3C = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.cpp;
+			path = ../Cores/GBCDeltaCore/gambatte/libgambatte/src/tima.cpp;
+			sourceTree = "<group>";
+		};
+		68F6E5975A294376ED563AB1 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.cpp;
+			path = ../Cores/GBCDeltaCore/gambatte/libgambatte/src/video.cpp;
+			sourceTree = "<group>";
+		};
+		D62B73986A5489AD7F4AF279 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.cpp;
+			path = ../Cores/GBCDeltaCore/gambatte/libgambatte/src/video/ly_counter.cpp;
+			sourceTree = "<group>";
+		};
+		2287369FA599D35836AB8A85 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.cpp;
+			path = ../Cores/GBCDeltaCore/gambatte/libgambatte/src/video/lyc_irq.cpp;
+			sourceTree = "<group>";
+		};
+		1DBFB5201B0A8FD51802E1E7 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.cpp;
+			path = ../Cores/GBCDeltaCore/gambatte/libgambatte/src/video/next_m0_time.cpp;
+			sourceTree = "<group>";
+		};
+		86EBCF5401237695EFED85BA = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.cpp;
+			path = ../Cores/GBCDeltaCore/gambatte/libgambatte/src/video/ppu.cpp;
+			sourceTree = "<group>";
+		};
+		BED9D77605D76BEB3A77F091 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.cpp;
+			path = ../Cores/GBCDeltaCore/gambatte/libgambatte/src/video/sprite_mapper.cpp;
+			sourceTree = "<group>";
+		};
+		27E0E2AA9E5C5029D237F1C1 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.objcpp;
+			path = Compatibility/GBCDeltaCore/Bridge/GBCEmulatorBridge.mm;
+			sourceTree = "<group>";
+		};
+		C1EC312ECEA116472231AE19 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = ../Cores/GBCDeltaCore/GBCDeltaCore/GBCDeltaCore.h;
+			sourceTree = "<group>";
+		};
+		0D3E3CB8D4434F4666A32A94 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = ../Cores/GBCDeltaCore/GBCDeltaCore/Types/GBCTypes.h;
+			sourceTree = "<group>";
+		};
+		20043F2E715E21633AABE684 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = Compatibility/GBCDeltaCore/Bridge/GBCEmulatorBridge.h;
+			sourceTree = "<group>";
+		};
+		BD9A1CDF9D879272A4317D12 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = ../Cores/GBCDeltaCore/GBCDeltaCore/Model/GBCPalette.h;
+			sourceTree = "<group>";
+		};
+		C4009EC947B218D62781E111 = {
+			isa = PBXFileReference;
+			lastKnownFileType = file;
+			path = ../Cores/GBCDeltaCore/GBCDeltaCore/Standard.deltamapping;
+			sourceTree = "<group>";
+		};
+		3EE9CD63FD633DABF028820F = {
+			isa = PBXGroup;
+			children = (
+				2CFE8332C22287D8A76C2867,
+				39949907817D8CA26619C425,
+				A389DA3190F9F9C8969725CA,
+				D1EC20929C880C0B5E809143,
+				760E469219D1E8C0AD773228,
+				341BDC3FF9AEA577BC3D52DD,
+				AB3EEEE0FD48B1F04820348D,
+				70930ECD77CC89C02A70C6AA,
+				68E3454317C8338CA2B3FEEB,
+				18947257ECFB69621C023582,
+				1617E06EBCB3BE159AEA77E7,
+				0622443315AC45729C05817A,
+				DB14AE45CC4CBBFBD6021DB0,
+				D272AF8BD605EA76454B77A1,
+				74C0E18A5593343326B10B19,
+				676245A4A44DCCE18271E67A,
+				6F9C25F7C4CF4E9E19383465,
+				38F556D70654E0446C501A60,
+				D7DAC56529A410F7669CF3A9,
+				156A6C6FD005E06F31BAAAA1,
+				35DBA291502AE0D12A431C6E,
+				1AA78AF4E4507E508AC1C77A,
+				FE0395CCEF12C707B3D3B627,
+				CA4D0353982D0F5374215BD9,
+				B01D235C73A34B6047FB9972,
+				6490007FCA316A3358F6F7A0,
+				5F252E4C1B80E954635EF4AD,
+				F0A826DC2E4EE85E59EE0462,
+				7126FC7EB97221BA2D69EB3C,
+				68F6E5975A294376ED563AB1,
+				D62B73986A5489AD7F4AF279,
+				2287369FA599D35836AB8A85,
+				1DBFB5201B0A8FD51802E1E7,
+				86EBCF5401237695EFED85BA,
+				BED9D77605D76BEB3A77F091,
+				27E0E2AA9E5C5029D237F1C1,
+				C1EC312ECEA116472231AE19,
+				0D3E3CB8D4434F4666A32A94,
+				20043F2E715E21633AABE684,
+				BD9A1CDF9D879272A4317D12,
+				C4009EC947B218D62781E111,
+			);
+			name = GBCDeltaCore;
+			sourceTree = "<group>";
+		};
+		90A8A148A1803CD2B91D3D4F = {
+			isa = PBXBuildFile;
+			fileRef = 2CFE8332C22287D8A76C2867;
+		};
+		9EAFC8CEA2A46CC14059BCA3 = {
+			isa = PBXBuildFile;
+			fileRef = 39949907817D8CA26619C425;
+		};
+		E03F74A8766D5F8EE2CD219B = {
+			isa = PBXBuildFile;
+			fileRef = A389DA3190F9F9C8969725CA;
+		};
+		6400BDB150EB08A932C7890D = {
+			isa = PBXBuildFile;
+			fileRef = D1EC20929C880C0B5E809143;
+		};
+		939709E45F4A3D6204AA0EC4 = {
+			isa = PBXBuildFile;
+			fileRef = 760E469219D1E8C0AD773228;
+		};
+		791E89D000ADA79194D9DAC5 = {
+			isa = PBXBuildFile;
+			fileRef = 341BDC3FF9AEA577BC3D52DD;
+		};
+		DA7FC0B788275A766C496F68 = {
+			isa = PBXBuildFile;
+			fileRef = AB3EEEE0FD48B1F04820348D;
+		};
+		52AD3A2D4EF6F5802E73F741 = {
+			isa = PBXBuildFile;
+			fileRef = 70930ECD77CC89C02A70C6AA;
+		};
+		CD8BBACB7991523E9274C5E2 = {
+			isa = PBXBuildFile;
+			fileRef = 68E3454317C8338CA2B3FEEB;
+		};
+		F0BA3547AE07FF6CC14DA2B4 = {
+			isa = PBXBuildFile;
+			fileRef = 18947257ECFB69621C023582;
+		};
+		7C4CD0CC16B0E30D609809E9 = {
+			isa = PBXBuildFile;
+			fileRef = 1617E06EBCB3BE159AEA77E7;
+		};
+		E072A36F8CF28B338A300485 = {
+			isa = PBXBuildFile;
+			fileRef = 0622443315AC45729C05817A;
+		};
+		E1569F7556927A4E9F232BB8 = {
+			isa = PBXBuildFile;
+			fileRef = DB14AE45CC4CBBFBD6021DB0;
+		};
+		17A212C5326C4D0B0168127C = {
+			isa = PBXBuildFile;
+			fileRef = D272AF8BD605EA76454B77A1;
+		};
+		DA1E48471F5B85775A88F6B0 = {
+			isa = PBXBuildFile;
+			fileRef = 74C0E18A5593343326B10B19;
+		};
+		D3B9175FA6A18F6F5994B638 = {
+			isa = PBXBuildFile;
+			fileRef = 676245A4A44DCCE18271E67A;
+		};
+		24322C331C013AF811F7DDE9 = {
+			isa = PBXBuildFile;
+			fileRef = 6F9C25F7C4CF4E9E19383465;
+		};
+		38F679B546E4784DE63FF7AA = {
+			isa = PBXBuildFile;
+			fileRef = 38F556D70654E0446C501A60;
+		};
+		E93056CBDDC29E6E7DBF6EAB = {
+			isa = PBXBuildFile;
+			fileRef = D7DAC56529A410F7669CF3A9;
+		};
+		778782205B79633B9F18645D = {
+			isa = PBXBuildFile;
+			fileRef = 156A6C6FD005E06F31BAAAA1;
+		};
+		9882DD0E21FA93E2F9FB4951 = {
+			isa = PBXBuildFile;
+			fileRef = 35DBA291502AE0D12A431C6E;
+		};
+		CAD013100EF10E65EF153C6B = {
+			isa = PBXBuildFile;
+			fileRef = 1AA78AF4E4507E508AC1C77A;
+		};
+		B20946B728C7419181BDB8FB = {
+			isa = PBXBuildFile;
+			fileRef = FE0395CCEF12C707B3D3B627;
+		};
+		CB1516CAA2812B07259AE6CC = {
+			isa = PBXBuildFile;
+			fileRef = CA4D0353982D0F5374215BD9;
+		};
+		49775705EBF83CDD1C1E63AE = {
+			isa = PBXBuildFile;
+			fileRef = B01D235C73A34B6047FB9972;
+		};
+		8673E74C4941174BE0B436A4 = {
+			isa = PBXBuildFile;
+			fileRef = 6490007FCA316A3358F6F7A0;
+		};
+		FC3B745B36E71101FCBAD97E = {
+			isa = PBXBuildFile;
+			fileRef = 5F252E4C1B80E954635EF4AD;
+		};
+		AC35B8695E9058D7294E05A6 = {
+			isa = PBXBuildFile;
+			fileRef = F0A826DC2E4EE85E59EE0462;
+		};
+		EA2E9D9AC5AF572F8C575DCB = {
+			isa = PBXBuildFile;
+			fileRef = 7126FC7EB97221BA2D69EB3C;
+		};
+		78A17C109A7A3E119F460C44 = {
+			isa = PBXBuildFile;
+			fileRef = 68F6E5975A294376ED563AB1;
+		};
+		0E6D01B2F00D244B524EC278 = {
+			isa = PBXBuildFile;
+			fileRef = D62B73986A5489AD7F4AF279;
+		};
+		1FDA12918B0AE3CABAC69CEF = {
+			isa = PBXBuildFile;
+			fileRef = 2287369FA599D35836AB8A85;
+		};
+		7A66C0752DF509EA302B004F = {
+			isa = PBXBuildFile;
+			fileRef = 1DBFB5201B0A8FD51802E1E7;
+		};
+		49D3C2793C2E8020A3F35875 = {
+			isa = PBXBuildFile;
+			fileRef = 86EBCF5401237695EFED85BA;
+		};
+		D33B89EA092E1B4403FCAA5C = {
+			isa = PBXBuildFile;
+			fileRef = BED9D77605D76BEB3A77F091;
+		};
+		1D255EA7CFA179D0A1E47FE4 = {
+			isa = PBXBuildFile;
+			fileRef = 27E0E2AA9E5C5029D237F1C1;
+		};
+		27C66E78765B7C979E9886B2 = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				90A8A148A1803CD2B91D3D4F,
+				9EAFC8CEA2A46CC14059BCA3,
+				E03F74A8766D5F8EE2CD219B,
+				6400BDB150EB08A932C7890D,
+				939709E45F4A3D6204AA0EC4,
+				791E89D000ADA79194D9DAC5,
+				DA7FC0B788275A766C496F68,
+				52AD3A2D4EF6F5802E73F741,
+				CD8BBACB7991523E9274C5E2,
+				F0BA3547AE07FF6CC14DA2B4,
+				7C4CD0CC16B0E30D609809E9,
+				E072A36F8CF28B338A300485,
+				E1569F7556927A4E9F232BB8,
+				17A212C5326C4D0B0168127C,
+				DA1E48471F5B85775A88F6B0,
+				D3B9175FA6A18F6F5994B638,
+				24322C331C013AF811F7DDE9,
+				38F679B546E4784DE63FF7AA,
+				E93056CBDDC29E6E7DBF6EAB,
+				778782205B79633B9F18645D,
+				9882DD0E21FA93E2F9FB4951,
+				CAD013100EF10E65EF153C6B,
+				B20946B728C7419181BDB8FB,
+				CB1516CAA2812B07259AE6CC,
+				49775705EBF83CDD1C1E63AE,
+				8673E74C4941174BE0B436A4,
+				FC3B745B36E71101FCBAD97E,
+				AC35B8695E9058D7294E05A6,
+				EA2E9D9AC5AF572F8C575DCB,
+				78A17C109A7A3E119F460C44,
+				0E6D01B2F00D244B524EC278,
+				1FDA12918B0AE3CABAC69CEF,
+				7A66C0752DF509EA302B004F,
+				49D3C2793C2E8020A3F35875,
+				D33B89EA092E1B4403FCAA5C,
+				1D255EA7CFA179D0A1E47FE4,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F47CEA3F8AA5319705C5EF65 = {
+			isa = PBXBuildFile;
+			fileRef = C1EC312ECEA116472231AE19;
+			settings = {
+				ATTRIBUTES = (
+					Public,
+				);
+			};
+		};
+		040F70AE5EC4417E9850904C = {
+			isa = PBXBuildFile;
+			fileRef = 0D3E3CB8D4434F4666A32A94;
+			settings = {
+				ATTRIBUTES = (
+					Public,
+				);
+			};
+		};
+		ACEDFF0F8C23BD64E19F75AF = {
+			isa = PBXBuildFile;
+			fileRef = 20043F2E715E21633AABE684;
+			settings = {
+				ATTRIBUTES = (
+					Public,
+				);
+			};
+		};
+		1C56469CFA3DD72BC43A0634 = {
+			isa = PBXBuildFile;
+			fileRef = BD9A1CDF9D879272A4317D12;
+			settings = {
+				ATTRIBUTES = (
+					Public,
+				);
+			};
+		};
+		F6831B6AA8D60FB536645AE7 = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F47CEA3F8AA5319705C5EF65,
+				040F70AE5EC4417E9850904C,
+				ACEDFF0F8C23BD64E19F75AF,
+				1C56469CFA3DD72BC43A0634,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CC4FBD33EFD2E84EA0307706 = {
+			isa = PBXBuildFile;
+			fileRef = 5FC0FE0B348105E3758597B0;
+		};
+		C098C21FBE6D592AC5E723AB = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.framework;
+			name = Foundation.framework;
+			path = System/Library/Frameworks/Foundation.framework;
+			sourceTree = SDKROOT;
+		};
+		DD1A1A0EA9635D3BD38FBE8D = {
+			isa = PBXBuildFile;
+			fileRef = C098C21FBE6D592AC5E723AB;
+		};
+		D655028AF048901C1284F7D2 = {
+			isa = PBXBuildFile;
+			fileRef = 4679B1B8479DBB4E59EA933C;
+		};
+		A415AAE6063EDE1C6AA4BEC3 = {
+			isa = PBXBuildFile;
+			fileRef = EDEF6E74797027D2A92ADE24;
+		};
+		03FEF55F7C716ABB4F6F86D4 = {
+			isa = PBXFileReference;
+			lastKnownFileType = "sourcecode.text-based-dylib-definition";
+			name = "libc++.tbd";
+			path = "usr/lib/libc++.tbd";
+			sourceTree = SDKROOT;
+		};
+		436A7FE374AAF7D77E32C63D = {
+			isa = PBXBuildFile;
+			fileRef = 03FEF55F7C716ABB4F6F86D4;
+		};
+		F8E5E09E4C3965B9BA393743 = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CC4FBD33EFD2E84EA0307706,
+				DD1A1A0EA9635D3BD38FBE8D,
+				D655028AF048901C1284F7D2,
+				A415AAE6063EDE1C6AA4BEC3,
+				436A7FE374AAF7D77E32C63D,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F09E761566331486B3A1FCDA = {
+			isa = PBXBuildFile;
+			fileRef = C4009EC947B218D62781E111;
+		};
+		9917CBD27242E89EE8A3768A = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F09E761566331486B3A1FCDA,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F055FB4BC0F7B424F1DFF39F = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 98F54143AB4E86B28C3AFEE0;
+			proxyType = 1;
+			remoteGlobalIDString = 8BB5776D6B2F8D5CDF3776D2;
+			remoteInfo = DeltaCore;
+		};
+		A025AF54E60055C131053119 = {
+			isa = PBXTargetDependency;
+			target = 8BB5776D6B2F8D5CDF3776D2;
+			targetProxy = F055FB4BC0F7B424F1DFF39F;
+		};
+		DEE829BC00477EAA6A93EE1A = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = GBCDeltaCore;
+				PRODUCT_BUNDLE_IDENTIFIER = com.rileytestut.GBCDeltaCore.tvOS;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 3;
+				TVOS_DEPLOYMENT_TARGET = 17.0;
+				SDKROOT = appletvos;
+				SUPPORTED_PLATFORMS = "appletvos appletvsimulator";
+				CODE_SIGN_STYLE = Automatic;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) DEBUG FRAMEWORK";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+					HAVE_CSTDINT,
+				);
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				CURRENT_PROJECT_VERSION = 1;
+				MARKETING_VERSION = 0.1.0;
+				DEFINES_MODULE = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = GBCDeltaCore;
+				SKIP_INSTALL = YES;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				SWIFT_INSTALL_OBJC_HEADER = YES;
+				SWIFT_OBJC_INTERFACE_HEADER_NAME = "GBCDeltaCore-Swift.h";
+				VERSIONING_SYSTEM = "apple-generic";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				ENABLE_BITCODE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)/Compatibility/GBCDeltaCore/Bridge",
+					"$(SRCROOT)/../Cores/GBCDeltaCore/gambatte/libgambatte/include",
+					"$(SRCROOT)/../Cores/GBCDeltaCore/gambatte/libgambatte/src",
+					"$(SRCROOT)/../Cores/GBCDeltaCore/gambatte/common",
+					"$(SRCROOT)/../Cores/GBCDeltaCore/GBCDeltaCore/Model",
+					"$(SRCROOT)/../Cores/GBCDeltaCore/GBCDeltaCore/Bridge",
+				);
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				GCC_OPTIMIZATION_LEVEL = 0;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_TESTABILITY = YES;
+			};
+			name = Debug;
+		};
+		29F6D40EA433975CEE2F3276 = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = GBCDeltaCore;
+				PRODUCT_BUNDLE_IDENTIFIER = com.rileytestut.GBCDeltaCore.tvOS;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 3;
+				TVOS_DEPLOYMENT_TARGET = 17.0;
+				SDKROOT = appletvos;
+				SUPPORTED_PLATFORMS = "appletvos appletvsimulator";
+				CODE_SIGN_STYLE = Automatic;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) FRAMEWORK";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					HAVE_CSTDINT,
+				);
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				CURRENT_PROJECT_VERSION = 1;
+				MARKETING_VERSION = 0.1.0;
+				DEFINES_MODULE = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = GBCDeltaCore;
+				SKIP_INSTALL = YES;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				SWIFT_INSTALL_OBJC_HEADER = YES;
+				SWIFT_OBJC_INTERFACE_HEADER_NAME = "GBCDeltaCore-Swift.h";
+				VERSIONING_SYSTEM = "apple-generic";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				ENABLE_BITCODE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)/Compatibility/GBCDeltaCore/Bridge",
+					"$(SRCROOT)/../Cores/GBCDeltaCore/gambatte/libgambatte/include",
+					"$(SRCROOT)/../Cores/GBCDeltaCore/gambatte/libgambatte/src",
+					"$(SRCROOT)/../Cores/GBCDeltaCore/gambatte/common",
+					"$(SRCROOT)/../Cores/GBCDeltaCore/GBCDeltaCore/Model",
+					"$(SRCROOT)/../Cores/GBCDeltaCore/GBCDeltaCore/Bridge",
+				);
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				GCC_OPTIMIZATION_LEVEL = s;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+			};
+			name = Release;
+		};
+		0CD275B6A4DCEE637E031B99 = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DEE829BC00477EAA6A93EE1A,
+				29F6D40EA433975CEE2F3276,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		B94E0A5BCD84504702919CD1 = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0CD275B6A4DCEE637E031B99;
+			buildPhases = (
+				27C66E78765B7C979E9886B2,
+				F6831B6AA8D60FB536645AE7,
+				F8E5E09E4C3965B9BA393743,
+				9917CBD27242E89EE8A3768A,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				A025AF54E60055C131053119,
+			);
+			name = GBCDeltaCore;
+			productName = GBCDeltaCore;
+			productReference = 618115B1DF466695AC502B77;
+			productType = "com.apple.product-type.framework";
+		};
+		D13B3ADD2267A858EAF5AE92 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.swift;
+			path = App/DeltaTVApp.swift;
+			sourceTree = "<group>";
+		};
+		B64E0A43C32FC56698806455 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.swift;
+			path = App/TVApplicationCoordinator.swift;
+			sourceTree = "<group>";
+		};
+		FC920C834B5941B11723FEDC = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.swift;
+			path = Emulation/TVEmulationSession.swift;
+			sourceTree = "<group>";
+		};
+		2FDAF53F3FA18B537EEE3646 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.swift;
+			path = Storage/TVCloudKitTransport.swift;
+			sourceTree = "<group>";
+		};
+		6AC5CD11B000003E81E5DAC5 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.swift;
+			path = Storage/TVCloudModel.swift;
+			sourceTree = "<group>";
+		};
+		B4FF0347488C792AE3321096 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.swift;
+			path = Storage/TVLibraryStore.swift;
+			sourceTree = "<group>";
+		};
+		BAA70B20AC218F23057E3A9E = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.swift;
+			path = UI/DeltaTVRootView.swift;
+			sourceTree = "<group>";
+		};
+		FEE32E1C9C3233596B5D9B83 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.swift;
+			path = UI/DeltaTVViewModel.swift;
+			sourceTree = "<group>";
+		};
+		66313893D3BAD711ED21647F = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.swift;
+			path = UI/TVLibrarySheets.swift;
+			sourceTree = "<group>";
+		};
+		24C999A04D3D318416EA3E95 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.swift;
+			path = UI/TVPauseView.swift;
+			sourceTree = "<group>";
+		};
+		2D4A267B89907C36B95A8823 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.swift;
+			path = UI/TVROMDownloader.swift;
+			sourceTree = "<group>";
+		};
+		111A8C99D84B836E552A45B9 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.swift;
+			path = UI/TVROMImportPolicy.swift;
+			sourceTree = "<group>";
+		};
+		76A8075437D903C8D1F00D43 = {
+			isa = PBXGroup;
+			children = (
+				D13B3ADD2267A858EAF5AE92,
+				B64E0A43C32FC56698806455,
+				FC920C834B5941B11723FEDC,
+				2FDAF53F3FA18B537EEE3646,
+				6AC5CD11B000003E81E5DAC5,
+				B4FF0347488C792AE3321096,
+				BAA70B20AC218F23057E3A9E,
+				FEE32E1C9C3233596B5D9B83,
+				66313893D3BAD711ED21647F,
+				24C999A04D3D318416EA3E95,
+				2D4A267B89907C36B95A8823,
+				111A8C99D84B836E552A45B9,
+			);
+			name = DeltaTV;
+			sourceTree = "<group>";
+		};
+		89D6653425FB8606B0D1CE6D = {
+			isa = PBXBuildFile;
+			fileRef = D13B3ADD2267A858EAF5AE92;
+		};
+		684223B76EB266D12CE7653A = {
+			isa = PBXBuildFile;
+			fileRef = B64E0A43C32FC56698806455;
+		};
+		8360D50FA85F68E73CE76A66 = {
+			isa = PBXBuildFile;
+			fileRef = FC920C834B5941B11723FEDC;
+		};
+		18BFE4F53B2A5413637EF093 = {
+			isa = PBXBuildFile;
+			fileRef = 2FDAF53F3FA18B537EEE3646;
+		};
+		2CC9C39BD5ECDCF8CECE99F0 = {
+			isa = PBXBuildFile;
+			fileRef = 6AC5CD11B000003E81E5DAC5;
+		};
+		D758058F4447382D76D932EA = {
+			isa = PBXBuildFile;
+			fileRef = B4FF0347488C792AE3321096;
+		};
+		4D67C403FD82B2DBF40A021C = {
+			isa = PBXBuildFile;
+			fileRef = BAA70B20AC218F23057E3A9E;
+		};
+		F7742BB931BFDE725F342701 = {
+			isa = PBXBuildFile;
+			fileRef = FEE32E1C9C3233596B5D9B83;
+		};
+		1D4BDD45C66521235DCB54C0 = {
+			isa = PBXBuildFile;
+			fileRef = 66313893D3BAD711ED21647F;
+		};
+		39A99597A0745571D871291E = {
+			isa = PBXBuildFile;
+			fileRef = 24C999A04D3D318416EA3E95;
+		};
+		9D8BAC7D361001EDFB3401FD = {
+			isa = PBXBuildFile;
+			fileRef = 2D4A267B89907C36B95A8823;
+		};
+		653DA90D291834F7C57CBD5C = {
+			isa = PBXBuildFile;
+			fileRef = 111A8C99D84B836E552A45B9;
+		};
+		829FB5D9A034EB396E431529 = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				89D6653425FB8606B0D1CE6D,
+				684223B76EB266D12CE7653A,
+				8360D50FA85F68E73CE76A66,
+				18BFE4F53B2A5413637EF093,
+				2CC9C39BD5ECDCF8CECE99F0,
+				D758058F4447382D76D932EA,
+				4D67C403FD82B2DBF40A021C,
+				F7742BB931BFDE725F342701,
+				1D4BDD45C66521235DCB54C0,
+				39A99597A0745571D871291E,
+				9D8BAC7D361001EDFB3401FD,
+				653DA90D291834F7C57CBD5C,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		99D9438D4D5D28A98C1CB9F0 = {
+			isa = PBXBuildFile;
+			fileRef = 5FC0FE0B348105E3758597B0;
+		};
+		DA08612459C14ACBAF838024 = {
+			isa = PBXBuildFile;
+			fileRef = 618115B1DF466695AC502B77;
+		};
+		C52592C076C25F74C74417EC = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.framework;
+			name = CloudKit.framework;
+			path = System/Library/Frameworks/CloudKit.framework;
+			sourceTree = SDKROOT;
+		};
+		1721385F858E304A0A07E1D2 = {
+			isa = PBXBuildFile;
+			fileRef = C52592C076C25F74C74417EC;
+		};
+		12A4B3D6AC4FAB9D19A11202 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.framework;
+			name = SwiftUI.framework;
+			path = System/Library/Frameworks/SwiftUI.framework;
+			sourceTree = SDKROOT;
+		};
+		9BFF2F387DA67CDAE2952076 = {
+			isa = PBXBuildFile;
+			fileRef = 12A4B3D6AC4FAB9D19A11202;
+		};
+		DBCABD429FAD4A435CE8655B = {
+			isa = PBXBuildFile;
+			fileRef = 849B17B15FD9CB9F03D10738;
+		};
+		7BB88BED0BE0ED2BF54B347E = {
+			isa = PBXBuildFile;
+			fileRef = 4679B1B8479DBB4E59EA933C;
+		};
+		E207470A98A5291734264F98 = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				99D9438D4D5D28A98C1CB9F0,
+				DA08612459C14ACBAF838024,
+				1721385F858E304A0A07E1D2,
+				9BFF2F387DA67CDAE2952076,
+				DBCABD429FAD4A435CE8655B,
+				7BB88BED0BE0ED2BF54B347E,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		633E02C28FE3BD867DD0D37A = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4E337DC5F8211E829875CD22 = {
+			isa = PBXBuildFile;
+			fileRef = 5FC0FE0B348105E3758597B0;
+			settings = {
+				ATTRIBUTES = (
+					CodeSignOnCopy,
+					RemoveHeadersOnCopy,
+				);
+			};
+		};
+		7621E86655A95174D4EE793E = {
+			isa = PBXBuildFile;
+			fileRef = 618115B1DF466695AC502B77;
+			settings = {
+				ATTRIBUTES = (
+					CodeSignOnCopy,
+					RemoveHeadersOnCopy,
+				);
+			};
+		};
+		F0AB04EE052351C80F3286E9 = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				4E337DC5F8211E829875CD22,
+				7621E86655A95174D4EE793E,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		21F7B0E0B137638D7AC0DF15 = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 98F54143AB4E86B28C3AFEE0;
+			proxyType = 1;
+			remoteGlobalIDString = 8BB5776D6B2F8D5CDF3776D2;
+			remoteInfo = DeltaCore;
+		};
+		82059D0438FE49D15B768CBC = {
+			isa = PBXTargetDependency;
+			target = 8BB5776D6B2F8D5CDF3776D2;
+			targetProxy = 21F7B0E0B137638D7AC0DF15;
+		};
+		CF735BA6291A31DD0C29EF6E = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 98F54143AB4E86B28C3AFEE0;
+			proxyType = 1;
+			remoteGlobalIDString = B94E0A5BCD84504702919CD1;
+			remoteInfo = GBCDeltaCore;
+		};
+		21906EC799F4E7B51512342F = {
+			isa = PBXTargetDependency;
+			target = B94E0A5BCD84504702919CD1;
+			targetProxy = CF735BA6291A31DD0C29EF6E;
+		};
+		B2C0FED28F5856014AB6ED04 = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = DeltaTV;
+				PRODUCT_BUNDLE_IDENTIFIER = com.rileytestut.DeltaTV;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = 3;
+				TVOS_DEPLOYMENT_TARGET = 17.0;
+				SDKROOT = appletvos;
+				SUPPORTED_PLATFORMS = "appletvos appletvsimulator";
+				CODE_SIGN_STYLE = Automatic;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) DEBUG ";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				CURRENT_PROJECT_VERSION = 1;
+				MARKETING_VERSION = 0.1.0;
+				SWIFT_STRICT_CONCURRENCY = complete;
+				INFOPLIST_FILE = App/Info.plist;
+				GENERATE_INFOPLIST_FILE = NO;
+				DELTATV_CLOUD_CONTAINER_IDENTIFIER = "";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				GCC_OPTIMIZATION_LEVEL = 0;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_TESTABILITY = YES;
+			};
+			name = Debug;
+		};
+		A0900BD4C88FBE269E0670C7 = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = DeltaTV;
+				PRODUCT_BUNDLE_IDENTIFIER = com.rileytestut.DeltaTV;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = 3;
+				TVOS_DEPLOYMENT_TARGET = 17.0;
+				SDKROOT = appletvos;
+				SUPPORTED_PLATFORMS = "appletvos appletvsimulator";
+				CODE_SIGN_STYLE = Automatic;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+				);
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				CURRENT_PROJECT_VERSION = 1;
+				MARKETING_VERSION = 0.1.0;
+				SWIFT_STRICT_CONCURRENCY = complete;
+				INFOPLIST_FILE = App/Info.plist;
+				GENERATE_INFOPLIST_FILE = NO;
+				DELTATV_CLOUD_CONTAINER_IDENTIFIER = "";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				GCC_OPTIMIZATION_LEVEL = s;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+			};
+			name = Release;
+		};
+		C70E421915EE38599B3BBBFE = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B2C0FED28F5856014AB6ED04,
+				A0900BD4C88FBE269E0670C7,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A846D1C419EF8C7E3A62AD83 = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C70E421915EE38599B3BBBFE;
+			buildPhases = (
+				829FB5D9A034EB396E431529,
+				E207470A98A5291734264F98,
+				633E02C28FE3BD867DD0D37A,
+				F0AB04EE052351C80F3286E9,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				82059D0438FE49D15B768CBC,
+				21906EC799F4E7B51512342F,
+			);
+			name = DeltaTV;
+			productName = DeltaTV;
+			productReference = 238D702259BFDDB77BD1D68A;
+			productType = "com.apple.product-type.application";
+		};
+		39D5390E186C0E4F0A89BB46 = {
+			isa = PBXFileReference;
+			lastKnownFileType = text.plist.xml;
+			path = App/Info.plist;
+			sourceTree = "<group>";
+		};
+		4D77EB98E5BEDE9C977AA98E = {
+			isa = PBXFileReference;
+			lastKnownFileType = text.plist.entitlements;
+			path = App/DeltaTV.entitlements;
+			sourceTree = "<group>";
+		};
+		3A7A1EB8DA4CDB194105A42D = {
+			isa = PBXFileReference;
+			lastKnownFileType = text.xcconfig;
+			path = Configuration/Cloud.example.xcconfig;
+			sourceTree = "<group>";
+		};
+		5F52AEE8201C27A8ED1DCC89 = {
+			isa = PBXFileReference;
+			lastKnownFileType = text.json;
+			path = Compatibility/sources.json;
+			sourceTree = "<group>";
+		};
+		C23108729D1809B8323E9806 = {
+			isa = PBXGroup;
+			children = (
+				39D5390E186C0E4F0A89BB46,
+				4D77EB98E5BEDE9C977AA98E,
+				3A7A1EB8DA4CDB194105A42D,
+				5F52AEE8201C27A8ED1DCC89,
+			);
+			name = Configuration;
+			sourceTree = "<group>";
+		};
+		2D17C89EB2C5B87E8B0EC3B6 = {
+			isa = PBXGroup;
+			children = (
+				4679B1B8479DBB4E59EA933C,
+				EDEF6E74797027D2A92ADE24,
+				2EE4D479CE80D8D5624CC344,
+				AC2446436B7AE5A9EC884AD4,
+				FB95B506FAA940469C15D964,
+				B6796D8C31DE485F365AC49A,
+				C950EBC2E3F88EF46D3B13CB,
+				DDFD627516D15D6FF7A00A3D,
+				B238F198CFF180031BC96453,
+				849B17B15FD9CB9F03D10738,
+				92B1FED2DBA6139B05776B6B,
+				C098C21FBE6D592AC5E723AB,
+				03FEF55F7C716ABB4F6F86D4,
+				C52592C076C25F74C74417EC,
+				12A4B3D6AC4FAB9D19A11202,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		5151B46607EBC8890D8DFCC2 = {
+			isa = PBXGroup;
+			children = (
+				5FC0FE0B348105E3758597B0,
+				618115B1DF466695AC502B77,
+				238D702259BFDDB77BD1D68A,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		325F10A6957A34D66CB8C0E4 = {
+			isa = PBXGroup;
+			children = (
+				80E4BFAED1F23D56CAB178A1,
+				3EE9CD63FD633DABF028820F,
+				76A8075437D903C8D1F00D43,
+				C23108729D1809B8323E9806,
+				2D17C89EB2C5B87E8B0EC3B6,
+				5151B46607EBC8890D8DFCC2,
+			);
+			sourceTree = "<group>";
+		};
+		262E02E3C63E2FBADCBCB6A2 = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				TVOS_DEPLOYMENT_TARGET = 17.0;
+				SDKROOT = appletvos;
+				SUPPORTED_PLATFORMS = "appletvos appletvsimulator";
+				SWIFT_VERSION = 5.0;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				SWIFT_STRICT_CONCURRENCY = minimal;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				GCC_OPTIMIZATION_LEVEL = 0;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) DEBUG ";
+				ENABLE_TESTABILITY = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+			};
+			name = Debug;
+		};
+		86E0D76135EE80816AB07AC0 = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				TVOS_DEPLOYMENT_TARGET = 17.0;
+				SDKROOT = appletvos;
+				SUPPORTED_PLATFORMS = "appletvos appletvsimulator";
+				SWIFT_VERSION = 5.0;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				SWIFT_STRICT_CONCURRENCY = minimal;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				GCC_OPTIMIZATION_LEVEL = s;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+			};
+			name = Release;
+		};
+		12D04D787E90C9B967248BFD = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				262E02E3C63E2FBADCBCB6A2,
+				86E0D76135EE80816AB07AC0,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		98F54143AB4E86B28C3AFEE0 = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 2630;
+				BuildIndependentTargetsInParallel = YES;
+			};
+			buildConfigurationList = 12D04D787E90C9B967248BFD;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 325F10A6957A34D66CB8C0E4;
+			productRefGroup = 5151B46607EBC8890D8DFCC2;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				A846D1C419EF8C7E3A62AD83,
+				8BB5776D6B2F8D5CDF3776D2,
+				B94E0A5BCD84504702919CD1,
+			);
+		};
+	};
+	rootObject = 98F54143AB4E86B28C3AFEE0;
+}

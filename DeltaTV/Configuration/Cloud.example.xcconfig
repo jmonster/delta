@@ -1,0 +1,7 @@
+// Optional developer-owned signing configuration. This example is not applied
+// to the default unsigned build and does not provision an Apple/iCloud account.
+// Replace these identifiers with an existing, authorized CloudKit app/container.
+PRODUCT_BUNDLE_IDENTIFIER = com.example.DeltaTV
+DELTATV_CLOUD_CONTAINER_IDENTIFIER = iCloud.com.example.DeltaTV
+CODE_SIGN_ENTITLEMENTS = App/DeltaTV.entitlements
+// DEVELOPMENT_TEAM = YOUR_TEAM_ID

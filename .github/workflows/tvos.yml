@@ -1,0 +1,99 @@
+name: Apple TV validation
+
+on:
+  push:
+    branches: ['tvos/**']
+    paths:
+      - 'DeltaTV/**'
+      - 'DeltaTVTests/**'
+      - 'Cores/DeltaCore'
+      - 'Cores/GBCDeltaCore'
+      - '.github/workflows/tvos.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# One Apple TV runner across all branches. Superseded candidates do not keep running.
+concurrency:
+  group: delta-tvos
+  cancel-in-progress: true
+
+jobs:
+  native:
+    if: startsWith(github.ref, 'refs/heads/tvos/')
+    runs-on: macos-15
+    timeout-minutes: 25
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_26.3.app/Contents/Developer
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+
+      - name: Record toolchain and initialize only Apple TV dependencies
+        run: |
+          mkdir -p build/tvos
+          {
+            git rev-parse HEAD
+            uname -m
+            xcodebuild -version
+            xcrun --sdk appletvos --show-sdk-version
+            xcrun --sdk appletvsimulator --show-sdk-version
+            xcrun simctl list runtimes
+          } > build/tvos/toolchain.log
+          git -c url.https://github.com/.insteadOf=git@github.com: submodule update --init Cores/DeltaCore Cores/GBCDeltaCore > build/tvos/dependencies.log 2>&1
+          git -C Cores/GBCDeltaCore -c url.https://github.com/.insteadOf=git@github.com: submodule update --init --recursive >> build/tvos/dependencies.log 2>&1
+          git submodule status --recursive >> build/tvos/dependencies.log
+
+      - name: Test storage recovery and import policy
+        run: |
+          bash DeltaTVTests/run-storage-tests.sh > build/tvos/storage-tests.log 2>&1 || { cat build/tvos/storage-tests.log; exit 1; }
+          bash DeltaTVTests/run-import-tests.sh > build/tvos/import-tests.log 2>&1 || { cat build/tvos/import-tests.log; exit 1; }
+
+      - name: Build the complete unsigned Apple TV Simulator application
+        run: |
+          xcodebuild -project DeltaTV/DeltaTV.xcodeproj -scheme DeltaTV -configuration Debug -destination 'generic/platform=tvOS Simulator' -derivedDataPath build/tvos/DerivedData ARCHS=arm64 ONLY_ACTIVE_ARCH=YES CODE_SIGNING_ALLOWED=NO build > build/tvos/simulator-build.log 2>&1 || { tail -n 100 build/tvos/simulator-build.log; exit 1; }
+          ditto -c -k --keepParent build/tvos/DerivedData/Build/Products/Debug-appletvsimulator/DeltaTV.app build/tvos/DeltaTV-simulator.app.zip
+          shasum -a 256 build/tvos/DeltaTV-simulator.app.zip > build/tvos/checksums.log
+
+      - name: Launch on an Apple TV simulator
+        run: |
+          simulator=$(xcrun simctl list devices available -j | python3 -c 'import json,sys; devices=json.load(sys.stdin)["devices"]; print(next(device["udid"] for runtime in sorted(devices, reverse=True) if ".tvOS-" in runtime for device in devices[runtime] if "Apple TV" in device["name"]))')
+          trap 'xcrun simctl shutdown "$simulator" >/dev/null 2>&1 || true' EXIT
+          printf 'Simulator: %s\n' "$simulator" >> build/tvos/toolchain.log
+          xcrun simctl boot "$simulator"
+          xcrun simctl bootstatus "$simulator" -b > build/tvos/simulator-boot.log 2>&1
+          app=build/tvos/DerivedData/Build/Products/Debug-appletvsimulator/DeltaTV.app
+          bundle_id=$(/usr/libexec/PlistBuddy -c 'Print CFBundleIdentifier' "$app/Info.plist")
+          xcrun simctl install "$simulator" "$app"
+          xcrun simctl launch "$simulator" "$bundle_id" > build/tvos/simulator-launch.log 2>&1
+          sleep 5
+          xcrun simctl io "$simulator" screenshot build/tvos/simulator-launch.png
+          xcrun simctl spawn "$simulator" launchctl list > build/tvos/simulator-processes.log
+          awk -v prefix="UIKitApplication:$bundle_id" 'index($3, prefix) == 1 && $1 ~ /^[0-9]+$/ { running = 1 } END { exit !running }' build/tvos/simulator-processes.log
+
+      - name: Build the complete unsigned Apple TV device application
+        run: |
+          xcodebuild -project DeltaTV/DeltaTV.xcodeproj -scheme DeltaTV -configuration Release -destination 'generic/platform=tvOS' -derivedDataPath build/tvos/DerivedData ARCHS=arm64 ONLY_ACTIVE_ARCH=YES CODE_SIGNING_ALLOWED=NO build > build/tvos/device-build.log 2>&1 || { tail -n 100 build/tvos/device-build.log; exit 1; }
+          ditto -c -k --keepParent build/tvos/DerivedData/Build/Products/Release-appletvos/DeltaTV.app build/tvos/DeltaTV-device-unsigned.app.zip
+          shasum -a 256 build/tvos/DeltaTV-device-unsigned.app.zip >> build/tvos/checksums.log
+
+      - name: Verify builds did not rewrite sources or dependencies
+        run: |
+          git diff --exit-code --ignore-submodules=none
+          git submodule foreach --recursive 'git diff --exit-code --ignore-submodules=none'
+
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: DeltaTV-${{ github.sha }}
+          path: |
+            build/tvos/*.log
+            build/tvos/*.png
+            build/tvos/*.app.zip
+          if-no-files-found: warn
+          retention-days: 3

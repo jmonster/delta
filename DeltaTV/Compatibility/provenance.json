@@ -1,0 +1,37 @@
+[
+  {
+    "adapted": "DeltaTV/Compatibility/DeltaCore/Delta.swift",
+    "original": "Cores/DeltaCore/DeltaCore/Delta.swift",
+    "originalSHA256": "d44fd9c612afd871eb5ffb3c48cceea3f8d654439a8286316bf78f52ac835275"
+  },
+  {
+    "adapted": "DeltaTV/Compatibility/DeltaCore/Emulator Core/Audio/AudioManager.swift",
+    "original": "Cores/DeltaCore/DeltaCore/Emulator Core/Audio/AudioManager.swift",
+    "originalSHA256": "7fb01d2f0076918975c527e9db5c361b25936e57602b1f25898c0a8ae32507a5"
+  },
+  {
+    "adapted": "DeltaTV/Compatibility/DeltaCore/Emulator Core/EmulatorCore.swift",
+    "original": "Cores/DeltaCore/DeltaCore/Emulator Core/EmulatorCore.swift",
+    "originalSHA256": "c67e19d626e926e60ea59ab84b80d92925ac537676ed9867179212a2d1da03e9"
+  },
+  {
+    "adapted": "DeltaTV/Compatibility/DeltaCore/Game Controllers/MFi/MFiGameController.swift",
+    "original": "Cores/DeltaCore/DeltaCore/Game Controllers/MFi/MFiGameController.swift",
+    "originalSHA256": "ad15072ff9bf5ccc4fab2df1083d92758445b820c8d82ae034bef0d96785dad8"
+  },
+  {
+    "adapted": "DeltaTV/Compatibility/DeltaCore/UI/Game/GameView.swift",
+    "original": "Cores/DeltaCore/DeltaCore/UI/Game/GameView.swift",
+    "originalSHA256": "de0af13f0d0e6aab5ed9a22a993173034f0a13d91cbec21d5982479b1e99ad9e"
+  },
+  {
+    "adapted": "DeltaTV/Compatibility/GBCDeltaCore/Bridge/GBCEmulatorBridge.h",
+    "original": "Cores/GBCDeltaCore/GBCDeltaCore/Bridge/GBCEmulatorBridge.h",
+    "originalSHA256": "8d235eebb228cfd419718e48094bc78811d87984e41898a9cd4cc311ecad63fc"
+  },
+  {
+    "adapted": "DeltaTV/Compatibility/GBCDeltaCore/Bridge/GBCEmulatorBridge.mm",
+    "original": "Cores/GBCDeltaCore/GBCDeltaCore/Bridge/GBCEmulatorBridge.mm",
+    "originalSHA256": "67d2f1967e6327f91641b042524336690a0f4a3b99c49ae5279e04a4a026757b"
+  }
+]
