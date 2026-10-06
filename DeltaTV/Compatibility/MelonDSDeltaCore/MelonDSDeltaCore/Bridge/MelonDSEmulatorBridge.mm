@@ -28,7 +28,12 @@
 #include "melonDS/src/NDSCart.h"
 
 // Exact pinned ROM-list ABI; do not include ROMList.h's definition of the table.
-struct ROMListEntry { u32 GameCode, ROMSize, SaveMemType; };
+struct ROMListEntry
+{
+    u32 GameCode;
+    u32 ROMSize;
+    u32 SaveMemType;
+};
 namespace NDSCart { bool ReadROMParams(u32 gamecode, ROMListEntry* params); }
 
 static u32 CartridgeSaveLength()
