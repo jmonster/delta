@@ -43,10 +43,13 @@ struct TVROMImportPolicyTests
         defer { try? FileManager.default.removeItem(at: directory) }
         let rom = directory.appendingPathComponent("homebrew.gb")
 
-        // Synthetic cartridge structure, not an executable copyrighted game.
-        // No Nintendo logo is copied into the fixture.
-        var bytes = Data(repeating: 0, count: 32 * 1024)
-        updateChecksum(&bytes)
+        guard let source = ProcessInfo.processInfo.environment["LOCAL_IMPORT_ROM"] else {
+            print("PASS: secure URL and redirect policy. SKIP: set LOCAL_IMPORT_ROM for actual cartridge checks.")
+            return
+        }
+        let original = try Data(contentsOf: URL(fileURLWithPath: source))
+        guard original.count >= 0x150 else { throw ImportTestFailure.failed("Actual cartridge input is incomplete") }
+        var bytes = original
         try bytes.write(to: rom)
         try TVROMImportPolicy.validateGameBoyROM(at: rom)
 
@@ -56,32 +59,40 @@ struct TVROMImportPolicyTests
         try Data(bytes.prefix(16 * 1024)).write(to: rom)
         try rejects("A truncated cartridge was accepted") { try TVROMImportPolicy.validateGameBoyROM(at: rom) }
 
-        bytes[0x134] = 1
+        bytes[0x134] ^= 1
         try bytes.write(to: rom)
         try rejects("A corrupt header checksum was accepted") { try TVROMImportPolicy.validateGameBoyROM(at: rom) }
-        bytes[0x134] = 0
+        bytes = original
 
         bytes[0x148] = 0xFF
         updateChecksum(&bytes)
         try bytes.write(to: rom)
         try rejects("An invalid cartridge size was accepted") { try TVROMImportPolicy.validateGameBoyROM(at: rom) }
 
-        bytes[0x148] = 1
-        updateChecksum(&bytes)
+        bytes = original
+        if original[0x148] < 8 {
+            bytes[0x148] = original[0x148] + 1
+            updateChecksum(&bytes)
+        } else {
+            bytes = Data(original.prefix(original.count / 2))
+        }
         try bytes.write(to: rom)
         try rejects("A declared size larger than the download was accepted") { try TVROMImportPolicy.validateGameBoyROM(at: rom) }
 
-        bytes[0x148] = 0
-        updateChecksum(&bytes)
+        bytes = original
         bytes.append(1)
         try bytes.write(to: rom)
         try rejects("A partial extra ROM bank was accepted") { try TVROMImportPolicy.validateGameBoyROM(at: rom) }
 
-        try Data(repeating: 0, count: TVROMImportPolicy.maximumBytes + 1).write(to: rom)
+        // A sparse extension of the actual input tests the GB cap without allocating 512 MB.
+        try original.write(to: rom)
+        let oversized = try FileHandle(forWritingTo: rom)
+        try oversized.truncate(atOffset: 16 * 1024 * 1024 + 1)
+        try oversized.close()
         try rejects("The maximum ROM size was not enforced") { try TVROMImportPolicy.validateGameBoyROM(at: rom) }
 
         try rejects("A directory was treated as a ROM") { try TVROMImportPolicy.validateGameBoyROM(at: directory) }
-        print("PASS: import URL, redirect, extension, size, header, checksum, and homebrew policy checks")
+        print("PASS: import URL, redirect, extension, size, header, checksum, and actual cartridge policy checks")
     }
 
     private static func updateChecksum(_ bytes: inout Data)

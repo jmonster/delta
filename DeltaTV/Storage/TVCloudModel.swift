@@ -2,6 +2,48 @@
 
 import Foundation
 
+/// Stable journal IDs shared by import, recovery and the runtime core catalog.
+enum TVSystem: String, CaseIterable, Sendable
+{
+    case gb, gbc, nes, snes, gba, n64, ds, genesis
+    var name: String {
+        switch self {
+        case .gb: "Game Boy"
+        case .gbc: "Game Boy Color"
+        case .nes: "Nintendo Entertainment System"
+        case .snes: "Super Nintendo"
+        case .gba: "Game Boy Advance"
+        case .n64: "Nintendo 64"
+        case .ds: "Nintendo DS"
+        case .genesis: "Genesis / Mega Drive"
+        }
+    }
+    var fileExtensions: [String] {
+        switch self {
+        case .gb: ["gb"]
+        case .gbc: ["gbc"]
+        case .nes: ["nes"]
+        case .snes: ["sfc", "smc"]
+        case .gba: ["gba"]
+        case .n64: ["z64", "v64", "n64"]
+        case .ds: ["nds"]
+        case .genesis: ["gen", "md", "bin"]
+        }
+    }
+    var maximumROMBytes: Int {
+        switch self {
+        case .ds: 512 * 1024 * 1024
+        case .n64: 64 * 1024 * 1024
+        case .gba: 32 * 1024 * 1024
+        default: 16 * 1024 * 1024
+        }
+    }
+    static var supportedExtensions: Set<String> { Set(allCases.flatMap(\.fileExtensions)) }
+    static func system(forExtension ext: String) -> Self? {
+        allCases.first { $0.fileExtensions.contains(ext.lowercased()) }
+    }
+}
+
 /// All paths are relative to the current, purgeable tvOS cache. Never persist sandbox URLs.
 struct TVGame: Codable, Identifiable, Equatable, Sendable
 {
@@ -86,9 +128,9 @@ protocol TVCloudTransport: AnyObject
 struct TVStorageLimits: Sendable
 {
     var maximumRecords = 512
-    var maximumPendingBytes: Int64 = 67_108_864
-    var maximumROMBytes: Int64 = 16_777_216
-    var maximumSaveBytes: Int64 = 4_194_304
+    var maximumPendingBytes: Int64 = 1_073_741_824
+    var maximumROMBytes: Int64 = 536_870_912
+    var maximumSaveBytes: Int64 = 67_108_864
     var maximumSaveSlots = 8
 }
 

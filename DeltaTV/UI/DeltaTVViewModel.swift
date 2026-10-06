@@ -52,6 +52,8 @@ struct TVSessionState: Equatable, Sendable
     var isPaused: Bool
     var canSaveState: Bool = true
     var canLoadState: Bool = false
+    var hasDSTouch: Bool = false
+    var touchCursorMode: Bool = false
 }
 
 struct TVConflictItem: Identifiable, Equatable, Sendable
@@ -78,6 +80,7 @@ struct TVApplicationActions
     /// Receives a validated HTTPS URL. The implementation downloads and imports it.
     var importGame: @MainActor (URL) async throws -> Void
     var resolveConflict: @MainActor (String, Bool) async throws -> Void = { _, _ in throw TVInterfaceError.notConfigured }
+    var toggleTouchCursor: @MainActor () -> Void = {}
 
     static var unavailable: TVApplicationActions
     {

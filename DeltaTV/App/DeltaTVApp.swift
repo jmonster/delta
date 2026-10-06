@@ -25,6 +25,7 @@ final class TVSceneDelegate: UIResponder, UIWindowSceneDelegate
         let root = TVRootViewController(model: coordinator.model)
         coordinator.setControllerRouting = { [weak root] isPlaying in
             root?.controllerUserInteractionEnabled = !isPlaying
+            GameControllerRegistry.shared.navigation.enabled = !isPlaying
         }
         self.coordinator = coordinator
         let window = UIWindow(windowScene: scene)

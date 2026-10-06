@@ -98,7 +98,7 @@ final class TVCloudKitTransport: TVCloudTransport
             guard let asset = remote["asset"] as? CKAsset, let source = asset.fileURL else { throw TVCloudError.missingAsset }
             // CKAsset's staging URL is ephemeral. Copy before returning from this request.
             let size = try source.resourceValues(forKeys: [.fileSizeKey]).fileSize ?? 0
-            let maximum = record.kind == .rom ? 16_777_216 : 4_194_304
+            let maximum = record.kind == .rom ? TVSystem(rawValue: record.game.system)?.maximumROMBytes ?? 0 : Int(TVStorageLimits().maximumSaveBytes)
             guard size > 0, size <= maximum else { throw TVCloudError.capacityExceeded }
             try await TVFileWorker.shared.copy(source, to: destination)
             _ = try await accountIdentifier()

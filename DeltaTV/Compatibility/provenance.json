@@ -33,5 +33,100 @@
     "adapted": "DeltaTV/Compatibility/GBCDeltaCore/Bridge/GBCEmulatorBridge.mm",
     "original": "Cores/GBCDeltaCore/GBCDeltaCore/Bridge/GBCEmulatorBridge.mm",
     "originalSHA256": "67d2f1967e6327f91641b042524336690a0f4a3b99c49ae5279e04a4a026757b"
+  },
+  {
+    "adapted": "DeltaTV/Compatibility/SNESDeltaCore/SNESDeltaCore/Bridge/SNESEmulatorBridge.h",
+    "original": "Cores/SNESDeltaCore/SNESDeltaCore/Bridge/SNESEmulatorBridge.h",
+    "originalSHA256": "d30e5b3e1cfab67098f76bd11b697883ac3fcbff50d4c98a2ed8701823594114"
+  },
+  {
+    "adapted": "DeltaTV/Compatibility/SNESDeltaCore/SNESDeltaCore/Bridge/SNESEmulatorBridge.mm",
+    "original": "Cores/SNESDeltaCore/SNESDeltaCore/Bridge/SNESEmulatorBridge.mm",
+    "originalSHA256": "0884766152a8a02ab87b07bf49436d31d3c1ee29529f9645c9b1dd6a6ee8b1b0"
+  },
+  {
+    "adapted": "DeltaTV/Compatibility/GBADeltaCore/GBADeltaCore/Bridge/GBAEmulatorBridge.h",
+    "original": "Cores/GBADeltaCore/GBADeltaCore/Bridge/GBAEmulatorBridge.h",
+    "originalSHA256": "04b1e2eada9630196f05e384f37bcd9d891dc4dad5d7d868fdc1aa1ee6484eb0"
+  },
+  {
+    "adapted": "DeltaTV/Compatibility/GBADeltaCore/GBADeltaCore/Bridge/GBAEmulatorBridge.mm",
+    "original": "Cores/GBADeltaCore/GBADeltaCore/Bridge/GBAEmulatorBridge.mm",
+    "originalSHA256": "8a8330b60c4da9b688ba67bf34503078288a7e53629d6f8a27856ea0d217af27"
+  },
+  {
+    "adapted": "DeltaTV/Compatibility/N64DeltaCore/N64DeltaCore/Bridge/N64EmulatorBridge.h",
+    "original": "Cores/N64DeltaCore/N64DeltaCore/Bridge/N64EmulatorBridge.h",
+    "originalSHA256": "b2b310371b0774a892f94b71035bad89fc1192e68e49be1c7b90fb6d371bfcf7"
+  },
+  {
+    "adapted": "DeltaTV/Compatibility/N64DeltaCore/N64DeltaCore/Bridge/N64EmulatorBridge.m",
+    "original": "Cores/N64DeltaCore/N64DeltaCore/Bridge/N64EmulatorBridge.m",
+    "originalSHA256": "680e4cc3be5efe4bb6a17b01183f99571eb9ad23e56972ad88416f48e64679e9"
+  },
+  {
+    "adapted": "DeltaTV/Compatibility/MelonDSDeltaCore/MelonDSDeltaCore/Bridge/MelonDSEmulatorBridge.h",
+    "original": "Cores/MelonDSDeltaCore/MelonDSDeltaCore/Bridge/MelonDSEmulatorBridge.h",
+    "originalSHA256": "647c78a8eba70e78e53870d813a9d8cee270f2c5b9a5b0a02d373a9dc56c260a"
+  },
+  {
+    "adapted": "DeltaTV/Compatibility/MelonDSDeltaCore/MelonDSDeltaCore/Bridge/MelonDSEmulatorBridge.mm",
+    "original": "Cores/MelonDSDeltaCore/MelonDSDeltaCore/Bridge/MelonDSEmulatorBridge.mm",
+    "originalSHA256": "7317b9f7476275908e8bce277c35c27ccdf674f934bf2e0d2208e130a2b78600"
+  },
+  {
+    "adapted": "DeltaTV/Compatibility/GPGXDeltaCore/Sources/GPGXBridge/GPGXEmulatorBridge.h",
+    "original": "Cores/GPGXDeltaCore/Sources/GPGXBridge/GPGXEmulatorBridge.h",
+    "originalSHA256": "e0001db21131efe14ad80cd3ccbbaea71c634b623257cfdfa0166e43c0079c65"
+  },
+  {
+    "adapted": "DeltaTV/Compatibility/GPGXDeltaCore/Sources/GPGXBridge/GPGXEmulatorBridge.m",
+    "original": "Cores/GPGXDeltaCore/Sources/GPGXBridge/GPGXEmulatorBridge.m",
+    "originalSHA256": "d7d49bc9a9ddb53f6b66e00b9248ae904138a32a25828614650ecce768e0196b"
+  },
+  {
+    "adapted": "DeltaTV/Compatibility/NESDeltaCore/NESDeltaCore/Bridge/NESEmulatorBridge.swift",
+    "original": "Cores/NESDeltaCore/NESDeltaCore/Bridge/NESEmulatorBridge.swift",
+    "originalSHA256": "7a1e6a9f822c10eba51d61b0ed43f9ab4ed9eb246f514779a366f49a3d176ac4"
+  },
+  {
+    "adapted": "DeltaTV/Compatibility/NESDeltaCore/NestopiaJS/NESEmulatorBridge.cpp",
+    "original": "Cores/NESDeltaCore/NestopiaJS/NESEmulatorBridge.cpp",
+    "originalSHA256": "c51b620448dd42cedb7c24c8c2a1a99405226f8e87442795b23c2c48489dd06a"
+  },
+  {
+    "adapted": "DeltaTV/Compatibility/NESDeltaCore/NestopiaJS/NESEmulatorBridge.hpp",
+    "original": "Cores/NESDeltaCore/NestopiaJS/NESEmulatorBridge.hpp",
+    "originalSHA256": "688f32cfa30cb5bb581e6c9660bbef77460c4d2671de3922e2b1ac79b8d29a83"
+  },
+  {
+    "adapted": "DeltaTV/Compatibility/SNESDeltaCore/snes9x/conffile.cpp",
+    "original": "Cores/SNESDeltaCore/snes9x/conffile.cpp",
+    "originalSHA256": "1b81eeac9bab9aa3545052d8cdacd776b4a1a9904f869289c085c22f3e9411cd"
+  },
+  {
+    "adapted": "DeltaTV/Compatibility/SNESDeltaCore/snes9x/conffile.h",
+    "original": "Cores/SNESDeltaCore/snes9x/conffile.h",
+    "originalSHA256": "696eb32ccda26de4d69104568902035d534d396f87b964a919cc4a21fd1e501d"
+  },
+  {
+    "adapted": "DeltaTV/Compatibility/App/Switch2ControllerService.swift",
+    "original": "Delta/Emulation/Switch2/Switch2ControllerService.swift",
+    "originalSHA256": "5908dc0919f91248460e6f0c7701f0bdbba0f91d13f91bcb0a7d06cf7920a619"
+  },
+  {
+    "adapted": "DeltaTV/Compatibility/GPGXDeltaCore/Sources/GPGXBridge/GPGXTypes.h",
+    "original": "Cores/GPGXDeltaCore/Sources/GPGXBridge/GPGXTypes.h",
+    "originalSHA256": "1e04ad24577b211e95fef401814332c3705e46177102531f1ed6f65593c85442"
+  },
+  {
+    "adapted": "DeltaTV/Compatibility/GPGXDeltaCore/Sources/GPGXBridge/GPGXTypes.m",
+    "original": "Cores/GPGXDeltaCore/Sources/GPGXBridge/GPGXTypes.m",
+    "originalSHA256": "0be7f14710e310cd441b8b2e5da3ac11b49b9e303d40e149119a2f94ef659ed4"
+  },
+  {
+    "adapted": "DeltaTV/Compatibility/App/Switch2InputMapping.swift",
+    "original": "Delta/Emulation/Switch2/Switch2InputMapping.swift",
+    "originalSHA256": "87dccb1865a2275a4fc2476f54aa8d64f6dbf4b65ad8765b787b0f689d398ddd"
   }
 ]

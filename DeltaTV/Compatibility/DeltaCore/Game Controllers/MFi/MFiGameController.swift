@@ -153,6 +153,14 @@ public class MFiGameController: NSObject, GameController
             {
                 self.deactivate(input)
             }
+            #if os(tvOS)
+            // A fallback for pads with no spare menu control. Start alone always
+            // reaches the game; only the explicit two-button chord pauses.
+            if input == .start || input == .select {
+                let chord = self.activatedInputs[AnyInput(Input.start)] != nil && self.activatedInputs[AnyInput(Input.select)] != nil
+                if chord { self.activate(Input.menu) } else { self.deactivate(Input.menu) }
+            }
+            #endif
         }
         
         let thumbstickChangedHandler: (_ input1: MFiGameController.Input, _ input2: MFiGameController.Input, _ value: Float) -> Void = { [weak self] (input1, input2, value) in
@@ -295,8 +303,9 @@ public class MFiGameController: NSObject, GameController
         }
         #if os(tvOS)
         // Home remains owned by tvOS; Start is a game input on every controller.
-        // The app provides an explicit pause mapping on the left shoulder.
+        // The left stick click is an app pause input; Start remains available to the game.
         menuButton?.pressedChangedHandler = { (button, value, pressed) in inputChangedHandler(.start, pressed) }
+        profile.buttons[GCInputLeftThumbstickButton]?.pressedChangedHandler = { (_, _, pressed) in inputChangedHandler(.menu, pressed) }
         #endif
     }
 }

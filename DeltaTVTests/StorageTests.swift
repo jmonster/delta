@@ -399,7 +399,34 @@ struct StorageTests
         try require(replayed.status.pendingCount == 1 && !replayed.hasCloudBackup(reconcileGame), "Cancellation changed pending acknowledgment")
         passed += 1
 
-        print("PASS: \(passed) storage scenarios (offline/restart, cold + partial purge, conflicts, in-flight saves, ambiguous acknowledgments, account isolation, bounded queue, untrusted paths)")
+        // Opaque non-cartridge bytes exercise the same journal protocol for every
+        // system. Actual cartridge loading is a separate opt-in runtime test.
+        for system in TVSystem.allCases {
+            let input = directory.appendingPathComponent("opaque." + system.fileExtensions[0])
+            try Data([1, 2, 3, 4]).write(to: input)
+            let transport = FakeCloud()
+            let root = directory.appendingPathComponent("system-" + system.rawValue)
+            let library = try TVLibraryStore(rootURL: root, cloud: transport)
+            let item = try await library.importGame(at: input, title: "Owned input", system: system.rawValue)
+            try Data([71]).write(to: library.batterySaveURL(for: item))
+            try library.stageBatterySave(for: item)
+            try Data([72]).write(to: library.saveStateURL(for: item))
+            try library.stageSaveState(for: item, coreIdentifier: "core." + system.rawValue, coreVersion: "tv1")
+            await library.synchronize()
+            try require(library.hasCloudBackup(item), "System backup was not acknowledged")
+            try FileManager.default.removeItem(at: root)
+            let cold = try TVLibraryStore(rootURL: root, cloud: transport)
+            await cold.restore()
+            try await cold.prepareForLaunch(item)
+            try require(cold.games == [item] && cold.hasCloudBackup(item), "System cold recovery lost the journal")
+            try require(tryData(cold.batterySaveURL(for: item)) == Data([71]) && tryData(cold.saveStateURL(for: item)) == Data([72]), "System cold recovery lost progress")
+            let wrong = TVGame(id: item.id, title: item.title, system: system == .nes ? "ds" : "nes", relativeROMPath: item.relativeROMPath)
+            let record = TVCloudRecord(id: "\(item.id).rom.rom", game: wrong, kind: .rom, slot: "rom", revision: UUID().uuidString, modifiedAt: Date())
+            do { try TVLibraryStore.validate(record); throw TestFailure.failed("Mismatched system and extension accepted") }
+            catch TVCloudError.invalidRecord {}
+            passed += 1
+        }
+        print("PASS: \(passed) storage scenarios (offline/restart, cold + partial purge, all systems, conflicts, in-flight saves, ambiguous acknowledgments, account isolation, bounded queue, untrusted paths)")
     }
 
     private static func batteryBytes(_ data: Data?) -> Data?

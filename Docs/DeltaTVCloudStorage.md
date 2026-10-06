@@ -2,7 +2,7 @@
 
 ## Scope and guarantees
 
-This first tvOS target imports user-provided Game Boy/Game Boy Color ROMs into a separate CloudKit library. It does not read existing iOS Harmony Google Drive/Dropbox data or migrate iOS saves. Identical ROM imports currently create separate UUID entries.
+The tvOS target imports user-provided GB/GBC, NES, SNES, GBA, N64, DS and Genesis cartridges into a separate CloudKit library. It does not read existing iOS Harmony Google Drive/Dropbox data or migrate iOS saves. Identical ROM imports currently create separate UUID entries.
 
 The user's private database stores ROM/library metadata, compatible emulator states, and battery RAM plus optional RTC in one versioned asset. Only server-acknowledged revisions count as backed up. Pending changes coalesce within fixed limits; divergent progress requires an explicit choice. Account changes stop synchronization rather than uploading the previous account's library into another account.
 
@@ -32,9 +32,9 @@ DeltaTVTests/run-storage-tests.sh
 SWIFTC=/absolute/path/to/swiftc DeltaTVTests/run-storage-tests.sh
 ```
 
-The 30 scenarios pass with Swift 6, complete concurrency checking, and warnings as errors. They use a fake transport, so they do not prove CloudKit runtime behavior.
+The 38 scenarios pass with Swift 6, complete concurrency checking, and warnings as errors. They use a fake transport, so they do not prove CloudKit runtime behavior.
 
-The final production code passed local Xcode 27 unsigned Simulator/device builds and real-ROM automation, including fresh battery/RTC restoration. A signed physical Apple TV build also verified private CloudKit backup acknowledgment and byte-identical ROM, battery RAM/RTC, and save-state recovery in the Development environment. A local-only harness restored into a new empty library and checked pre-cancelled synchronization and retry; a normal app relaunch then recovered the same files through the unchanged production coordinator with no pending revisions. Production deployment, physical-controller gameplay, audible listening, actual OS-managed cache purge, reinstall/process-kill recovery, concurrent-device conflicts, quota/throttle, in-flight cancellation and account-change tests remain release gates.
+The expanded native project passed local Xcode 27 unsigned Simulator/device builds. Real-ROM automation passed for GB/GBC, NES, SNES, GBA, N64 and DS, including native save restoration; Genesis cartridge execution remains unverified. The additional systems use the same opaque battery/state transport and pass fake-transport backup/restore tests. A signed physical Apple TV build previously verified one GB/GBC RTC cartridge’s private CloudKit backup acknowledgment and byte-identical ROM, battery RAM/RTC, and save-state recovery in the Development environment. A local-only harness restored into a new empty library and checked pre-cancelled synchronization and retry; a normal app relaunch then recovered the same files through the unchanged production coordinator with no pending revisions. Live CloudKit validation for each expanded system, production deployment, physical-controller gameplay, audible listening, actual OS-managed cache purge, reinstall/process-kill recovery, concurrent-device conflicts, quota/throttle, in-flight cancellation and account-change tests remain release gates.
 
 Before launch, the app reconciles inactive battery/RTC files from the current journaled checkpoint, preserving pending progress. Tests cover interrupted publication, mixed native files, missing components, cancellation and newer revisions. A crash before a new checkpoint can still lose recent play; this does not make native-core writes transactional or prove live iCloud durability.
 

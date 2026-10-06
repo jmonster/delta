@@ -18,14 +18,10 @@ final class TVApplicationCoordinator
     private var lifecycleGeneration: UInt64 = 0
     private var progressErrors: [String: String] = [:]
     private var acceptedCheckpointSequences: [String: UInt64] = [:]
-    private static let coreRevision = "0871ccaad2bbd7cbd2de0ce06f9e26dc3d1bfdde"
 
     init()
     {
-        model.supportedSystems = [
-            TVSupportedSystem(id: "gb", name: "Game Boy", fileExtensions: ["gb"]),
-            TVSupportedSystem(id: "gbc", name: "Game Boy Color", fileExtensions: ["gbc"])
-        ]
+        model.supportedSystems = TVSystem.allCases.map { TVSupportedSystem(id: $0.rawValue, name: $0.name, fileExtensions: $0.fileExtensions) }
         emulator.onPauseRequested = { [weak self] in self?.pauseForSystemEvent() }
         emulator.onControllersChanged = { [weak self] count in self?.showControllerCount(count) }
         emulator.onFailure = { [weak self] gameID, sequence, error in
@@ -82,7 +78,11 @@ final class TVApplicationCoordinator
             loadState: { [weak self] in try self?.loadState() },
             exitGame: { [weak self] in try self?.exitGame() },
             importGame: { [weak self] url in try await self?.importGame(url) },
-            resolveConflict: { [weak self] id, keepLocal in try await self?.resolveConflict(id, keepLocal: keepLocal) }
+            resolveConflict: { [weak self] id, keepLocal in try await self?.resolveConflict(id, keepLocal: keepLocal) },
+            toggleTouchCursor: { [weak self] in
+                self?.emulator.toggleTouchCursorMode()
+                self?.model.session?.touchCursorMode = self?.emulator.touchCursorMode ?? false
+            }
         )
     }
 
@@ -138,7 +138,7 @@ final class TVApplicationCoordinator
         defer { try? FileManager.default.removeItem(at: downloadedURL) }
         try Task.checkCancellation()
         let title = url.deletingPathExtension().lastPathComponent.removingPercentEncoding ?? url.deletingPathExtension().lastPathComponent
-        try await store.importGame(at: downloadedURL, title: title, system: url.pathExtension.lowercased())
+        try await store.importGame(at: downloadedURL, title: title, system: TVSystem.system(forExtension: url.pathExtension)!.rawValue)
         updatePresentation()
         // Import cancellation ends at the atomic local commit. Do not hold the
         // import sheet open for a cloud request that has its own visible status.
@@ -171,7 +171,7 @@ final class TVApplicationCoordinator
             throw error
         }
         model.gameViewController = emulator.viewController
-        model.session = TVSessionState(gameID: id, title: game.title, isPaused: false, canLoadState: canLoadState(game))
+        model.session = TVSessionState(gameID: id, title: game.title, isPaused: false, canLoadState: canLoadState(game), hasDSTouch: emulator.hasDSTouch)
         setControllerRouting?(true)
     }
 
@@ -183,6 +183,7 @@ final class TVApplicationCoordinator
         if wasPaused, progressErrors[session.gameID] != nil { emulator.retryBatterySave() }
         setControllerRouting?(false)
         model.session?.isPaused = true
+        model.session?.touchCursorMode = emulator.touchCursorMode
         // Stage immediately on the main actor as well as the core callback.
         // The callback may be queued until after tvOS suspends this scene.
         if let store, let game = currentGame
@@ -195,7 +196,7 @@ final class TVApplicationCoordinator
                 acceptedCheckpointSequences[game.id] = sequence
                 do
                 {
-                    guard GBCEmulatorBridge.shared.lastBatterySaveResult else { throw TVEmulationSession.SessionError.failedToSaveBattery }
+                    guard emulator.batterySavedSuccessfully else { throw TVEmulationSession.SessionError.failedToSaveBattery }
                     if FileManager.default.fileExists(atPath: store.batterySaveURL(for: game).path)
                         || FileManager.default.fileExists(atPath: store.batteryRTCURL(for: game).path)
                     {
@@ -228,7 +229,7 @@ final class TVApplicationCoordinator
     {
         guard let store, let game = currentGame else { throw TVEmulationSession.SessionError.noSession }
         try emulator.saveState(to: store.saveStateURL(for: game))
-        try store.stageSaveState(for: game, coreIdentifier: GBC.core.identifier, coreVersion: Self.coreRevision)
+        try store.stageSaveState(for: game, coreIdentifier: TVSystem(rawValue: game.system)!.core.identifier, coreVersion: TVSystem(rawValue: game.system)!.coreRevision)
         model.session?.canLoadState = true
         model.notice = "State saved locally. iCloud status shows when the backup is complete."
         synchronize()
@@ -237,7 +238,7 @@ final class TVApplicationCoordinator
 
     private func canLoadState(_ game: TVGame) -> Bool
     {
-        store?.saveStateIsCompatible(game, coreIdentifier: GBC.core.identifier, coreVersion: Self.coreRevision) == true
+        store?.saveStateIsCompatible(game, coreIdentifier: TVSystem(rawValue: game.system)!.core.identifier, coreVersion: TVSystem(rawValue: game.system)!.coreRevision) == true
     }
 
     private func loadState() throws
@@ -275,7 +276,7 @@ final class TVApplicationCoordinator
 
     private func showControllerCount(_ count: Int)
     {
-        model.controllerDescription = count > 0 ? "Game controller connected. L1 / LB opens the pause menu." : "Use the Siri Remote to browse. Pair a game controller in Apple TV Settings to play."
+        model.controllerDescription = count > 0 ? "Game controller connected. Click the left stick to pause, or use the controller’s extra menu buttons." : "Use the Siri Remote to browse. Pair a game controller in Apple TV Settings to play."
     }
 
     private func recordProgressFailure(_ error: Error, gameID: String)

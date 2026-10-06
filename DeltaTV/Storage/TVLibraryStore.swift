@@ -215,14 +215,14 @@ final class TVLibraryStore
     func importGame(at source: URL, title: String, system: String) async throws -> TVGame
     {
         let fileExtension = source.pathExtension.lowercased()
-        guard ["gb", "gbc"].contains(fileExtension),
+        guard TVSystem(rawValue: system)?.fileExtensions.contains(fileExtension) == true,
               !title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty, title.count <= 256,
-              ["gb", "gbc"].contains(system) else { throw TVCloudError.invalidRecord }
+              TVSystem(rawValue: system) != nil else { throw TVCloudError.invalidRecord }
         let id = UUID().uuidString
         let game = TVGame(id: id, title: title, system: system, relativeROMPath: "Games/\(id)/game.\(fileExtension)")
         var committed = false
         defer { if !committed { try? FileManager.default.removeItem(at: gameDirectory(game)) } }
-        guard try Self.fileSize(source) <= limits.maximumROMBytes else { throw TVCloudError.capacityExceeded }
+        guard try Self.fileSize(source) <= min(limits.maximumROMBytes, Int64(TVSystem(rawValue: system)!.maximumROMBytes)) else { throw TVCloudError.capacityExceeded }
         try await TVFileWorker.shared.copy(source, to: romURL(for: game))
         let prepared = try await TVFileWorker.shared.prepareCopy(source, beside: rootURL.appendingPathComponent("Staged/rom"))
         defer { try? FileManager.default.removeItem(at: prepared) }
@@ -657,14 +657,14 @@ final class TVLibraryStore
         guard UUID(uuidString: record.game.id) != nil, UUID(uuidString: record.revision) != nil,
               safeSlot(record.slot), record.id == "\(record.game.id).\(record.kind.rawValue).\(record.slot)",
               record.game.title.count <= 256, !record.game.title.isEmpty,
-              ["gb", "gbc"].contains(record.game.system) else { throw TVCloudError.invalidRecord }
+              TVSystem(rawValue: record.game.system) != nil else { throw TVCloudError.invalidRecord }
         guard (record.kind != .rom || record.slot == "rom"),
               (record.kind != .batterySave || record.slot == "battery"),
               (record.kind != .batterySave || (record.hasRTC != nil && record.hasBatteryRAM != nil && (record.hasRTC == true || record.hasBatteryRAM == true))),
               (record.kind == .batterySave || (record.hasRTC == nil && record.hasBatteryRAM == nil)) else { throw TVCloudError.invalidRecord }
         let path = record.game.relativeROMPath
         let ext = (path as NSString).pathExtension
-        guard ["gb", "gbc"].contains(ext),
+        guard TVSystem(rawValue: record.game.system)?.fileExtensions.contains(ext) == true,
               path == "Games/\(record.game.id)/game.\(ext)",
               (record.coreIdentifier?.count ?? 0) <= 256, (record.coreVersion?.count ?? 0) <= 256 else { throw TVCloudError.invalidRecord }
     }

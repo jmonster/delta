@@ -14,9 +14,10 @@ enum TVROMDownloader
     // Keep streaming, file writes, and cartridge validation off the UI actor,
     // including when the caller enables Swift's nonisolated-nonsending mode.
     @concurrent
-    static func download(_ url: URL, allowedExtensions: Set<String> = ["gb", "gbc"]) async throws -> URL
+    static func download(_ url: URL, allowedExtensions: Set<String> = TVSystem.supportedExtensions) async throws -> URL
     {
         let validatedURL = try TVROMImportPolicy.validatedURL(url.absoluteString, allowedExtensions: allowedExtensions)
+        guard let system = TVSystem.system(forExtension: validatedURL.pathExtension) else { throw TVROMImportError.unsupportedFile }
         let configuration = URLSessionConfiguration.ephemeral
         configuration.timeoutIntervalForRequest = 30
         configuration.timeoutIntervalForResource = 120
@@ -38,7 +39,7 @@ enum TVROMDownloader
         {
             throw TVROMImportError.httpStatus(response.statusCode)
         }
-        guard response.expectedContentLength <= Int64(TVROMImportPolicy.maximumBytes) else
+        guard response.expectedContentLength <= Int64(system.maximumROMBytes) else
         {
             throw TVROMImportError.tooLarge
         }
@@ -71,7 +72,7 @@ enum TVROMDownloader
         {
             try Task.checkCancellation()
             byteCount += 1
-            guard byteCount <= TVROMImportPolicy.maximumBytes else { throw TVROMImportError.tooLarge }
+            guard byteCount <= system.maximumROMBytes else { throw TVROMImportError.tooLarge }
             buffer.append(byte)
             if buffer.count == 64 * 1024
             {
@@ -82,7 +83,7 @@ enum TVROMDownloader
         if !buffer.isEmpty { try handle.write(contentsOf: buffer) }
         try handle.synchronize()
         try Task.checkCancellation()
-        try TVROMImportPolicy.validateGameBoyROM(at: destination)
+        try TVROMImportPolicy.validateROM(at: destination)
         completed = true
         return destination
     }

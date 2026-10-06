@@ -37,8 +37,8 @@ final class TVEmulationSession: NSObject
             case .controllerRequired: return "Pair a game controller in Apple TV Settings before playing. The Siri Remote can browse the library."
             case .incompleteRecovery: return "This game’s files or progress are not fully restored. Retry iCloud recovery before playing."
             case .missingROM: return "The local ROM was removed. Restore this game from iCloud before playing."
-            case .unsupportedGame: return "This build can play Game Boy and Game Boy Color games."
-            case .failedToStart: return "Gambatte could not load this ROM. Check that it is an uncompressed, supported Game Boy game."
+            case .unsupportedGame: return "This game does not match a linked emulator core."
+            case .failedToStart: return "The emulator could not start this cartridge. Check its format and try again."
             case .noSession: return "No game is running."
             case .pauseRequired: return "Pause the game before saving or loading a state."
             case .failedToSaveBattery: return "The latest in-game progress could not be saved. Free local space and retry before closing this game."
@@ -52,20 +52,22 @@ final class TVEmulationSession: NSObject
     {
         let fileURL: URL
         let gameSaveURL: URL
-        let type = GameType.gbc
+        let type: GameType
     }
 
-    /// The left shoulder always opens the pause menu, even on a controller whose
-    /// Home button tvOS reserves. Other buttons keep Delta's standard mapping.
+    /// Preserve each provider's mapping; cursor mode reserves DS touch controls.
     private struct ControllerMapping: GameControllerInputMappingProtocol
     {
         let base: GameControllerInputMappingProtocol?
+        var touchCursorMode = false
         let gameControllerInputType = GameControllerInputType.mfi
 
         func input(forControllerInput input: Input) -> Input?
         {
-            if input == MFiGameController.Input.leftShoulder { return StandardGameControllerInput.menu }
-            return base?.input(forControllerInput: input)
+            let mapped = base?.input(forControllerInput: input)
+            if touchCursorMode, let mapped,
+               ["up", "down", "left", "right", "a", "b"].contains(mapped.stringValue) { return nil }
+            return mapped
         }
     }
 
@@ -74,29 +76,36 @@ final class TVEmulationSession: NSObject
     private(set) var isPaused = false
     var onPauseRequested: (() -> Void)?
     var onControllersChanged: ((Int) -> Void)?
+    private let stylus = TVDSStylus()
+    private var stylusInputs: [String: Double] = [:]
+    private(set) var touchCursorMode = false
+    var hasDSTouch: Bool { system == .ds }
     /// Called with an immutable copy, never the live file the emulator mutates.
     var onBatterySave: ((String, UInt64, URL) -> Void)?
     var onFailure: ((String, UInt64, Error) -> Void)?
     private let checkpointSequence = OSAllocatedUnfairLock(initialState: UInt64(0))
     var latestCheckpointSequence: UInt64 { checkpointSequence.withLock { $0 } }
 
+    private var system: TVSystem?
+    var batterySavedSuccessfully: Bool { system?.batterySavedSuccessfully == true }
     private var core: EmulatorCore?
     private var gameView: GameView?
-    private var controllers: [ObjectIdentifier: MFiGameController] = [:]
+    private var controllers: [ObjectIdentifier: DeltaCore.GameController] = [:]
     private var notificationTokens: [NSObjectProtocol] = []
     private var checkpointTimer: Timer?
     private var isInvalidated = false
 
     var controllerCount: Int
     {
-        GCController.controllers().filter { $0.extendedGamepad != nil }.count
+        GameControllerRegistry.shared.connectedControllers.count
     }
 
     override init()
     {
         super.init()
-        Delta.register(GBC.core)
-        for name in [Notification.Name.GCControllerDidConnect, .GCControllerDidDisconnect]
+        for system in TVSystem.allCases { Delta.register(system.core) }
+        GameControllerRegistry.shared.startMonitoring()
+        for name in [Notification.Name.deltaControllerDidConnect, .deltaControllerDidDisconnect, .deltaControllerAssignmentDidChange]
         {
             let token = NotificationCenter.default.addObserver(forName: name, object: nil, queue: .main) { [weak self] _ in
                 Task { @MainActor in self?.updateControllers() }
@@ -108,23 +117,28 @@ final class TVEmulationSession: NSObject
     func start(gameID: String, system: String, romURL: URL, batterySaveURL: URL) throws
     {
         guard core == nil, !isInvalidated else { throw SessionError.failedToStart }
-        guard ["gb", "gbc"].contains(system) else { throw SessionError.unsupportedGame }
-        guard controllerCount > 0 else { throw SessionError.controllerRequired }
+        guard let system = TVSystem(rawValue: system) else { throw SessionError.unsupportedGame }
+        guard GameControllerRegistry.shared.connectedControllers.contains(where: { ($0.playerIndex ?? 4) < system.maximumPlayers }) else { throw SessionError.controllerRequired }
         guard FileManager.default.fileExists(atPath: romURL.path) else { throw SessionError.missingROM }
-        try TVROMImportPolicy.validateGameBoyROM(at: romURL)
+        try TVROMImportPolicy.validateROM(at: romURL)
         try FileManager.default.createDirectory(at: batterySaveURL.deletingLastPathComponent(), withIntermediateDirectories: true)
 
-        let game = EmulatorGame(fileURL: romURL, gameSaveURL: batterySaveURL)
+        let game = EmulatorGame(fileURL: romURL, gameSaveURL: batterySaveURL, type: system.core.gameType)
         guard let core = EmulatorCore(game: game) else { throw SessionError.unsupportedGame }
         let gameView = GameView(frame: .zero)
-        let renderer = TVGameRendererViewController(gameView: gameView)
+        let renderer = TVGameRendererViewController(gameView: gameView, aspectRatio: system.aspectRatio)
         core.add(gameView)
+        if system == .ds {
+            stylus.addReceiver(core)
+            stylus.onChange = { [weak renderer] point, touching in renderer?.showStylus(point, touching: touching) }
+            renderer.showStylus(stylus.point, touching: false)
+        }
         let checkpointSequence = self.checkpointSequence
         core.saveHandler = { [weak self] _ in
             let sequence = checkpointSequence.withLock { value in value &+= 1; return value }
             // saveHandler may run on the emulation thread. Snapshot before the
             // bridge can write again, then hand the immutable file to storage.
-            guard GBCEmulatorBridge.shared.lastBatterySaveResult else
+            guard system.batterySavedSuccessfully else
             {
                 Task { @MainActor in self?.onFailure?(gameID, sequence, SessionError.failedToSaveBattery) }
                 return
@@ -160,13 +174,14 @@ final class TVEmulationSession: NSObject
                 Task { @MainActor in self?.onFailure?(gameID, sequence, error) }
             }
         }
+        self.system = system
         self.gameID = gameID
         self.core = core
         self.gameView = gameView
         self.viewController = renderer
         self.isPaused = false
         updateControllers()
-        guard core.start(), GBCEmulatorBridge.shared.lastLoadResult == 0 else
+        guard core.start(), system.loadedSuccessfully else
         {
             core.saveHandler = nil
             stop()
@@ -184,6 +199,8 @@ final class TVEmulationSession: NSObject
     {
         guard let core, !isPaused else { return }
         releaseInputs()
+        stylus.release()
+        stylusInputs.removeAll()
         core.pause()
         isPaused = true
         detachEmulatorInput()
@@ -198,10 +215,10 @@ final class TVEmulationSession: NSObject
     func resume() throws
     {
         guard let core else { throw SessionError.noSession }
-        guard controllerCount > 0 else { throw SessionError.controllerRequired }
+        guard GameControllerRegistry.shared.connectedControllers.contains(where: { ($0.playerIndex ?? 4) < (system?.maximumPlayers ?? 1) }) else { throw SessionError.controllerRequired }
         guard isPaused else { return }
         updateControllers()
-        for controller in controllers.values { controller.addReceiver(core, inputMapping: ControllerMapping(base: controller.defaultInputMapping)) }
+        for controller in controllers.values where (controller.playerIndex ?? 4) < (system?.maximumPlayers ?? 1) { controller.addReceiver(core, inputMapping: ControllerMapping(base: controller.defaultInputMapping, touchCursorMode: touchCursorMode)) }
         core.resume()
         isPaused = false
     }
@@ -214,7 +231,7 @@ final class TVEmulationSession: NSObject
         let temporary = url.deletingLastPathComponent().appendingPathComponent(UUID().uuidString).appendingPathExtension("state")
         defer { try? FileManager.default.removeItem(at: temporary) }
         core.saveSaveState(to: temporary)
-        guard GBCEmulatorBridge.shared.lastSaveStateResult else { throw SessionError.failedToSave }
+        guard system?.stateSavedSuccessfully == true else { throw SessionError.failedToSave }
         let attributes = try FileManager.default.attributesOfItem(atPath: temporary.path)
         guard ((attributes[.size] as? NSNumber)?.intValue ?? 0) > 0 else { throw SessionError.failedToSave }
         if FileManager.default.fileExists(atPath: url.path)
@@ -231,8 +248,8 @@ final class TVEmulationSession: NSObject
     {
         guard let core else { throw SessionError.noSession }
         guard isPaused else { throw SessionError.pauseRequired }
-        try core.load(SaveState(fileURL: url, gameType: .gbc))
-        guard GBCEmulatorBridge.shared.lastLoadStateResult else { throw SessionError.failedToLoadState }
+        try core.load(SaveState(fileURL: url, gameType: system!.core.gameType))
+        guard system?.stateLoadedSuccessfully == true else { throw SessionError.failedToLoadState }
         core.save()
     }
 
@@ -241,6 +258,11 @@ final class TVEmulationSession: NSObject
         checkpointTimer?.invalidate()
         checkpointTimer = nil
         releaseInputs()
+        stylus.release()
+        if let core { stylus.removeReceiver(core) }
+        stylus.onChange = nil
+        stylusInputs.removeAll()
+        touchCursorMode = false
         core?.stop()
         detachEmulatorInput()
         if let gameView { core?.remove(gameView) }
@@ -250,6 +272,7 @@ final class TVEmulationSession: NSObject
         gameView = nil
         viewController = nil
         gameID = nil
+        system = nil
         isPaused = false
     }
 
@@ -288,7 +311,7 @@ final class TVEmulationSession: NSObject
     private func updateControllers()
     {
         guard !isInvalidated else { return }
-        let connected = GCController.controllers().filter { $0.extendedGamepad != nil }
+        let connected = GameControllerRegistry.shared.connectedControllers
         let identifiers = Set(connected.map { ObjectIdentifier($0) })
         for (identifier, controller) in controllers where !identifiers.contains(identifier)
         {
@@ -302,19 +325,44 @@ final class TVEmulationSession: NSObject
             let identifier = ObjectIdentifier(device)
             if controllers[identifier] == nil
             {
-                device.handlerQueue = .main
-                controllers[identifier] = MFiGameController(controller: device)
+                controllers[identifier] = device
             }
             guard let controller = controllers[identifier] else { continue }
-            // The first slice is single-player: any paired full controller can
-            // drive player one, so reconnects do not strand the session.
-            controller.playerIndex = 0
+            // Registry assignments remain stable across the native and direct
+            // Bluetooth providers; only this core's supported slots receive input.
+            if let core { controller.removeReceiver(core) }
             let mapping = ControllerMapping(base: controller.defaultInputMapping)
             controller.addReceiver(self, inputMapping: mapping)
-            if let core, !isPaused { controller.addReceiver(core, inputMapping: mapping) }
+            if let core, !isPaused, let player = controller.playerIndex, player < (system?.maximumPlayers ?? 1) { controller.addReceiver(core, inputMapping: ControllerMapping(base: controller.defaultInputMapping, touchCursorMode: touchCursorMode)) }
         }
         onControllersChanged?(connected.count)
-        if core != nil, connected.isEmpty, !isPaused { onPauseRequested?() }
+        if core != nil, !connected.contains(where: { ($0.playerIndex ?? 4) < (system?.maximumPlayers ?? 1) }), !isPaused { onPauseRequested?() }
+    }
+
+    func toggleTouchCursorMode()
+    {
+        guard system == .ds else { return }
+        releaseInputs()
+        stylus.release()
+        stylusInputs.removeAll()
+        touchCursorMode.toggle()
+        updateControllers()
+    }
+
+    private func handleInput(_ name: String, value: Double?, player: Int?)
+    {
+        guard core != nil, !isPaused else { return }
+        if name == "menu", value != nil { onPauseRequested?(); return }
+        guard system == .ds, player == 0 else { return }
+        stylusInputs[name] = value
+        if touchCursorMode, name == "b", value != nil { toggleTouchCursorMode(); return }
+        let left = touchCursorMode ? "left" : "rightThumbstickLeft"
+        let right = touchCursorMode ? "right" : "rightThumbstickRight"
+        let up = touchCursorMode ? "up" : "rightThumbstickUp"
+        let down = touchCursorMode ? "down" : "rightThumbstickDown"
+        stylus.move(horizontal: stylusInputs[right, default: 0] - stylusInputs[left, default: 0],
+                    vertical: stylusInputs[up, default: 0] - stylusInputs[down, default: 0])
+        stylus.press(stylusInputs[touchCursorMode ? "a" : "r2", default: 0] > 0)
     }
 }
 
@@ -322,23 +370,31 @@ extension TVEmulationSession: GameControllerReceiver
 {
     nonisolated func gameController(_ gameController: DeltaCore.GameController, didActivate input: Input, value: Double)
     {
-        guard input == StandardGameControllerInput.menu else { return }
-        Task { @MainActor [weak self] in
-            guard let self, self.core != nil, !self.isPaused else { return }
-            self.onPauseRequested?()
-        }
+        // Native handlers and the SDK adapter both deliver on main. Synchronous
+        // release prevents a queued touch from surviving pause or disconnection.
+        let name = input.stringValue
+        let player = gameController.playerIndex
+        MainActor.assumeIsolated { handleInput(name, value: value, player: player) }
     }
 
-    nonisolated func gameController(_ gameController: DeltaCore.GameController, didDeactivate input: Input) {}
+    nonisolated func gameController(_ gameController: DeltaCore.GameController, didDeactivate input: Input)
+    {
+        let name = input.stringValue
+        let player = gameController.playerIndex
+        MainActor.assumeIsolated { handleInput(name, value: nil, player: player) }
+    }
 }
 
 private final class TVGameRendererViewController: UIViewController
 {
     let gameView: GameView
+    let aspectRatio: Double
+    private let cursor = CAShapeLayer()
 
-    init(gameView: GameView)
+    init(gameView: GameView, aspectRatio: Double)
     {
         self.gameView = gameView
+        self.aspectRatio = aspectRatio
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -350,16 +406,29 @@ private final class TVGameRendererViewController: UIViewController
         view.backgroundColor = .black
         gameView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(gameView)
-        // Original Game Boy pixels stay square on every TV aspect ratio.
+        // Keep each system's native display ratio, including the stacked DS screens.
         NSLayoutConstraint.activate([
             gameView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             gameView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            gameView.widthAnchor.constraint(equalTo: gameView.heightAnchor, multiplier: 160.0 / 144.0),
+            gameView.widthAnchor.constraint(equalTo: gameView.heightAnchor, multiplier: aspectRatio),
             gameView.widthAnchor.constraint(lessThanOrEqualTo: view.widthAnchor),
             gameView.heightAnchor.constraint(lessThanOrEqualTo: view.heightAnchor)
         ])
         let fill = gameView.heightAnchor.constraint(equalTo: view.heightAnchor)
         fill.priority = .defaultHigh
         fill.isActive = true
+    }
+
+    func showStylus(_ point: CGPoint, touching: Bool)
+    {
+        loadViewIfNeeded()
+        view.layoutIfNeeded()
+        if cursor.superlayer == nil { gameView.layer.addSublayer(cursor) }
+        let bounds = gameView.bounds
+        let center = CGPoint(x: point.x * bounds.width, y: bounds.height / 2 + point.y * bounds.height / 2)
+        cursor.path = UIBezierPath(ovalIn: CGRect(x: center.x - 8, y: center.y - 8, width: 16, height: 16)).cgPath
+        cursor.fillColor = UIColor.clear.cgColor
+        cursor.strokeColor = (touching ? UIColor.systemYellow : UIColor.white).cgColor
+        cursor.lineWidth = 2
     }
 }

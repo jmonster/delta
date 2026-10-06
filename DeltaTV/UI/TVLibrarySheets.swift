@@ -34,7 +34,7 @@ struct TVImportView: View
                 .accessibilityLabel("ROM download address")
                 .onSubmit { focusedField = .importGame }
 
-            Text("Supported: \(model.supportedFileExtensions.sorted().map { ".\($0)" }.joined(separator: ", ")) · Maximum 16 MB · No ZIP files")
+            Text("Supported: \(model.supportedFileExtensions.sorted().map { ".\($0)" }.joined(separator: ", ")) · Limits vary by system, up to 512 MB · No ZIP files")
                 .font(.callout)
                 .foregroundStyle(.secondary)
 
@@ -78,6 +78,20 @@ struct TVImportView: View
         .onAppear { focusedField = .address }
         .onDisappear { importTask?.cancel() }
         .onExitCommand(perform: goBack)
+        .onReceive(NotificationCenter.default.publisher(for: .tvControllerNavigation)) { notification in
+            guard let raw = notification.object as? String, let command = TVNavigationCommand(rawValue: raw) else { return }
+            if command == .back { goBack() }
+            else if command == .select {
+                if focusedField == .back { goBack() }
+                else if focusedField == .importGame, !model.isBusy, !address.isEmpty {
+                    importTask = Task { if await model.importGame(from: address) { close() } }
+                }
+            } else {
+                let actions: [Field] = model.isBusy ? [.back] : [.address, .importGame, .back]
+                let index = actions.firstIndex(where: { $0 == focusedField }) ?? 0
+                focusedField = actions[min(actions.count - 1, max(0, index + (command == .up || command == .left ? -1 : 1)))]
+            }
+        }
         .onChange(of: model.isBusy) { _, isBusy in
             if isBusy { focusedField = .back }
             else if closesAfterCancellation { close() }
@@ -104,7 +118,7 @@ struct TVCloudView: View
 {
     @ObservedObject var model: DeltaTVViewModel
     var close: () -> Void
-    @FocusState private var backIsFocused: Bool
+    @FocusState private var focusedAction: String?
     @State private var selectedConflict: TVConflictItem?
 
     var body: some View
@@ -127,10 +141,12 @@ struct TVCloudView: View
                 HStack(spacing: 30)
                 {
                     Button("Retry Sync") { Task { await model.refresh() } }
+                        .focused($focusedAction, equals: "retry")
                         .disabled(model.isBusy || model.cloud.isWorking || !model.cloud.allowsRetry)
                     Button("Restore Library") { Task { await model.restoreLibrary() } }
+                        .focused($focusedAction, equals: "restore")
                         .disabled(model.isBusy || model.cloud.isWorking)
-                    Button("Back", action: close).focused($backIsFocused)
+                    Button("Back", action: close).focused($focusedAction, equals: "back")
                 }
 
                 if let title = model.busyTitle
@@ -138,7 +154,15 @@ struct TVCloudView: View
                     HStack(spacing: 18) { ProgressView(); Text(title) }
                 }
 
-                if !model.conflicts.isEmpty
+                if let conflict = selectedConflict {
+                    Text("Choose which progress to keep").font(.headline)
+                    Text("\(conflict.gameTitle): \(conflict.kindDescription). Keeping this Apple TV replaces the iCloud version. Using iCloud keeps the replaced local file only in this Apple TV’s purgeable cache.")
+                    HStack {
+                        Button("Keep This Apple TV") { resolve(conflict, keepLocal: true) }.focused($focusedAction, equals: "local")
+                        Button("Use iCloud") { resolve(conflict, keepLocal: false) }.focused($focusedAction, equals: "cloud")
+                        Button("Cancel") { cancelConflict() }.focused($focusedAction, equals: "cancel")
+                    }.disabled(model.isBusy)
+                } else if !model.conflicts.isEmpty
                 {
                     Text("Conflicting Progress").font(.headline)
                     ForEach(model.conflicts) { conflict in
@@ -150,7 +174,8 @@ struct TVCloudView: View
                                 Text(conflict.kindDescription).font(.callout).foregroundStyle(.secondary)
                             }
                             Spacer()
-                            Button("Resolve") { selectedConflict = conflict }
+                            Button("Resolve") { selectedConflict = conflict; focusedAction = "cancel" }
+                                .focused($focusedAction, equals: "resolve:" + conflict.id)
                                 .disabled(model.isBusy || model.session != nil)
                                 .accessibilityLabel("Resolve \(conflict.gameTitle), \(conflict.kindDescription)")
                         }
@@ -179,15 +204,40 @@ struct TVCloudView: View
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(TVTheme.background)
         .tint(TVTheme.purple)
-        .onAppear { backIsFocused = true }
+        .onAppear { focusedAction = "back" }
         .onExitCommand(perform: close)
-        .alert("Choose which progress to keep", isPresented: Binding(get: { selectedConflict != nil }, set: { if !$0 { selectedConflict = nil } }), presenting: selectedConflict)
-        { conflict in
-            Button("Keep This Apple TV") { Task { await model.resolveConflict(conflict, keepLocal: true) } }
-            Button("Use iCloud") { Task { await model.resolveConflict(conflict, keepLocal: false) } }
-            Button("Cancel", role: .cancel) {}
-        } message: { conflict in
-            Text("\(conflict.gameTitle): \(conflict.kindDescription). Keeping this Apple TV replaces the iCloud version. Using iCloud keeps the replaced local file only in this Apple TV’s purgeable cache, not in a durable backup.")
+        .onReceive(NotificationCenter.default.publisher(for: .tvControllerNavigation)) { notification in
+            guard let raw = notification.object as? String, let command = TVNavigationCommand(rawValue: raw) else { return }
+            if command == .back { selectedConflict == nil ? close() : cancelConflict(); return }
+            guard !model.isBusy else { return }
+            let actions: [String]
+            if selectedConflict != nil { actions = ["local", "cloud", "cancel"] }
+            else {
+                actions = (!model.cloud.isWorking && model.cloud.allowsRetry ? ["retry"] : [])
+                    + (!model.cloud.isWorking ? ["restore"] : []) + ["back"]
+                    + (model.session == nil ? model.conflicts.map { "resolve:" + $0.id } : [])
+            }
+            if command == .select {
+                if let conflict = selectedConflict {
+                    if focusedAction == "local" { resolve(conflict, keepLocal: true) }
+                    else if focusedAction == "cloud" { resolve(conflict, keepLocal: false) }
+                    else { cancelConflict() }
+                } else if focusedAction == "retry", actions.contains("retry") { Task { await model.refresh() } }
+                else if focusedAction == "restore", actions.contains("restore") { Task { await model.restoreLibrary() } }
+                else if focusedAction == "back" { close() }
+                else if let conflict = model.conflicts.first(where: { "resolve:" + $0.id == focusedAction }), model.session == nil {
+                    selectedConflict = conflict; focusedAction = "cancel"
+                }
+            } else {
+                let index = actions.firstIndex(where: { $0 == focusedAction }) ?? 0
+                focusedAction = actions[min(actions.count - 1, max(0, index + (command == .up || command == .left ? -1 : 1)))]
+            }
         }
+    }
+
+    private func cancelConflict() { selectedConflict = nil; focusedAction = "back" }
+    private func resolve(_ conflict: TVConflictItem, keepLocal: Bool) {
+        selectedConflict = nil; focusedAction = "back"
+        Task { await model.resolveConflict(conflict, keepLocal: keepLocal) }
     }
 }

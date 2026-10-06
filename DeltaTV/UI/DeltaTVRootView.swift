@@ -18,12 +18,12 @@ struct DeltaTVRootView: View
 
     private enum LibraryFocus: Hashable
     {
-        case game(String), importGame, restore, cloud
+        case game(String), importGame, restore, cloud, controllers
     }
 
     private enum LibrarySheet: String, Identifiable
     {
-        case importGame, cloud
+        case importGame, cloud, controllers
         var id: String { rawValue }
     }
 
@@ -51,12 +51,19 @@ struct DeltaTVRootView: View
                 TVImportView(model: model) { presentedSheet = nil }
             case .cloud:
                 TVCloudView(model: model) { presentedSheet = nil }
+            case .controllers:
+                TVControllersView { presentedSheet = nil }
             }
         }
         .task
         {
             await model.refresh()
             restoreLibraryFocus()
+        }
+        .onReceive(NotificationCenter.default.publisher(for: .tvControllerNavigation)) { notification in
+            guard model.session == nil, presentedSheet == nil, let raw = notification.object as? String,
+                  let command = TVNavigationCommand(rawValue: raw) else { return }
+            navigate(command)
         }
         .onChange(of: model.session?.gameID) { _, gameID in
             if gameID == nil { restoreLibraryFocus() }
@@ -79,6 +86,36 @@ struct DeltaTVRootView: View
                 restoreLibraryFocus()
             }
         }
+    }
+
+    private func navigate(_ command: TVNavigationCommand)
+    {
+        let actions: [LibraryFocus] = [.importGame, .restore, .cloud, .controllers]
+        let games = model.playableGames
+        if command == .select {
+            guard !model.isBusy else { return }
+            switch focusedItem {
+            case .importGame: presentedSheet = .importGame
+            case .restore: Task { await model.restoreLibrary() }
+            case .cloud: presentedSheet = .cloud
+            case .controllers: presentedSheet = .controllers
+            case .game(let id):
+                guard let game = games.first(where: { $0.id == id }) else { return }
+                lastSelectedGameID = id; Task { await model.launch(game) }
+            case nil: break
+            }
+            return
+        }
+        guard command != .back else { return }
+        if let index = actions.firstIndex(where: { $0 == focusedItem }) {
+            if command == .down, let game = games.first { focusedItem = .game(game.id) }
+            else { focusedItem = actions[min(actions.count - 1, max(0, index + (command == .left || command == .up ? -1 : 1)))] }
+        } else if case .game(let id)? = focusedItem, let index = games.firstIndex(where: { $0.id == id }) {
+            let columns = max(1, Int((UIScreen.main.bounds.width - 104) / 316))
+            let delta = command == .up ? -columns : command == .down ? columns : command == .left ? -1 : 1
+            if index + delta < 0 { focusedItem = .importGame }
+            else { focusedItem = .game(games[min(games.count - 1, index + delta)].id) }
+        } else { focusedItem = .importGame }
     }
 
     private var library: some View
@@ -108,6 +145,8 @@ struct DeltaTVRootView: View
                     .disabled(model.isBusy || model.cloud.isWorking)
                 Button { presentedSheet = .cloud } label: { Label("iCloud Details", systemImage: "icloud") }
                     .focused($focusedItem, equals: .cloud)
+                Button { presentedSheet = .controllers } label: { Label("Controllers", systemImage: "gamecontroller") }
+                    .focused($focusedItem, equals: .controllers)
                 Spacer()
             }
             .focusSection()
