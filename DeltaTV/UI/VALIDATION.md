@@ -27,7 +27,9 @@ Keep private ROMs out of commits, CI and shared artifacts.
   reassignment and foreground reconnect. Do not infer Bluetooth support from builds.
 - Exercise DS right-stick/R2 and D-Pad/A touch, screen bounds, contact/release,
   pause/disconnect/background, and games needing microphone or external BIOS.
-- Measure physical N64 performance; the Debug simulator result was about 16 FPS.
+- Extend physical N64 performance checks across titles and gameplay stress cases.
+  One bounded cartridge boot/menu run reached 60.02 VI/second and 59.79 OpenGL
+  presentations/second; the Debug simulator result was roughly 14–16 VI/second.
 - Launch, pause, resume, save, load, cancel loading, and return to the selected
   game. Dismissing an alert must not activate an underlying control.
 - Disconnect/reconnect the controller and background/foreground the app.
