@@ -55,22 +55,6 @@ final class TVEmulationSession: NSObject
         let type: GameType
     }
 
-    /// Preserve each provider's mapping; cursor mode reserves DS touch controls.
-    private struct ControllerMapping: GameControllerInputMappingProtocol
-    {
-        let base: GameControllerInputMappingProtocol?
-        var touchCursorMode = false
-        let gameControllerInputType = GameControllerInputType.mfi
-
-        func input(forControllerInput input: Input) -> Input?
-        {
-            let mapped = base?.input(forControllerInput: input)
-            if touchCursorMode, let mapped,
-               ["up", "down", "left", "right", "a", "b"].contains(mapped.stringValue) { return nil }
-            return mapped
-        }
-    }
-
     private(set) var gameID: String?
     private(set) var viewController: UIViewController?
     private(set) var isPaused = false
@@ -202,6 +186,7 @@ final class TVEmulationSession: NSObject
         stylus.release()
         stylusInputs.removeAll()
         core.pause()
+        core.deltaCore.emulatorBridge.resetInputs()
         isPaused = true
         detachEmulatorInput()
     }
@@ -218,7 +203,7 @@ final class TVEmulationSession: NSObject
         guard GameControllerRegistry.shared.connectedControllers.contains(where: { ($0.playerIndex ?? 4) < (system?.maximumPlayers ?? 1) }) else { throw SessionError.controllerRequired }
         guard isPaused else { return }
         updateControllers()
-        for controller in controllers.values where (controller.playerIndex ?? 4) < (system?.maximumPlayers ?? 1) { controller.addReceiver(core, inputMapping: ControllerMapping(base: controller.defaultInputMapping, touchCursorMode: touchCursorMode)) }
+        for controller in controllers.values where (controller.playerIndex ?? 4) < (system?.maximumPlayers ?? 1) { controller.addReceiver(core, inputMapping: TVDSControllerMapping(base: controller.defaultInputMapping, reservesTouch: hasDSTouch, touchCursorMode: touchCursorMode)) }
         core.resume()
         isPaused = false
     }
@@ -304,7 +289,7 @@ final class TVEmulationSession: NSObject
     {
         for controller in controllers.values
         {
-            for input in Array(controller.activatedInputs.keys) { controller.deactivate(input) }
+            releaseTVControllerInputs(controller)
         }
     }
 
@@ -315,7 +300,7 @@ final class TVEmulationSession: NSObject
         let identifiers = Set(connected.map { ObjectIdentifier($0) })
         for (identifier, controller) in controllers where !identifiers.contains(identifier)
         {
-            for input in Array(controller.activatedInputs.keys) { controller.deactivate(input) }
+            releaseTVControllerInputs(controller)
             if let core { controller.removeReceiver(core) }
             controller.removeReceiver(self)
             controllers.removeValue(forKey: identifier)
@@ -331,9 +316,9 @@ final class TVEmulationSession: NSObject
             // Registry assignments remain stable across the native and direct
             // Bluetooth providers; only this core's supported slots receive input.
             if let core { controller.removeReceiver(core) }
-            let mapping = ControllerMapping(base: controller.defaultInputMapping)
+            let mapping = TVDSControllerMapping(base: controller.defaultInputMapping)
             controller.addReceiver(self, inputMapping: mapping)
-            if let core, !isPaused, let player = controller.playerIndex, player < (system?.maximumPlayers ?? 1) { controller.addReceiver(core, inputMapping: ControllerMapping(base: controller.defaultInputMapping, touchCursorMode: touchCursorMode)) }
+            if let core, !isPaused, let player = controller.playerIndex, player < (system?.maximumPlayers ?? 1) { controller.addReceiver(core, inputMapping: TVDSControllerMapping(base: controller.defaultInputMapping, reservesTouch: hasDSTouch, touchCursorMode: touchCursorMode)) }
         }
         onControllersChanged?(connected.count)
         if core != nil, !connected.contains(where: { ($0.playerIndex ?? 4) < (system?.maximumPlayers ?? 1) }), !isPaused { onPauseRequested?() }
@@ -355,7 +340,15 @@ final class TVEmulationSession: NSObject
         if name == "menu", value != nil { onPauseRequested?(); return }
         guard system == .ds, player == 0 else { return }
         stylusInputs[name] = value
-        if touchCursorMode, name == "b", value != nil { toggleTouchCursorMode(); return }
+        if touchCursorMode, name == "b", value != nil {
+            // Preserve this report's cursor mapping until every receiver has
+            // finished delivery. Replacing it inline can leak B into the core.
+            Task { @MainActor [weak self] in
+                guard let self, self.core != nil, !self.isPaused, self.touchCursorMode else { return }
+                self.toggleTouchCursorMode()
+            }
+            return
+        }
         let left = touchCursorMode ? "left" : "rightThumbstickLeft"
         let right = touchCursorMode ? "right" : "rightThumbstickRight"
         let up = touchCursorMode ? "up" : "rightThumbstickUp"

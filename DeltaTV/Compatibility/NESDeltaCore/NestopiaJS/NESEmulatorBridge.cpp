@@ -28,6 +28,8 @@
 // C++
 #include <iostream>
 #include <fstream>
+#include <sys/stat.h>
+#include <errno.h>
 
 // Variables
 Nes::Api::Emulator nes_emulator;
@@ -56,6 +58,7 @@ char *gameSaveLoadPath = NULL;
 bool gameLoaded = false;
 char *gamePath = NULL;
 bool batteryWriteSucceeded = true;
+bool batteryLoadSucceeded = true;
 
 static bool NST_CALLBACK AudioLock(void *context, Nes::Api::Sound::Output& audioOutput);
 static void NST_CALLBACK AudioUnlock(void *context, Nes::Api::Sound::Output& audioOutput);
@@ -218,11 +221,16 @@ void NESResetInputs()
 
 bool NESSaveSaveState(const char *saveStateFilepath)
 {
-    std::ofstream fileStream(saveStateFilepath, std::ifstream::out | std::ifstream::binary);
-    if (!gameLoaded || !fileStream.is_open()) return false;
+    if (!gameLoaded) return false;
+    std::string temporary = std::string(saveStateFilepath) + ".pending";
+    std::ofstream fileStream(temporary.c_str(), std::ifstream::out | std::ifstream::binary);
+    if (!fileStream.is_open()) return false;
     Nes::Result result = nes_machine.SaveState(fileStream);
     fileStream.flush();
-    return NES_SUCCEEDED(result) && fileStream.good();
+    fileStream.close();
+    bool succeeded = NES_SUCCEEDED(result) && fileStream.good() && rename(temporary.c_str(), saveStateFilepath) == 0;
+    remove(temporary.c_str());
+    return succeeded;
 }
 
 bool NESLoadSaveState(const char *saveStateFilepath)
@@ -274,11 +282,14 @@ bool NESSaveGameSave(const char *gameSavePath)
 
 bool NESLoadGameSave(const char *gameSavePath)
 {
+    batteryLoadSucceeded = true;
     free(gameSaveLoadPath);
     gameSaveLoadPath = strdup(gameSavePath);
 
     // Restart emulation so FileIO callback is called.
-    return NESStartEmulation(gamePath);
+    bool started = NESStartEmulation(gamePath);
+    free(gameSaveLoadPath); gameSaveLoadPath = NULL;
+    return started && batteryLoadSucceeded;
 }
 
 #pragma mark - Cheats -
@@ -364,8 +375,12 @@ static void NST_CALLBACK FileIO(void *context, Nes::Api::User::File& file)
                 return;
             }
 
-            std::ifstream fileStream(gameSaveLoadPath, std::ios::binary);
-            file.SetContent(fileStream);
+            struct stat attributes;
+            if (stat(gameSaveLoadPath, &attributes) == 0) {
+                std::ifstream fileStream(gameSaveLoadPath, std::ios::binary);
+                batteryLoadSucceeded = S_ISREG(attributes.st_mode) && attributes.st_size == file.GetMaxSize()
+                    && fileStream.is_open() && NES_SUCCEEDED(file.SetContent(fileStream));
+            } else if (errno != ENOENT) { batteryLoadSucceeded = false; }
             free(gameSaveLoadPath);
             gameSaveLoadPath = NULL;
 
@@ -386,9 +401,10 @@ static void NST_CALLBACK FileIO(void *context, Nes::Api::User::File& file)
             }
 
             std::ofstream fileStream(gameSaveSavePath, std::ios::binary);
-            file.GetContent(fileStream);
+            Nes::Result result = file.GetContent(fileStream);
             fileStream.flush();
-            batteryWriteSucceeded = fileStream.good();
+            fileStream.close();
+            batteryWriteSucceeded = NES_SUCCEEDED(result) && fileStream.good();
             free(gameSaveSavePath);
             gameSaveSavePath = NULL;
 

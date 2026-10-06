@@ -4,10 +4,11 @@ Import-policy tests pass with real owned inputs and Swift 6 strict concurrency c
 `bash DeltaTVTests/run-import-tests.sh`. The final production code passed local
 Xcode 27 unsigned Simulator/device builds and actual-ROM automation for GB/GBC,
 NES, SNES, GBA, N64 and DS video, input, audio-sample processing, states and saves.
-Genesis execution awaits a suitable owned cartridge; firmware rejection passed.
-Thirty-eight storage scenarios and 32 fake-radio controller assertions passed.
+Genesis execution remains unverified; firmware rejection passed.
+Thirty-eight storage scenarios and 34 fake-radio controller scenarios passed.
 The reusable controller XCTest bundle builds; local assertions were run through
 a private app harness because Xcode could not select the custom simulator set.
+Real-ROM save regressions additionally verify failed-write preservation, truncated battery rejection and batteryless SNES saves. `bash DeltaTVTests/run-savestate-io.sh <task-output-directory>` checks native DS short I/O and close errors.
 Signed-device backup acknowledgment and byte-identical CloudKit recovery also
 passed in the Development environment; see [verification scope and remaining
 release gates](../../Docs/DeltaTVCloudStorage.md#verification-and-release-gates).
@@ -19,7 +20,7 @@ Keep private ROMs out of commits, CI and shared artifacts.
   completed backups; keep Import, Restore, and account errors accessible.
 - Navigate every screen with the Siri Remote and a controller. Check visible
   focus, Select/A, VoiceOver labels, long titles, scrolling, and Back behavior.
-- Import a valid cartridge for each linked system. Reject HTTP, credential-bearing URLs, unsupported
+- Import a valid ROM file for each linked system. Reject HTTP, credential-bearing URLs, unsupported
   files, corrupt/truncated ROMs, oversized streams, and insecure redirects.
   Test timeout, cancellation before/during download, retry, and repeated Select.
 - Exercise official NES/SNES/N64 and Switch 2 GameCube hardware. Verify native

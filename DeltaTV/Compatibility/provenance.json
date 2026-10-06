@@ -133,5 +133,15 @@
     "adapted": "DeltaTV/Compatibility/N64DeltaCore/Mupen64Plus/mupen64plus-core/src/osal/files_tvos.m",
     "original": "Cores/N64DeltaCore/Mupen64Plus/mupen64plus-core/src/osal/files_macos.c",
     "originalSHA256": "1c50e2a1ddd0521b4a89c1dee5d455c8832a5053480c6b10dc314e80e03ec095"
+  },
+  {
+    "adapted": "DeltaTV/Compatibility/MelonDSDeltaCore/melonDS/src/Savestate.cpp",
+    "original": "Cores/MelonDSDeltaCore/melonDS/src/Savestate.cpp",
+    "originalSHA256": "913cf2f98d8bfafb7ac622ab7b169d4abaceee8e3c8656e15469c8f8bacfff29"
+  },
+  {
+    "adapted": "DeltaTV/Compatibility/MelonDSDeltaCore/melonDS/src/Savestate.h",
+    "original": "Cores/MelonDSDeltaCore/melonDS/src/Savestate.h",
+    "originalSHA256": "e8a3b10d36c008ebca1fbb9efbf1798dd18b3fc5ac4276f12eaeb12532aa485f"
   }
 ]

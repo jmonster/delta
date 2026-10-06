@@ -26,7 +26,7 @@ struct TVControllersView: View
                 Button("Disconnect Switch 2 Controllers") { service.stop() }
                     .focused($focus, equals: "disconnect").disabled(!service.isStarted || service.isStopping)
                 Text(service.status).foregroundStyle(.secondary)
-                Text("For the official Switch 2 GameCube controller, choose Find and hold Sync. Up to two direct Bluetooth controllers. Returning from background may require Find and Sync again.")
+                Text("For the official Switch 2 GameCube controller, select Find Switch 2 Controllers above, then hold the controller’s Sync button. Up to two direct Bluetooth controllers. After returning from background, you may need to repeat these steps.")
                     .font(.callout).foregroundStyle(.secondary)
                 if let error = service.errorMessage { Text(error).foregroundStyle(.orange) }
                 ForEach(registry.connectedControllers.map { Entry(controller: $0) }) { entry in

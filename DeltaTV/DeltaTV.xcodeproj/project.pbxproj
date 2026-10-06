@@ -305,6 +305,7 @@
 		2E116063A45518C44FC42CA4 /* ARMInterpreter_ALU.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9131455CA779B5C986F8C20B /* ARMInterpreter_ALU.cpp */; };
 		2E319D74AD53EA81FDE8CF29 /* Util.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3F6DF25D531E202D835FB78D /* Util.cpp */; };
 		2E9B10B29E1A22DC3146A39A /* TextureFilters_xbrz.h in Headers */ = {isa = PBXBuildFile; fileRef = E95A9AC26861AEB56E486E52 /* TextureFilters_xbrz.h */; };
+		2EB13A58719E25F7D9315368 /* TVDSStylus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79F0C140A4204D61D9B63AC4 /* TVDSStylus.swift */; };
 		2EE5AF9A6512CB7D88373B59 /* Arm64Emitter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 44B932AEA83CB3BD9EA498BF /* Arm64Emitter.cpp */; };
 		2EFED3281D7DEF93BDA2EE9E /* NstVideoFilterHqX.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 79CCE2DABC30EAFE765481F3 /* NstVideoFilterHqX.cpp */; };
 		2F14DA1F56068071869A005B /* flashram.c in Sources */ = {isa = PBXBuildFile; fileRef = 95971AF0F817EE9E7747CDC6 /* flashram.c */; };
@@ -442,6 +443,7 @@
 		480B45060D402B75FE332E28 /* NstVsTkoBoxing.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8920BC0BC6D4991BB1495C47 /* NstVsTkoBoxing.cpp */; };
 		48175F7D829B914AD57ED1CB /* F3DTEXA.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 25B93F456CB83E27BA00148C /* F3DTEXA.cpp */; };
 		48B2474514E62926EB5E1CC4 /* FileInputStream.hpp in Headers */ = {isa = PBXBuildFile; fileRef = EC6CD8EFFD30667672DA7F41 /* FileInputStream.hpp */; };
+		48F78E6A7C06480FA6D80B96 /* MelonDSDeltaCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9D550823A9FB4C0EB83ED800 /* MelonDSDeltaCore.framework */; };
 		49706756C68865AC1985EF52 /* areplay.c in Sources */ = {isa = PBXBuildFile; fileRef = 3E15E1DA62C909210793720C /* areplay.c */; };
 		49706F1B2787D0EE55384115 /* GBI.h in Headers */ = {isa = PBXBuildFile; fileRef = 33AA453C648C436C173DD88A /* GBI.h */; };
 		49775705EBF83CDD1C1E63AE /* envelope_unit.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B01D235C73A34B6047FB9972 /* envelope_unit.cpp */; };
@@ -1573,6 +1575,13 @@
 			remoteGlobalIDString = 1C7E3CCD70CB5B2B2D1D9492;
 			remoteInfo = libSnes9x;
 		};
+		A973A3631E8EDF2B1F3C394F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 98F54143AB4E86B28C3AFEE0 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = B8ADC4791AC03DA6892A4FB1;
+			remoteInfo = MelonDSDeltaCore;
+		};
 		AA1BE29546967A608DE7157C /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 98F54143AB4E86B28C3AFEE0 /* Project object */;
@@ -1857,7 +1866,7 @@
 		1BEE49F04E2B0A4870C47B99 /* blip_buf.c */ = {isa = PBXFileReference; includeInIndex = 1; name = blip_buf.c; path = "../Cores/GPGXDeltaCore/Sources/GenesisPlusGX/Genesis-Plus-GX/core/sound/blip_buf.c"; sourceTree = "<group>"; };
 		1C131EF34BDC5A031C82FC14 /* opengl_UnbufferedDrawer.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = opengl_UnbufferedDrawer.h; path = ../Cores/N64DeltaCore/Mupen64Plus/GLideN64/src/Graphics/OpenGLContext/opengl_UnbufferedDrawer.h; sourceTree = "<group>"; };
 		1C200F232A636A2D645AFEC2 /* system.c */ = {isa = PBXFileReference; includeInIndex = 1; name = system.c; path = "../Cores/GPGXDeltaCore/Sources/GenesisPlusGX/Genesis-Plus-GX/core/system.c"; sourceTree = "<group>"; };
-		1C82DAD00921F1FB40C8A8E7 /* Savestate.cpp */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.cpp.cpp; name = Savestate.cpp; path = ../Cores/MelonDSDeltaCore/melonDS/src/Savestate.cpp; sourceTree = "<group>"; };
+		1C82DAD00921F1FB40C8A8E7 /* Savestate.cpp */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.cpp.cpp; name = Savestate.cpp; path = Compatibility/MelonDSDeltaCore/melonDS/src/Savestate.cpp; sourceTree = SOURCE_ROOT; };
 		1CC8385C75F57E76D34D1723 /* snes9x.cpp */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.cpp.cpp; name = snes9x.cpp; path = ../Cores/SNESDeltaCore/snes9x/snes9x.cpp; sourceTree = "<group>"; };
 		1D33AB4F0515DA6AF1C2E320 /* MFiGameController.deltamapping */ = {isa = PBXFileReference; lastKnownFileType = file; path = "../Cores/DeltaCore/DeltaCore/Supporting Files/MFiGameController.deltamapping"; sourceTree = "<group>"; };
 		1D5510423024B92FA747B92D /* cheat.c */ = {isa = PBXFileReference; includeInIndex = 1; name = cheat.c; path = "../Cores/N64DeltaCore/Mupen64Plus/mupen64plus-core/src/main/cheat.c"; sourceTree = "<group>"; };
@@ -3102,7 +3111,7 @@
 		FC920C834B5941B11723FEDC /* TVEmulationSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Emulation/TVEmulationSession.swift; sourceTree = "<group>"; };
 		FCCFB8C74B9252E890D733E8 /* NstBoardBmc36in1.cpp */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.cpp.cpp; name = NstBoardBmc36in1.cpp; path = ../Cores/NESDeltaCore/nestopia/source/core/board/NstBoardBmc36in1.cpp; sourceTree = "<group>"; };
 		FD357A5009FC111662EE5394 /* dcheck.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = dcheck.h; path = ../Cores/N64DeltaCore/Mupen64Plus/GLideN64/src/Graphics/OpenGLContext/GraphicBuffer/PublicApi/dcheck.h; sourceTree = "<group>"; };
-		FDE173CFB5B6D6FC81484BCF /* files_tvos.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = files_tvos.m; path = Compatibility/N64DeltaCore/Mupen64Plus/mupen64plus-core/src/osal/files_tvos.m; sourceTree = "<group>"; };
+		FDE173CFB5B6D6FC81484BCF /* files_tvos.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = files_tvos.m; path = "Compatibility/N64DeltaCore/Mupen64Plus/mupen64plus-core/src/osal/files_tvos.m"; sourceTree = "<group>"; };
 		FDE57D78C6BB69C8111191A8 /* pngrtran.c */ = {isa = PBXFileReference; includeInIndex = 1; name = pngrtran.c; path = ../Cores/N64DeltaCore/Mupen64Plus/libpng/pngrtran.c; sourceTree = "<group>"; };
 		FDF25CF834825B4A0746F4DB /* NstBoardIremLrog017.cpp */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.cpp.cpp; name = NstBoardIremLrog017.cpp; path = ../Cores/NESDeltaCore/nestopia/source/core/board/NstBoardIremLrog017.cpp; sourceTree = "<group>"; };
 		FDF467743428D8ED3A0C7A26 /* ftmodapi.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = ftmodapi.h; path = ../Cores/N64DeltaCore/Mupen64Plus/GLideN64/src/inc/freetype/include/ftmodapi.h; sourceTree = "<group>"; };
@@ -3239,6 +3248,7 @@
 				96DF57F2CC20A749A4D809D0 /* Foundation.framework in Frameworks */,
 				9ABE515ABCF1BB96E05B1E5A /* DeltaCore.framework in Frameworks */,
 				04B17E5D844A191B29CDD77C /* Switch2Kit.framework in Frameworks */,
+				48F78E6A7C06480FA6D80B96 /* MelonDSDeltaCore.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5710,6 +5720,7 @@
 			dependencies = (
 				5403AE90026CCDC11965C0A8 /* PBXTargetDependency */,
 				F8B3863DA60551654D02D786 /* PBXTargetDependency */,
+				84F55FF2050778E04F194D54 /* PBXTargetDependency */,
 			);
 			name = DeltaTVControllerTests;
 			productName = DeltaTVControllerTests;
@@ -6868,6 +6879,7 @@
 				E20A05EF460D111961C52259 /* Switch2GameController.swift in Sources */,
 				691C59F6121773ED9C339808 /* ControllerIntegrationTests.swift in Sources */,
 				36FD37E9FBAFF37C21BC13A5 /* TVControllerRegistryTests.swift in Sources */,
+				2EB13A58719E25F7D9315368 /* TVDSStylus.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -7097,6 +7109,12 @@
 			isa = PBXTargetDependency;
 			target = 8BB5776D6B2F8D5CDF3776D2 /* DeltaCore */;
 			targetProxy = 21F7B0E0B137638D7AC0DF15 /* PBXContainerItemProxy */;
+		};
+		84F55FF2050778E04F194D54 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = MelonDSDeltaCore;
+			target = B8ADC4791AC03DA6892A4FB1 /* MelonDSDeltaCore */;
+			targetProxy = A973A3631E8EDF2B1F3C394F /* PBXContainerItemProxy */;
 		};
 		8521A26555F8D4D8A8C22B1F /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -8046,6 +8064,12 @@
 					"-D_NETINET_TCP_VAR_H_",
 					"-ffast-math",
 				);
+				OTHER_CPLUSPLUSFLAGS = (
+					"$(OTHER_CFLAGS)",
+					"$(inherited)",
+					"-include",
+					"$(SRCROOT)/Compatibility/MelonDSDeltaCore/melonDS/src/Savestate.h",
+				);
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = MelonDS;
 				SDKROOT = appletvos;
@@ -8258,6 +8282,12 @@
 				);
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
+				OTHER_CPLUSPLUSFLAGS = (
+					"$(OTHER_CFLAGS)",
+					"$(inherited)",
+					"-include",
+					"$(SRCROOT)/Compatibility/MelonDSDeltaCore/melonDS/src/Savestate.h",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.rileytestut.MelonDSDeltaCore.tvOS;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SDKROOT = appletvos;
@@ -9152,6 +9182,12 @@
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
+				OTHER_CPLUSPLUSFLAGS = (
+					"$(OTHER_CFLAGS)",
+					"$(inherited)",
+					"-include",
+					"$(SRCROOT)/Compatibility/MelonDSDeltaCore/melonDS/src/Savestate.h",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.rileytestut.MelonDSDeltaCore.tvOS;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SDKROOT = appletvos;
@@ -10237,6 +10273,12 @@
 					"-DMELONDS_VERSION=\\\"0.9.5\\\"",
 					"-D_NETINET_TCP_VAR_H_",
 					"-ffast-math",
+				);
+				OTHER_CPLUSPLUSFLAGS = (
+					"$(OTHER_CFLAGS)",
+					"$(inherited)",
+					"-include",
+					"$(SRCROOT)/Compatibility/MelonDSDeltaCore/melonDS/src/Savestate.h",
 				);
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = MelonDS;

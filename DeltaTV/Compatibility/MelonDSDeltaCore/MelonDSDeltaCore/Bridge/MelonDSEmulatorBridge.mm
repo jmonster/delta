@@ -25,6 +25,23 @@
 #include "melonDS/src/SPU.h"
 #include "melonDS/src/GPU.h"
 #include "melonDS/src/AREngine.h"
+#include "melonDS/src/NDSCart.h"
+
+// Exact pinned ROM-list ABI; do not include ROMList.h's definition of the table.
+struct ROMListEntry { u32 GameCode, ROMSize, SaveMemType; };
+namespace NDSCart { bool ReadROMParams(u32 gamecode, ROMListEntry* params); }
+
+static u32 CartridgeSaveLength()
+{
+    u32 code = 0;
+    memcpy(&code, NDSCart::Header.GameCode, sizeof(code));
+    if (NDSCart::Header.ARM9ROMOffset < 0x4000 || code == 0x23232323) return 0;
+    ROMListEntry params = {};
+    if (!NDSCart::ReadROMParams(code, &params))
+        params.SaveMemType = 2;
+    const u32 sizes[] = {0, 512, 8192, 65536, 131072, 262144, 524288, 1048576, 8388608, 16777216, 67108864};
+    return params.SaveMemType < sizeof(sizes) / sizeof(sizes[0]) ? sizes[params.SaveMemType] : 0;
+}
 
 #include "melonDS/src/frontend/qt_sdl/Config.h"
 #include "melonDS/src/frontend/qt_sdl/LAN_Socket.h"
@@ -540,6 +557,7 @@ void ParseTextCode(char* text, int tlen, u32* code, int clen) // or whatever thi
 - (void)saveGameSaveToURL:(NSURL *)fileURL
 {
     _lastBatterySaveResult = _lastLoadResult;
+    if (!_lastLoadResult) return;
     if (self.saveData.length > 0)
     {
         NSError *error = nil;
@@ -595,9 +613,11 @@ void ParseTextCode(char* text, int tlen, u32* code, int clen) // or whatever thi
     NSData *saveData = [NSData dataWithContentsOfURL:fileURL options:0 error:&error];
     if (saveData == nil)
     {
-        NSLog(@"Failed load save data. %@", error);
+        _lastLoadResult = NO;
         return;
     }
+
+    if (!_lastLoadResult || saveData.length != CartridgeSaveLength()) { _lastLoadResult = NO; return; }
 
     NDS::LoadSave((const u8 *)saveData.bytes, (u32)saveData.length);
 }
@@ -606,15 +626,23 @@ void ParseTextCode(char* text, int tlen, u32* code, int clen) // or whatever thi
 
 - (void)saveSaveStateToURL:(NSURL *)URL
 {
-    Savestate *savestate = new Savestate(URL.fileSystemRepresentation, true);
-    _lastSaveStateResult = _lastLoadResult && !savestate->Error && NDS::DoSavestate(savestate) && !savestate->Error;
+    _lastSaveStateResult = NO;
+    if (!_lastLoadResult) return;
+    NSURL *temporary = [URL URLByAppendingPathExtension:@"pending"];
+    Savestate *savestate = new Savestate(temporary.fileSystemRepresentation, true);
+    bool serialized = !savestate->Error && NDS::DoSavestate(savestate);
+    bool finished = savestate->Finish();
+    _lastSaveStateResult = serialized && finished && rename(temporary.fileSystemRepresentation, URL.fileSystemRepresentation) == 0;
     delete savestate;
+    [[NSFileManager defaultManager] removeItemAtURL:temporary error:nil];
 }
 
 - (void)loadSaveStateFromURL:(NSURL *)URL
 {
     Savestate *savestate = new Savestate(URL.fileSystemRepresentation, false);
-    _lastLoadStateResult = _lastLoadResult && !savestate->Error && NDS::DoSavestate(savestate) && !savestate->Error;
+    bool loaded = _lastLoadResult && !savestate->Error && NDS::DoSavestate(savestate);
+    bool finished = savestate->Finish();
+    _lastLoadStateResult = loaded && finished;
     delete savestate;
 }
 

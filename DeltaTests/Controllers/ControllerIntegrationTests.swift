@@ -403,13 +403,20 @@ final class ControllerIntegrationTests: XCTestCase
     func testSynchronousPauseDuringInputDeliveryDoesNotReapplyRemainingPresses() async
     {
         let controller = Switch2GameController(controller: self.device(), manager: Radio())
-        let receiver = Receiver()
-        controller.addReceiver(receiver)
-        receiver.onPress = { controller.releaseInputs() }
+        let receivers = [Receiver(), Receiver()]
+        for receiver in receivers {
+            controller.addReceiver(receiver)
+            receiver.onPress = {
+                #if os(tvOS)
+                releaseTVControllerInputs(controller)
+                #else
+                controller.releaseInputs()
+                #endif
+            }
+        }
         controller.update(self.device([.a, .b, .home]))
-        XCTAssertTrue(receiver.active.isEmpty)
+        XCTAssertTrue(receivers.allSatisfy { $0.active.isEmpty && $0.presses.count == 1 })
         XCTAssertTrue(controller.activatedInputs.isEmpty)
-        XCTAssertEqual(receiver.presses.count, 1)
     }
 
     func testTypedDefaultMappingCoversEveryProducedInput() async

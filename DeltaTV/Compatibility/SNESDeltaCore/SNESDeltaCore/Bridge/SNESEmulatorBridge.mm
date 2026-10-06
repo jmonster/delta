@@ -16,6 +16,7 @@
 #include "controls.h"
 #include "display.h"
 #include "snes9x/cheats.h"
+#include "srtc.h"
 
 // System
 #include <sys/time.h>
@@ -147,7 +148,7 @@ void SNESFinalizeSamplesCallback(void *context);
 
     S9xReportControllers();
 
-    if (!Memory.LoadROM(URL.path.fileSystemRepresentation))
+    if (!Memory.LoadROM(URL.path.fileSystemRepresentation) || Memory.SRAMSize > 7 || Memory.SRAMMask > 0x1FFFF)
     {
         fprintf(stderr, "Error opening the ROM file.\n");
         return;
@@ -279,7 +280,13 @@ void SNESFinalizeSamplesCallback(void *context);
 
 - (void)saveSaveStateToURL:(NSURL *)URL
 {
-    _lastSaveStateResult = _lastLoadResult && S9xFreezeGame(URL.path.fileSystemRepresentation);
+    _lastSaveStateResult = NO;
+    if (!_lastLoadResult) return;
+    uint32 size = S9xFreezeSize();
+    if (!size || size > 64 * 1024 * 1024) return;
+    NSMutableData *data = [NSMutableData dataWithLength:size];
+    if (S9xFreezeGameMem((uint8 *)data.mutableBytes, size))
+        _lastSaveStateResult = [data writeToURL:URL options:NSDataWritingAtomic error:nil];
 }
 
 - (void)loadSaveStateFromURL:(NSURL *)URL
@@ -338,16 +345,41 @@ void SNESFinalizeSamplesCallback(void *context);
 
 - (void)saveGameSaveToURL:(NSURL *)URL
 {
-    NSURL *temporary = [URL URLByAppendingPathExtension:@"pending"];
-    _lastBatterySaveResult = _lastLoadResult && Memory.SaveSRAM(temporary.path.fileSystemRepresentation);
-    if (_lastBatterySaveResult && [[NSFileManager defaultManager] fileExistsAtPath:temporary.path])
-        _lastBatterySaveResult = rename(temporary.fileSystemRepresentation, URL.fileSystemRepresentation) == 0;
-    [[NSFileManager defaultManager] removeItemAtURL:temporary error:nil];
+    _lastBatterySaveResult = NO;
+    if (!_lastLoadResult) return;
+    NSUInteger size = Memory.SRAMSize ? (Memory.SRAMSize >= 7 ? 0x20000 : 1u << (Memory.SRAMSize + 10)) : 0;
+    if ((Settings.SuperFX && Memory.ROMType < 0x15) || (Settings.SA1 && Memory.ROMType == 0x34)) size = 0;
+    if (size && ![[NSData dataWithBytes:Memory.SRAM length:size] writeToURL:URL options:NSDataWritingAtomic error:nil]) return;
+    if (Settings.SRTC || Settings.SPC7110RTC)
+    {
+        NSURL *rtc = [[URL URLByDeletingPathExtension] URLByAppendingPathExtension:@"rtc"];
+        if (![[NSData dataWithBytes:RTCData.reg length:20] writeToURL:rtc options:NSDataWritingAtomic error:nil]) return;
+    }
+    // Cartridges without persistent RAM legitimately have no battery asset.
+    _lastBatterySaveResult = YES;
 }
 
 - (void)loadGameSaveFromURL:(NSURL *)URL
 {
-    Memory.LoadSRAM(URL.path.fileSystemRepresentation);
+    if (!_lastLoadResult) return;
+    NSUInteger size = Memory.SRAMSize ? (Memory.SRAMSize >= 7 ? 0x20000 : 1u << (Memory.SRAMSize + 10)) : 0;
+    if ((Settings.SuperFX && Memory.ROMType < 0x15) || (Settings.SA1 && Memory.ROMType == 0x34)) size = 0;
+    NSData *save = nil, *rtcData = nil;
+    if ([[NSFileManager defaultManager] fileExistsAtPath:URL.path])
+    {
+        save = [NSData dataWithContentsOfURL:URL];
+        if (!size || !save || (save.length != size && save.length != size + 512)) { _lastLoadResult = NO; return; }
+    }
+    NSURL *rtc = [[URL URLByDeletingPathExtension] URLByAppendingPathExtension:@"rtc"];
+    if ((Settings.SRTC || Settings.SPC7110RTC) && [[NSFileManager defaultManager] fileExistsAtPath:rtc.path])
+    {
+        rtcData = [NSData dataWithContentsOfURL:rtc];
+        if (rtcData.length != 20) { _lastLoadResult = NO; return; }
+    }
+    // Validate the whole pair before changing native RAM or clock registers.
+    Memory.ClearSRAM();
+    if (save) memcpy(Memory.SRAM, (const uint8 *)save.bytes + save.length - size, size);
+    if (rtcData) memcpy(RTCData.reg, rtcData.bytes, 20);
 }
 
 #pragma mark - Getters/Setters -

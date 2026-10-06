@@ -279,6 +279,7 @@ int GPGXGameSaveSize = 0x10000;
 - (void)loadSaveStateFromURL:(NSURL *)URL
 {
     _lastLoadStateResult = NO;
+    if (!_lastLoadResult) return;
     NSError *error = nil;
     NSData *saveStateData = [NSData dataWithContentsOfURL:URL options:0 error:&error];
     if (saveStateData == nil)
@@ -287,7 +288,10 @@ int GPGXGameSaveSize = 0x10000;
         return;
     }
 
-    if (saveStateData.length < 16 || saveStateData.length > STATE_SIZE) return;
+    NSMutableData *current = [NSMutableData dataWithLength:STATE_SIZE];
+    int expectedSize = state_save(current.mutableBytes);
+    if (expectedSize < 16 || expectedSize > STATE_SIZE || saveStateData.length != expectedSize
+        || memcmp(saveStateData.bytes, STATE_VERSION, 16) != 0) return;
     NSMutableData *padded = [NSMutableData dataWithLength:STATE_SIZE];
     memcpy(padded.mutableBytes, saveStateData.bytes, saveStateData.length);
     _lastLoadStateResult = state_load(padded.mutableBytes) > 0;

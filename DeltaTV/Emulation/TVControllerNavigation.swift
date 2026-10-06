@@ -12,11 +12,14 @@ final class TVControllerNavigation: GameControllerReceiver
 {
     var enabled = true { didSet { if !enabled { stopRepeating() } } }
     private var held: TVNavigationCommand?
+    private var heldController: ObjectIdentifier?
+    private var heldInput: String?
     private var timer: Timer?
     private var repeatAfter: Date?
 
     nonisolated func gameController(_ gameController: DeltaCore.GameController, didActivate input: Input, value: Double)
     {
+        let controllerID = ObjectIdentifier(gameController)
         MainActor.assumeIsolated {
             guard enabled else { return }
             let command: TVNavigationCommand?
@@ -29,10 +32,16 @@ final class TVControllerNavigation: GameControllerReceiver
             case "b", "menu": command = .back
             default: command = nil
             }
-            guard let command, value >= 0.5 else { return }
+            let matchesHeld = heldController == controllerID && heldInput == input.stringValue
+            guard let command, value >= 0.5 else {
+                if matchesHeld { stopRepeating() }
+                return
+            }
             if [.up, .down, .left, .right].contains(command) {
-                guard held != command else { return }
+                guard !matchesHeld else { return }
                 stopRepeating(); held = command; repeatAfter = Date().addingTimeInterval(0.4)
+                heldController = controllerID
+                heldInput = input.stringValue
                 timer = Timer.scheduledTimer(withTimeInterval: 0.12, repeats: true) { [weak self] _ in
                     MainActor.assumeIsolated {
                         guard let self, self.enabled, let held = self.held, let after = self.repeatAfter, Date() >= after else { return }
@@ -44,8 +53,13 @@ final class TVControllerNavigation: GameControllerReceiver
         }
     }
     nonisolated func gameController(_ gameController: DeltaCore.GameController, didDeactivate input: Input)
-    { MainActor.assumeIsolated { if input.isContinuous || ["up", "down", "left", "right"].contains(input.stringValue) { stopRepeating() } } }
-    func stopRepeating() { timer?.invalidate(); timer = nil; held = nil; repeatAfter = nil }
+    {
+        let controllerID = ObjectIdentifier(gameController)
+        MainActor.assumeIsolated {
+            if heldController == controllerID, heldInput == input.stringValue { stopRepeating() }
+        }
+    }
+    func stopRepeating() { timer?.invalidate(); timer = nil; held = nil; repeatAfter = nil; heldController = nil; heldInput = nil }
     private func post(_ command: TVNavigationCommand)
     { NotificationCenter.default.post(name: .tvControllerNavigation, object: command.rawValue) }
 }

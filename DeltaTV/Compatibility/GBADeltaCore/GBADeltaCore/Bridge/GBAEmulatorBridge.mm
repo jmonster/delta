@@ -22,9 +22,32 @@
 #include "gba/Cheats.h"
 #include "gba/RTC.h"
 #include "gba/EEprom.h"
+#include "gba/Flash.h"
+#include <zlib.h>
 #include "Util.h"
 
 #include <sys/time.h>
+
+// Pinned VBA-M's remembered save type, also used by its battery writer.
+extern int gbaSaveType;
+
+static bool CompleteGzip(const void *bytes, unsigned length)
+{
+    z_stream stream = {};
+    stream.next_in = (Bytef *)bytes;
+    stream.avail_in = length;
+    if (inflateInit2(&stream, 15 + 16) != Z_OK) return false;
+    unsigned char output[65536];
+    int result;
+    do {
+        stream.next_out = output;
+        stream.avail_out = sizeof(output);
+        result = inflate(&stream, Z_NO_FLUSH);
+    } while (result == Z_OK && stream.total_out < 16 * 1024 * 1024);
+    bool complete = result == Z_STREAM_END && stream.avail_in == 0;
+    inflateEnd(&stream);
+    return complete;
+}
 
 // DeltaCore
 #import <GBADeltaCore/GBADeltaCore.h>
@@ -341,11 +364,17 @@ int  RGB_LOW_BITS_MASK;
 
 - (void)saveGameSaveToURL:(NSURL *)URL
 {
-    NSURL *temporary = [URL URLByAppendingPathExtension:@"pending"];
-    _lastBatterySaveResult = _lastLoadResult && GBASystem.emuWriteBattery(temporary.fileSystemRepresentation);
-    if (_lastBatterySaveResult && [[NSFileManager defaultManager] fileExistsAtPath:temporary.path])
-        _lastBatterySaveResult = rename(temporary.fileSystemRepresentation, URL.fileSystemRepresentation) == 0;
-    [[NSFileManager defaultManager] removeItemAtURL:temporary error:nil];
+    _lastBatterySaveResult = NO;
+    if (!_lastLoadResult) return;
+    if (gbaSaveType == 0) {
+        if (eepromInUse) gbaSaveType = 3;
+        else if (saveType == 1 || saveType == 2) gbaSaveType = saveType;
+    }
+    if (gbaSaveType == 0 || gbaSaveType == 5) { _lastBatterySaveResult = YES; return; }
+    int size = gbaSaveType == 3 ? eepromSize : (gbaSaveType == 2 ? flashSize : 32768);
+    if (size <= 0 || size > (gbaSaveType == 3 ? sizeof(eepromData) : sizeof(flashSaveMemory))) return;
+    NSData *data = [NSData dataWithBytes:(gbaSaveType == 3 ? eepromData : flashSaveMemory) length:size];
+    _lastBatterySaveResult = [data writeToURL:URL options:NSDataWritingAtomic error:nil];
 }
 
 - (void)loadGameSaveFromURL:(NSURL *)URL
@@ -369,7 +398,17 @@ int  RGB_LOW_BITS_MASK;
 
 - (void)saveSaveStateToURL:(NSURL *)URL
 {
-    _lastSaveStateResult = _lastLoadResult && GBASystem.emuWriteState(URL.fileSystemRepresentation);
+    _lastSaveStateResult = NO;
+    if (!_lastLoadResult) return;
+    NSMutableData *memory = [NSMutableData dataWithLength:4 * 1024 * 1024];
+    long reserved = 0;
+    if (!GBASystem.emuWriteMemState((char *)memory.mutableBytes, (int)memory.length, reserved)) return;
+    // memgz adds an eight-byte wrapper. Its final length includes the gzip trailer.
+    unsigned length = 0;
+    memcpy(&length, (const char *)memory.bytes + 4, sizeof(length));
+    if (!length || length > memory.length - 8 || !CompleteGzip((const char *)memory.bytes + 8, length)) return;
+    NSData *data = [NSData dataWithBytes:(const char *)memory.bytes + 8 length:length];
+    _lastSaveStateResult = [data writeToURL:URL options:NSDataWritingAtomic error:nil];
 }
 
 - (void)loadSaveStateFromURL:(NSURL *)URL

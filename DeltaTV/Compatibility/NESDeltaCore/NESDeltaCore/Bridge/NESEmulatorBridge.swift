@@ -163,7 +163,7 @@ public extension NESEmulatorBridge
     func loadGameSave(from url: URL)
     {
 
-        _ = url.withUnsafeFileSystemRepresentation { NESLoadGameSave($0!) }
+        lastLoadResult = lastLoadResult && url.withUnsafeFileSystemRepresentation { NESLoadGameSave($0!) }
 
 
     }

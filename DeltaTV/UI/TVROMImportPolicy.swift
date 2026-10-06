@@ -56,7 +56,10 @@ enum TVROMImportPolicy
                     let h = try read(offset + copier, 64)
                     let complement = Int(h[28]) | Int(h[29]) << 8
                     let checksum = Int(h[30]) | Int(h[31]) << 8
-                    if complement ^ checksum == 0xFFFF && h[21] & 0x20 != 0 && h[61] >= 0x80 { valid = true }
+                    if complement ^ checksum == 0xFFFF && h[21] & 0x20 != 0 && h[61] >= 0x80 {
+                        guard h[24] <= 7 else { throw TVROMImportError.invalidROM }
+                        valid = true
+                    }
                 }
             }
         case .gba:

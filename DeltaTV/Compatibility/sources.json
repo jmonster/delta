@@ -2400,7 +2400,13 @@
           "$(SRCROOT)/../Cores/MelonDSDeltaCore/melonDS/src/tiny-AES-c",
           "$(SRCROOT)/../Cores/MelonDSDeltaCore/melonDS/src/xxhash"
         ],
-        "USE_HEADERMAP": "NO"
+        "USE_HEADERMAP": "NO",
+        "OTHER_CPLUSPLUSFLAGS": [
+          "$(OTHER_CFLAGS)",
+          "$(inherited)",
+          "-include",
+          "$(SRCROOT)/Compatibility/MelonDSDeltaCore/melonDS/src/Savestate.h"
+        ]
       },
       "Debug": {
         "CLANG_CXX_LANGUAGE_STANDARD": "c++17",
@@ -2438,7 +2444,13 @@
           "$(SRCROOT)/../Cores/MelonDSDeltaCore/melonDS/src/tiny-AES-c",
           "$(SRCROOT)/../Cores/MelonDSDeltaCore/melonDS/src/xxhash"
         ],
-        "USE_HEADERMAP": "NO"
+        "USE_HEADERMAP": "NO",
+        "OTHER_CPLUSPLUSFLAGS": [
+          "$(OTHER_CFLAGS)",
+          "$(inherited)",
+          "-include",
+          "$(SRCROOT)/Compatibility/MelonDSDeltaCore/melonDS/src/Savestate.h"
+        ]
       }
     }
   },
@@ -2447,7 +2459,7 @@
       "Cores/MelonDSDeltaCore/melonDS/src/sha1/sha1.c",
       "Cores/MelonDSDeltaCore/melonDS/src/DSi_AES.cpp",
       "Cores/MelonDSDeltaCore/melonDS/src/tiny-AES-c/aes.c",
-      "Cores/MelonDSDeltaCore/melonDS/src/Savestate.cpp",
+      "DeltaTV/Compatibility/MelonDSDeltaCore/melonDS/src/Savestate.cpp",
       "Cores/MelonDSDeltaCore/melonDS/src/dolphin/Arm64Emitter.cpp",
       "Cores/MelonDSDeltaCore/melonDS/src/RTC.cpp",
       "Cores/MelonDSDeltaCore/melonDS/src/DSi_Camera.cpp",
@@ -2579,7 +2591,13 @@
           "$(SRCROOT)/../Cores/MelonDSDeltaCore/melonDS/src/tiny-AES-c",
           "$(SRCROOT)/../Cores/MelonDSDeltaCore/melonDS/src/xxhash"
         ],
-        "USE_HEADERMAP": "NO"
+        "USE_HEADERMAP": "NO",
+        "OTHER_CPLUSPLUSFLAGS": [
+          "$(OTHER_CFLAGS)",
+          "$(inherited)",
+          "-include",
+          "$(SRCROOT)/Compatibility/MelonDSDeltaCore/melonDS/src/Savestate.h"
+        ]
       },
       "Debug": {
         "CLANG_CXX_LANGUAGE_STANDARD": "c++17",
@@ -2620,7 +2638,13 @@
           "$(SRCROOT)/../Cores/MelonDSDeltaCore/melonDS/src/tiny-AES-c",
           "$(SRCROOT)/../Cores/MelonDSDeltaCore/melonDS/src/xxhash"
         ],
-        "USE_HEADERMAP": "NO"
+        "USE_HEADERMAP": "NO",
+        "OTHER_CPLUSPLUSFLAGS": [
+          "$(OTHER_CFLAGS)",
+          "$(inherited)",
+          "-include",
+          "$(SRCROOT)/Compatibility/MelonDSDeltaCore/melonDS/src/Savestate.h"
+        ]
       }
     }
   },

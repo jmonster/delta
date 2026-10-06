@@ -3,6 +3,16 @@ import Combine
 import GameController
 import DeltaCore
 
+@MainActor
+func releaseTVControllerInputs(_ controller: DeltaCore.GameController)
+{
+    // The raw adapter defers release until every receiver finishes this press.
+    // Removing its active keys early would hide a late receiver's activation.
+    if let raw = controller as? Switch2GameController { raw.releaseInputs(); return }
+    for input in Array(controller.sustainedInputs.keys) { controller.unsustain(input) }
+    for input in Array(controller.activatedInputs.keys) { controller.deactivate(input) }
+}
+
 extension Notification.Name {
     static let deltaControllerDidConnect = Notification.Name("DeltaControllerDidConnect")
     static let deltaControllerDidDisconnect = Notification.Name("DeltaControllerDidDisconnect")
@@ -88,8 +98,7 @@ final class GameControllerRegistry: ObservableObject
 
     private func releaseInputs(_ controller: DeltaCore.GameController)
     {
-        for input in Array(controller.sustainedInputs.keys) { controller.unsustain(input) }
-        for input in Array(controller.activatedInputs.keys) { controller.deactivate(input) }
+        releaseTVControllerInputs(controller)
     }
 
     private static func isGameplayController(_ controller: GCController) -> Bool

@@ -3,6 +3,25 @@ import DeltaCore
 import MelonDSDeltaCore
 import UIKit
 
+/// The session still receives touch controls; only the DS core reserves them.
+struct TVDSControllerMapping: GameControllerInputMappingProtocol
+{
+    let base: GameControllerInputMappingProtocol?
+    var reservesTouch = false
+    var touchCursorMode = false
+    let gameControllerInputType = GameControllerInputType.mfi
+
+    func input(forControllerInput input: Input) -> Input?
+    {
+        let mapped = base?.input(forControllerInput: input)
+        if reservesTouch, let mapped {
+            if touchCursorMode, ["up", "down", "left", "right", "a", "b"].contains(mapped.stringValue) { return nil }
+            if !touchCursorMode, mapped.stringValue == "r2" { return nil }
+        }
+        return mapped
+    }
+}
+
 /// An app-owned virtual touch input, independent of the physical pad's player slot.
 @MainActor
 final class TVDSStylus: NSObject, @preconcurrency DeltaCore.GameController
