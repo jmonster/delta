@@ -1530,7 +1530,7 @@
       "Cores/N64DeltaCore/Mupen64Plus/mupen64plus-core/src/main/sdl_key_converter.c",
       "Cores/N64DeltaCore/Mupen64Plus/mupen64plus-core/subprojects/xxhash/xxhash.c",
       "Cores/N64DeltaCore/Mupen64Plus/mupen64plus-core/src/device/controllers/paks/rumblepak.c",
-      "Cores/N64DeltaCore/Mupen64Plus/mupen64plus-core/src/osal/files_macos.c",
+      "DeltaTV/Compatibility/N64DeltaCore/Mupen64Plus/mupen64plus-core/src/osal/files_tvos.m",
       "Cores/N64DeltaCore/Mupen64Plus/mupen64plus-core/src/device/controllers/paks/transferpak.c",
       "Cores/N64DeltaCore/Mupen64Plus/mupen64plus-core/src/device/memory/memory.c",
       "Cores/N64DeltaCore/Mupen64Plus/mupen64plus-core/src/api/config.c",

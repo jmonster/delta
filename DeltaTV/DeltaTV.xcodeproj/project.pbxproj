@@ -1156,7 +1156,7 @@
 		CA9D42755B536CC31E4AAD78 /* vdp_render.c in Sources */ = {isa = PBXBuildFile; fileRef = F45174439946A3BB62BEDD25 /* vdp_render.c */; };
 		CABEB152EB4BEB31793320FC /* zip.c in Sources */ = {isa = PBXBuildFile; fileRef = D98D50175E3109F9CD43DB84 /* zip.c */; };
 		CAD013100EF10E65EF153C6B /* channel3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1AA78AF4E4507E508AC1C77A /* channel3.cpp */; };
-		CAE580ABEE26534BE39F1B90 /* files_macos.c in Sources */ = {isa = PBXBuildFile; fileRef = FDE173CFB5B6D6FC81484BCF /* files_macos.c */; };
+		CAE580ABEE26534BE39F1B90 /* files_tvos.m in Sources */ = {isa = PBXBuildFile; fileRef = FDE173CFB5B6D6FC81484BCF /* files_tvos.m */; };
 		CB1516CAA2812B07259AE6CC /* duty_unit.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CA4D0353982D0F5374215BD9 /* duty_unit.cpp */; };
 		CB2D457DBD45D8BA07598F6B /* GPU2D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4B4D0BABE523CB707DE7312B /* GPU2D.cpp */; };
 		CB361561BFBFCC70F8A1C625 /* Mode3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3FADD8EA7216A7189C4C2AFF /* Mode3.cpp */; };
@@ -3102,7 +3102,7 @@
 		FC920C834B5941B11723FEDC /* TVEmulationSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Emulation/TVEmulationSession.swift; sourceTree = "<group>"; };
 		FCCFB8C74B9252E890D733E8 /* NstBoardBmc36in1.cpp */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.cpp.cpp; name = NstBoardBmc36in1.cpp; path = ../Cores/NESDeltaCore/nestopia/source/core/board/NstBoardBmc36in1.cpp; sourceTree = "<group>"; };
 		FD357A5009FC111662EE5394 /* dcheck.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = dcheck.h; path = ../Cores/N64DeltaCore/Mupen64Plus/GLideN64/src/Graphics/OpenGLContext/GraphicBuffer/PublicApi/dcheck.h; sourceTree = "<group>"; };
-		FDE173CFB5B6D6FC81484BCF /* files_macos.c */ = {isa = PBXFileReference; includeInIndex = 1; name = files_macos.c; path = "../Cores/N64DeltaCore/Mupen64Plus/mupen64plus-core/src/osal/files_macos.c"; sourceTree = "<group>"; };
+		FDE173CFB5B6D6FC81484BCF /* files_tvos.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = files_tvos.m; path = Compatibility/N64DeltaCore/Mupen64Plus/mupen64plus-core/src/osal/files_tvos.m; sourceTree = "<group>"; };
 		FDE57D78C6BB69C8111191A8 /* pngrtran.c */ = {isa = PBXFileReference; includeInIndex = 1; name = pngrtran.c; path = ../Cores/N64DeltaCore/Mupen64Plus/libpng/pngrtran.c; sourceTree = "<group>"; };
 		FDF25CF834825B4A0746F4DB /* NstBoardIremLrog017.cpp */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.cpp.cpp; name = NstBoardIremLrog017.cpp; path = ../Cores/NESDeltaCore/nestopia/source/core/board/NstBoardIremLrog017.cpp; sourceTree = "<group>"; };
 		FDF467743428D8ED3A0C7A26 /* ftmodapi.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = ftmodapi.h; path = ../Cores/N64DeltaCore/Mupen64Plus/GLideN64/src/inc/freetype/include/ftmodapi.h; sourceTree = "<group>"; };
@@ -4237,7 +4237,7 @@
 				534677E3A92341F5F5FF0904 /* sdl_key_converter.c */,
 				4B48E666F887580C86097342 /* xxhash.c */,
 				E66888F71C42F3B435FA21F1 /* rumblepak.c */,
-				FDE173CFB5B6D6FC81484BCF /* files_macos.c */,
+				FDE173CFB5B6D6FC81484BCF /* files_tvos.m */,
 				6754B0BB5D4C04737473E01A /* transferpak.c */,
 				65F222566498FD9D49C1CF13 /* memory.c */,
 				3029C1C9E7142B9E35CA4EF8 /* config.c */,
@@ -6935,7 +6935,7 @@
 				18B25F6B1B052A44EFA0E8DB /* sdl_key_converter.c in Sources */,
 				B8BA37EC84E3CF9066D5E06B /* xxhash.c in Sources */,
 				E959EE2839CD3C3416B61E1B /* rumblepak.c in Sources */,
-				CAE580ABEE26534BE39F1B90 /* files_macos.c in Sources */,
+				CAE580ABEE26534BE39F1B90 /* files_tvos.m in Sources */,
 				17709654E8D8A8255B69D845 /* transferpak.c in Sources */,
 				68A00D07A5C0C49E13237227 /* memory.c in Sources */,
 				CCD17BD1234522A07C9EFA9A /* config.c in Sources */,

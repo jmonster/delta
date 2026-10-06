@@ -359,6 +359,14 @@ static void MupenSetAudioSpeed(int percent)
     if (CoreStartup(FRONTEND_API_VERSION, self.configDirectoryURL.fileSystemRepresentation, N64EmulatorBridge.coreDirectoryURL.fileSystemRepresentation, (__bridge void *)self, MupenDebugCallback, (__bridge void *)self, MupenStateCallback) != M64ERR_SUCCESS) return;
     self.coreInitialized = YES;
 
+    // GLideN64 consumes these paths during plugin startup. A missing cache
+    // directory must fail the load before its wide-string conversion.
+    if (!ConfigGetUserDataPath() || !ConfigGetUserCachePath())
+    {
+        [self stop];
+        return;
+    }
+
     /* Configure Core */
     m64p_handle config;
     ConfigOpenSection("Core", &config);

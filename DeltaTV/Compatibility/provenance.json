@@ -128,5 +128,10 @@
     "adapted": "DeltaTV/Compatibility/App/Switch2InputMapping.swift",
     "original": "Delta/Emulation/Switch2/Switch2InputMapping.swift",
     "originalSHA256": "87dccb1865a2275a4fc2476f54aa8d64f6dbf4b65ad8765b787b0f689d398ddd"
+  },
+  {
+    "adapted": "DeltaTV/Compatibility/N64DeltaCore/Mupen64Plus/mupen64plus-core/src/osal/files_tvos.m",
+    "original": "Cores/N64DeltaCore/Mupen64Plus/mupen64plus-core/src/osal/files_macos.c",
+    "originalSHA256": "1c50e2a1ddd0521b4a89c1dee5d455c8832a5053480c6b10dc314e80e03ec095"
   }
 ]
